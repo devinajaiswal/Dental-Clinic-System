@@ -27,8 +27,8 @@ public class Data {
     public static Connection getConnection() throws SQLException {
         // final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://localhost:3306/Final_Project?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
-        final String USERNAME = "chuanqi";
-        final String PASSWORD = "chuanqi123";
+        final String USERNAME = "user1";
+        final String PASSWORD = "user1";
 
         return DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
     }
