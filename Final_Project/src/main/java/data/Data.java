@@ -26,13 +26,19 @@ import javax.swing.border.LineBorder;
  */
 public class Data {
 
-    public static Connection getConnection() throws SQLException {
-        // final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    static Connection conn;
+
+    private static Connection createConnection() throws SQLException {
+         // final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://localhost:3306/Final_Project?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
         final String USERNAME = "user1";
         final String PASSWORD = "user1";
-
         return DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+    }
+
+    public static Connection getConnection() throws SQLException {
+        if (conn == null) conn = createConnection();
+        return conn;
     }
 
     public static UserAccount login(String userName, String passWord) {
@@ -47,7 +53,7 @@ public class Data {
                     UserAccount account = new UserAccount();
                     account.setUsername(userName);
 
-                    query = "SELECT * FROM Roles WHERE username = ?";
+                    query = "SELECT * FROM Role_User WHERE username = ?";
                     stat = conn.prepareStatement(query);
                     stat.setString(1, userName);
                     rs = stat.executeQuery();
@@ -68,6 +74,17 @@ public class Data {
             txtField.setBorder(new LineBorder(Color.RED));
             JOptionPane.showMessageDialog(parentComponent, "This text field can't be empty!");
             return false;
+        }
+        return true;
+    }
+
+    public static boolean requireNotEmpty(Component parentComponent, JTextField... txtFields) {
+        for (JTextField txtField : txtFields) {
+            if (txtField.getText() == null || txtField.getText().equals("")) {
+                txtField.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(parentComponent, "This text field can't be empty!");
+                return false;
+            }
         }
         return true;
     }

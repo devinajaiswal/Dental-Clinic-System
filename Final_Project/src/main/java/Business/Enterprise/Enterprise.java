@@ -85,9 +85,9 @@ public abstract class Enterprise {
 
     public static Enterprise createEnterprise(String name, String type) {
         Enterprise enterprise = null;
-        if (type == EnterpriseType.DENTAL_CLINIC.getValue()) {
+        if (type.equals(EnterpriseType.DENTAL_CLINIC.getValue())) {
             enterprise = new DentalClinicEnterprise(name);
-        } else if (type == EnterpriseType.INSURACE.getValue()) {
+        } else if (type.equals(EnterpriseType.INSURACE.getValue())) {
             enterprise = new InsuranceEnterprise(name);
         }
         return enterprise;

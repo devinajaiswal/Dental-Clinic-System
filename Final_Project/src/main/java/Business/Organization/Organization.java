@@ -5,6 +5,7 @@
 package Business.Organization;
 
 import Business.Employee.EmployeeDirectory;
+import Business.Enterprise.Enterprise;
 import Business.Role.Role;
 import Business.UserAccount.UserAccountDirectory;
 import Business.WorkQueue.WorkQueue;
@@ -21,6 +22,12 @@ public abstract class Organization {
     private EmployeeDirectory employeeDirectory;
     private UserAccountDirectory userAccountDirectory;
     private int organizationID;
+    private Enterprise enterprise;
+    private Type type;
+
+    public void setOrganizationID(int organizationID) {
+        this.organizationID = organizationID;
+    }
 
     public enum Type {
         DentalAdmin("Dental Admin Organization"),
@@ -48,6 +55,22 @@ public abstract class Organization {
         workQueue = new WorkQueue();
         employeeDirectory = new EmployeeDirectory();
         userAccountDirectory = new UserAccountDirectory();
+    }
+
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public abstract ArrayList<Role> getSupportedRole();
@@ -83,6 +106,16 @@ public abstract class Organization {
     @Override
     public String toString() {
         return name;
+    }
+
+    public static Organization createOrganization(String organizationType) {
+        Organization organization = null;
+
+        if (organizationType.equals(Organization.Type.DentalAdmin.getValue())) {
+            organization = new DentalAdminOrganization();
+        }
+
+        return organization;
     }
 
 }

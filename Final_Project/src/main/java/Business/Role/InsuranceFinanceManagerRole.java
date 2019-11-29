@@ -6,19 +6,25 @@
 package Business.Role;
 
 import Business.Enterprise.Enterprise;
-import Business.Organization.PolicyManagerOrganization;
+import Business.Organization.FinanceManagerOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
-import userinterface.PolicyManagerRole.PolicyManagerWorkAreaJPanel;
+import userinterface.FinanceManagerRole.FinanceManagerWorkAreaJpanel;
 
 /**
  *
  * @author devinajaiswal
  */
-public class PolicyManagerRole extends Role {
+public class InsuranceFinanceManagerRole extends Role {
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        return new PolicyManagerWorkAreaJPanel(userProcessContainer, account, (PolicyManagerOrganization)organization, enterprise);
+        return new FinanceManagerWorkAreaJpanel(userProcessContainer, account, (FinanceManagerOrganization)organization, enterprise);
     }
+
+    @Override
+    public RoleType getRoleType() {
+        return Role.RoleType.InsuranceFinanceManager;
+    }
+    
 }

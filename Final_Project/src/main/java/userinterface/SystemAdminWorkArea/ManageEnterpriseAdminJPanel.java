@@ -7,13 +7,16 @@ package userinterface.SystemAdminWorkArea;
 import Business.Employee.Employee;
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;
+import Business.Organization.Organization;
 import Business.Role.EnterpriseAdminRole;
+import Business.Role.Role;
 import Business.UserAccount.UserAccount;
-import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Container;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,7 +31,7 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     private final String ACTION_EDIT = "EDIT";
 
     /**
-     * Creates new form ManageEnterpriseJPanel
+     * Creates new form ManageEnterpriseJPane¡l
      */
     public ManageEnterpriseAdminJPanel(JPanel userProcessContainer) {
         initComponents();
@@ -38,6 +41,13 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
         populateNetworkComboBox();
         Network network = (Network) comboNetwork.getSelectedItem();
         populateEnterpriseComboBox(network);
+
+        BasicInternalFrameUI ui = (BasicInternalFrameUI) jInternalFrame1.getUI();
+        Container north = (Container) ui.getNorthPane();
+        north.remove(0);
+        north.validate();
+        north.repaint();
+        jInternalFrame1.setVisible(false);
     }
 
     private void populateTable() {
@@ -247,6 +257,11 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
         });
 
         buttonEdit.setText("Edit");
+        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -291,14 +306,13 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_comboEnterpriseActionPerformed
 
     private void resetInternalFrame() {
-        txtUsername.setBorder(new LineBorder(new Color(128, 128, 128)));
-        txtName.setBorder(new LineBorder(new Color(128, 128, 128)));
-        txtPassword.setBorder(new LineBorder(new Color(128, 128, 128)));
-        txtRepassword.setBorder(new LineBorder(new Color(128, 128, 128)));
+        setComponentsBorderBlack();
         txtUsername.setText("");
         txtName.setText("");
         txtPassword.setText("");
         txtRepassword.setText("");
+        comboNetwork.setSelectedIndex(0);
+        comboEnterprise.setSelectedIndex(0);
         jInternalFrame1.setVisible(false);
         currentAction = null;
         comboNetwork.setEnabled(true);
@@ -310,25 +324,78 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
         buttonEdit.setEnabled(enable);
     }
 
+    private void setEditFieldsEnabled(boolean enable) {
+        txtUsername.setEnabled(enable);
+        comboNetwork.setEnabled(enable);
+        comboEnterprise.setEnabled(enable);
+    }
+
+    private void setComponentsBorderBlack() {
+        userinterface.Util.setBorderBlack(txtName, txtPassword, txtRepassword, txtUsername, comboEnterprise, comboNetwork);
+    }
+
+
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
-        Enterprise enterprise = (Enterprise) comboNetwork.getSelectedItem();
-        String username = txtUsername.getText();
-        String password = String.valueOf(txtPassword.getPassword());
-        String name = txtName.getText();
+        setComponentsBorderBlack();
+        if (currentAction.equals(ACTION_ADD)) {
+            Enterprise enterprise = (Enterprise) comboEnterprise.getSelectedItem();
 
-//        Employee employee = enterprise.getEmployeeDirectory().createEmployee(name);
-//        
-//        UserAccount account = enterprise.getUserAccountDirectory().createUserAccount(username, password, employee, new EnterpriseAdminRole());
-//        populateTable();
+            if (!data.Data.requireNotEmpty(this, txtName, txtPassword, txtRepassword)) {
+                return;
+            }
 
+            String password = String.valueOf(txtPassword.getPassword());
+            String rePassword = String.valueOf(txtRepassword.getPassword());
+            if (!password.equals(rePassword)) {
+                JOptionPane.showMessageDialog(this, "Two passwords don't mathch!");
+                return;
+            }
+
+            if (data.UserDAO.isUsernameExist(txtUsername.getText())) {
+                JOptionPane.showMessageDialog(this, "Username already exists, please choose another one!");
+                return;
+            }
+
+            UserAccount user = new UserAccount();
+            user.setUsername(txtUsername.getText());
+            user.setPassword(password);
+            user.setRole(new EnterpriseAdminRole());
+            Employee employee = new Employee();
+            employee.setName(txtName.getText());
+            user.setEmployee(employee);
+            Organization.Type organizationType = null;
+            if (enterprise.getEnterpriseType().getValue().equals(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
+                organizationType = Organization.Type.DentalAdmin;
+            } else if (enterprise.getEnterpriseType().getValue().equals(Enterprise.EnterpriseType.INSURACE.getValue())) {
+                organizationType = Organization.Type.InsuranceAdmin;
+            }
+            Organization organization = data.OrganizationDAO.searchByTypeAndEnterprise(organizationType.getValue(), enterprise.getEnterpriseId());
+            data.UserDAO.createWithEmployee(user, organization.getOrganizationID());
+
+            JOptionPane.showMessageDialog(this, "Created successfully!");
+        } else if (currentAction.equals(ACTION_EDIT)) {
+
+        }
+        populateTable();
+        SystemAdminWorkAreaJPanel parent = (SystemAdminWorkAreaJPanel) userProcessContainer;
+        parent.populateTree();
+        resetInternalFrame();
+        jInternalFrame1.setVisible(false);
+        setButtonsEnabled(true);
+        setEditFieldsEnabled(true);
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
-        // TODO add your handling code here:
+        resetInternalFrame();
+        jInternalFrame1.setVisible(false);
+        setButtonsEnabled(true);
+        setEditFieldsEnabled(true);
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void buttonAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddNewActionPerformed
-        // TODO add your handling code here:
+        jInternalFrame1.setVisible(true);
+        currentAction = ACTION_ADD;
+        setButtonsEnabled(false);
     }//GEN-LAST:event_buttonAddNewActionPerformed
 
     private void comboNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboNetworkActionPerformed
@@ -337,6 +404,23 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
             populateEnterpriseComboBox(network);
         }
     }//GEN-LAST:event_comboNetworkActionPerformed
+
+    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
+        if (tableAdmin.getSelectedRow() >= 0) {
+            UserAccount user = (UserAccount) tableAdmin.getValueAt(tableAdmin.getSelectedRow(), 2);
+            txtName.setText(user.getEmployee().getName());
+            txtUsername.setText(user.getUsername());
+            comboNetwork.setSelectedItem(user.getEnterprise().getNetwork());
+            comboEnterprise.setSelectedItem(user.getEnterprise());
+            currentAction = ACTION_EDIT;
+            jInternalFrame1.setVisible(true);
+            setButtonsEnabled(false);
+            setEditFieldsEnabled(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a record first");
+            return;
+        }
+    }//GEN-LAST:event_buttonEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddNew;
