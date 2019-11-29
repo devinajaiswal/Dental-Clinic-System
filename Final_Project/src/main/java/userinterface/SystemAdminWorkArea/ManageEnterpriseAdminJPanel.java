@@ -357,6 +357,7 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
             }
 
             UserAccount user = new UserAccount();
+            user.setEnterprise(enterprise);
             user.setUsername(txtUsername.getText());
             user.setPassword(password);
             user.setRole(new EnterpriseAdminRole());

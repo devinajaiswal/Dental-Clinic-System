@@ -131,6 +131,12 @@ public class UserDAO {
             stmt.setInt(1, organizationId);
             stmt.setString(2, user.getUsername());
             stmt.executeLargeUpdate();
+            
+            sql = "INSERT INTO Enterprise_User values (?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, user.getEnterprise().getEnterpriseId());
+            stmt.setString(2, user.getUsername());
+            stmt.executeLargeUpdate();
 
             conn.commit();
 
