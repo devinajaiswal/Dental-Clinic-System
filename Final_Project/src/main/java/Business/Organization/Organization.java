@@ -21,14 +21,35 @@ public abstract class Organization {
     private EmployeeDirectory employeeDirectory;
     private UserAccountDirectory userAccountDirectory;
     private int organizationID;
+<<<<<<< HEAD
+    private static int counter = 0;
+
+    public enum Type {
+        DentalAdmin("Dental Admin Organization"),
+        DentalFrontDesk("Dental Front Desk Organization"),
+        DentalDentist("Dental Dentist Organization"),
+        DentalManager("Dental Manager Organization"),
+        InsuranceAdmin("Insurance Admin Organization"),
+        InsuranceRepresentative("Insurance Representative Organization"),
+        InsurancePolicyManager("Insurance Policy Manager Organization"),
+        InsuranceFinanceManager("Insurance Finance Manager Organization");
+        
+        
+=======
     private static int counter=0;
     
     public enum Type{
         Admin("Admin Organization"), Doctor("Doctor Organization"),CustomerRepresentativeOrganization(" Customer Representative"),FinanceManagerOrganization("Finance Manager Organization"), PolicyManagerOrganization("Policy Manager Organization");
+<<<<<<< HEAD
+>>>>>>> 37b8d98e2b29c4df644a52b92c9beeac6ea9ab29
+=======
+>>>>>>> 69e29b63ee9e4421195ff5fb2209e64001682b91
         private String value;
+
         private Type(String value) {
             this.value = value;
         }
+
         public String getValue() {
             return value;
         }
@@ -44,7 +65,7 @@ public abstract class Organization {
     }
 
     public abstract ArrayList<Role> getSupportedRole();
-    
+
     public UserAccountDirectory getUserAccountDirectory() {
         return userAccountDirectory;
     }
@@ -56,7 +77,7 @@ public abstract class Organization {
     public EmployeeDirectory getEmployeeDirectory() {
         return employeeDirectory;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -77,6 +98,5 @@ public abstract class Organization {
     public String toString() {
         return name;
     }
-    
-    
+
 }

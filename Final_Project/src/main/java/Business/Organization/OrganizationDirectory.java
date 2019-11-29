@@ -25,8 +25,8 @@ public class OrganizationDirectory {
     
     public Organization createOrganization(Type type){
         Organization organization = null;
-        if (type.getValue().equals(Type.Doctor.getValue())){
-            organization = new DoctorOrganization();
+        if (type.getValue().equals(Type.DentalDentist.getValue())){
+            organization = new DentalDentistOrganization();
             organizationList.add(organization);
         }
         return organization;

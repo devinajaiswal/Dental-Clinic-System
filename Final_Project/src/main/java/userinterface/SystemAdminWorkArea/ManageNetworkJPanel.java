@@ -7,8 +7,16 @@ package userinterface.SystemAdminWorkArea;
 import Business.EcoSystem;
 import Business.Network.Network;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,28 +26,34 @@ import javax.swing.table.DefaultTableModel;
 public class ManageNetworkJPanel extends javax.swing.JPanel {
 
     private JPanel userProcessContainer;
-    private EcoSystem system;
+    private String currentAction;
+    private final String ACTION_ADD = "ADD";
+    private final String ACTION_EDIT = "EDIT";
 
     /**
      *
      * Creates new form ManageNetworkJPanel
      */
-    public ManageNetworkJPanel(JPanel userProcessContainer, EcoSystem system) {
+    public ManageNetworkJPanel(JPanel userProcessContainer) {
         initComponents();
-
         this.userProcessContainer = userProcessContainer;
-        this.system = system;
-
         populateNetworkTable();
+        BasicInternalFrameUI ui = (BasicInternalFrameUI) jInternalFrame1.getUI();
+        Container north = (Container) ui.getNorthPane();
+        north.remove(0);
+        north.validate();
+        north.repaint();
+        jInternalFrame1.setVisible(false);
     }
 
     private void populateNetworkTable() {
-        DefaultTableModel model = (DefaultTableModel) networkJTable.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableNetwork.getModel();
 
         model.setRowCount(0);
-        for (Network network : system.getNetworkList()) {
+        ArrayList<Network> networkList = data.NetworkDAO.getAll();
+        for (Network network : networkList) {
             Object[] row = new Object[1];
-            row[0] = network.getName();
+            row[0] = network;
             model.addRow(row);
         }
     }
@@ -54,21 +68,24 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        networkJTable = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        submitJButton = new javax.swing.JButton();
-        nameJTextField = new javax.swing.JTextField();
-        backJButton = new javax.swing.JButton();
+        tableNetwork = new javax.swing.JTable();
+        buttonEdit = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        buttonAddNew = new javax.swing.JButton();
+        jInternalFrame1 = new javax.swing.JInternalFrame();
+        labAvailable = new javax.swing.JLabel();
+        labUnavailable = new javax.swing.JLabel();
+        buttonConfirm = new javax.swing.JButton();
+        buttonCancel = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
 
-        networkJTable.setModel(new javax.swing.table.DefaultTableModel(
+        tableNetwork.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
+
             },
             new String [] {
-                "Name"
+                "Network Name"
             }
         ) {
             Class[] types = new Class [] {
@@ -86,88 +103,215 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(networkJTable);
-        if (networkJTable.getColumnModel().getColumnCount() > 0) {
-            networkJTable.getColumnModel().getColumn(0).setResizable(false);
+        tableNetwork.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tableNetworkFocusGained(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableNetwork);
+        if (tableNetwork.getColumnModel().getColumnCount() > 0) {
+            tableNetwork.getColumnModel().getColumn(0).setResizable(false);
         }
 
-        jLabel1.setText("Name");
-
-        submitJButton.setText("Submit");
-        submitJButton.addActionListener(new java.awt.event.ActionListener() {
+        buttonEdit.setText("Edit");
+        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                submitJButtonActionPerformed(evt);
+                buttonEditActionPerformed(evt);
             }
         });
 
-        backJButton.setText("<< Back");
-        backJButton.addActionListener(new java.awt.event.ActionListener() {
+        jLabel2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        jLabel2.setText("Network Management");
+
+        buttonAddNew.setText("Add New");
+        buttonAddNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backJButtonActionPerformed(evt);
+                buttonAddNewActionPerformed(evt);
             }
         });
+
+        jInternalFrame1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jInternalFrame1.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        jInternalFrame1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jInternalFrame1.setEnabled(false);
+        jInternalFrame1.setVisible(true);
+
+        buttonConfirm.setText("Confirm");
+        buttonConfirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonConfirmActionPerformed(evt);
+            }
+        });
+
+        buttonCancel.setText("Cancel");
+        buttonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCancelActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Network Name");
+
+        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
+        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
+        jInternalFrame1Layout.setHorizontalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonConfirm)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonCancel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(160, Short.MAX_VALUE))
+        );
+        jInternalFrame1Layout.setVerticalGroup(
+            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonConfirm)
+                        .addComponent(buttonCancel)))
+                .addGap(8, 8, 8))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(166, 166, 166)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(nameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(submitJButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(132, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(backJButton)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(110, 110, 110))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonAddNew, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(99, 99, 99)
+                .addGap(11, 11, 11)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(submitJButton)
-                    .addComponent(nameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
-                .addComponent(backJButton)
-                .addGap(76, 76, 76))
+                    .addComponent(buttonEdit)
+                    .addComponent(buttonAddNew))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void submitJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitJButtonActionPerformed
+    private void resetInternalFrame() {
+        txtName.setBorder(new LineBorder(new Color(128, 128, 128)));
+        txtName.setText("");
+        jInternalFrame1.setVisible(false);
+        currentAction = null;
+    }
 
-        String name = nameJTextField.getText();
+    private void setButtonsEnabled(boolean enable) {
+        buttonAddNew.setEnabled(enable);
+        buttonEdit.setEnabled(enable);
+    }
 
-        Network network = system.createAndAddNetwork();
-        network.setName(name);
+    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
+        if (tableNetwork.getSelectedRow() >= 0) {
+            Network network = (Network) tableNetwork.getValueAt(tableNetwork.getSelectedRow(), 0);
+            txtName.setText(network.getName());
+            currentAction = ACTION_EDIT;
+            jInternalFrame1.setVisible(true);
+            setButtonsEnabled(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a record first");
+            return;
+        }
+    }//GEN-LAST:event_buttonEditActionPerformed
+
+    private void tableNetworkFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tableNetworkFocusGained
+
+    }//GEN-LAST:event_tableNetworkFocusGained
+
+    private void buttonAddNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddNewActionPerformed
+        jInternalFrame1.setVisible(true);
+        setButtonsEnabled(false);
+        currentAction = ACTION_ADD;
+    }//GEN-LAST:event_buttonAddNewActionPerformed
+
+    private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
+        txtName.setBorder(new LineBorder(new Color(128, 128, 128)));
+        if (!data.Data.requireNotEmpty(this, txtName)) {
+            return;
+        }
+
+        if (currentAction.equals(ACTION_ADD)) {
+            Network network = new Network();
+            network.setName(txtName.getText());
+            data.NetworkDAO.create(network);
+            tableNetwork.setEnabled(true);
+            JOptionPane.showMessageDialog(this, "Add successfully!");
+        } else if (currentAction.equals(ACTION_EDIT)) {
+            Network network = (Network) tableNetwork.getValueAt(tableNetwork.getSelectedRow(), 0);
+            if (network.getName().equals(txtName.getText())) {
+                resetInternalFrame();
+                tableNetwork.setEnabled(true);
+                return;
+            }
+            network.setName(txtName.getText());
+            data.NetworkDAO.update(network);
+            tableNetwork.setEnabled(true);
+            JOptionPane.showMessageDialog(this, "Updated successfully!");
+            
+        }
 
         populateNetworkTable();
-    }//GEN-LAST:event_submitJButtonActionPerformed
+        SystemAdminWorkAreaJPanel parent = (SystemAdminWorkAreaJPanel) userProcessContainer;
+        parent.populateTree();
+        resetInternalFrame();
+        jInternalFrame1.setVisible(false);
+        setButtonsEnabled(true);
+    }//GEN-LAST:event_buttonConfirmActionPerformed
 
-    private void backJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backJButtonActionPerformed
-        userProcessContainer.remove(this);
-         Component[] componentArray = userProcessContainer.getComponents();
-        Component component = componentArray[componentArray.length - 1];
-        SystemAdminWorkAreaJPanel sysAdminwjp = (SystemAdminWorkAreaJPanel) component;
-        sysAdminwjp.populateTree();
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.previous(userProcessContainer);
-    }//GEN-LAST:event_backJButtonActionPerformed
+    private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
+        jInternalFrame1.setVisible(false);
+        resetInternalFrame();
+        setButtonsEnabled(true);
+    }//GEN-LAST:event_buttonCancelActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton backJButton;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton buttonAddNew;
+    private javax.swing.JButton buttonCancel;
+    private javax.swing.JButton buttonConfirm;
+    private javax.swing.JButton buttonEdit;
+    private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameJTextField;
-    private javax.swing.JTable networkJTable;
-    private javax.swing.JButton submitJButton;
+    private javax.swing.JLabel labAvailable;
+    private javax.swing.JLabel labUnavailable;
+    private javax.swing.JTable tableNetwork;
+    private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }

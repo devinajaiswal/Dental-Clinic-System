@@ -5,6 +5,7 @@
 package Business.UserAccount;
 
 import Business.Employee.Employee;
+import Business.Enterprise.Enterprise;
 import Business.Role.Role;
 import Business.WorkQueue.WorkQueue;
 
@@ -19,6 +20,15 @@ public class UserAccount {
     private Employee employee;
     private Role role;
     private WorkQueue workQueue;
+    private Enterprise enterprise;
+
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
+    }
 
     public UserAccount() {
         workQueue = new WorkQueue();

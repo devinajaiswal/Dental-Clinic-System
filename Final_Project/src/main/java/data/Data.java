@@ -9,6 +9,8 @@ import Business.Network.Network;
 import Business.Role.Role;
 import Business.Role.SystemAdminRole;
 import Business.UserAccount.UserAccount;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,12 +20,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 /**
  *
  * @author zhangchuanqi
  */
 public class Data {
+
     public static Connection getConnection() throws SQLException {
         // final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://localhost:3306/Final_Project?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
@@ -33,7 +39,7 @@ public class Data {
         return DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
     }
 
-        public static UserAccount login(String userName, String passWord) {
+    public static UserAccount login(String userName, String passWord) {
         try {
             Connection conn = getConnection();
             String query = "SELECT * FROM User WHERE username = ?";
@@ -50,10 +56,8 @@ public class Data {
                     stat.setString(1, userName);
                     rs = stat.executeQuery();
                     rs.next();
-                    String role = rs.getString("role_name");
-                    if (role.equals(Role.RoleType.SysAdmin.getValue())){
-                            account.setRole(new SystemAdminRole());
-                    }
+                    String roleName = rs.getString("role_name");
+                    account.setRole(Role.createRole(roleName));
                     return account;
                 }
             }
@@ -63,22 +67,13 @@ public class Data {
         return null;
     }
 
-        public static ArrayList<Network> getNetworkList() {
-            ArrayList<Network> result = new ArrayList<>();
-        try {
-            Connection conn = getConnection();
-            String sql = "SELECT * FROM Network";
-            Statement stat = conn.createStatement();
-            ResultSet rs = stat.executeQuery(sql);
-            while (rs.next()) {
-                Network network = new Network();
-                network.setName(rs.getString("network_name"));
-                network.setId(rs.getInt("network_id"));
-                result.add(network);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+    public static boolean requireNotEmpty(Component parentComponent, JTextField txtField) {
+        if (txtField.getText() == null || txtField.getText().equals("")) {
+            txtField.setBorder(new LineBorder(Color.RED));
+            JOptionPane.showMessageDialog(parentComponent, "This text field can't be empty!");
+            return false;
         }
-        return result;
-        }
+        return true;
+    }
+
 }

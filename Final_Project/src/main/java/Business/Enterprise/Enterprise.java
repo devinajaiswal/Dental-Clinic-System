@@ -5,6 +5,7 @@
  */
 package Business.Enterprise;
 
+import Business.Network.Network;
 import Business.Organization.Organization;
 import Business.Organization.OrganizationDirectory;
 
@@ -12,13 +13,24 @@ import Business.Organization.OrganizationDirectory;
  *
  * @author MyPC1
  */
-public abstract class Enterprise extends Organization {
+public abstract class Enterprise {
 
     private EnterpriseType enterpriseType;
+    private int enterpriseId;
+    private String enterpriseName;
+    private Network network;
     private OrganizationDirectory organizationDirectory;
 
     public OrganizationDirectory getOrganizationDirectory() {
         return organizationDirectory;
+    }
+
+    public Network getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(Network network) {
+        this.network = network;
     }
 
     public enum EnterpriseType {
@@ -49,9 +61,40 @@ public abstract class Enterprise extends Organization {
         this.enterpriseType = enterpriseType;
     }
 
+    public int getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(int enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
+
     public Enterprise(String name, EnterpriseType type) {
-        super(name);
+        this.enterpriseName = name;
         this.enterpriseType = type;
         organizationDirectory = new OrganizationDirectory();
+    }
+
+    public static Enterprise createEnterprise(String name, String type) {
+        Enterprise enterprise = null;
+        if (type == EnterpriseType.DENTAL_CLINIC.getValue()) {
+            enterprise = new DentalClinicEnterprise(name);
+        } else if (type == EnterpriseType.INSURACE.getValue()) {
+            enterprise = new InsuranceEnterprise(name);
+        }
+        return enterprise;
+    }
+
+    @Override
+    public String toString() {
+        return this.enterpriseName;
     }
 }

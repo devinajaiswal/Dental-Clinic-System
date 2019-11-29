@@ -15,22 +15,21 @@ import javax.swing.JPanel;
  * @author raunak
  */
 public abstract class Role {
-    
-    public enum RoleType{
+
+    public enum RoleType {
         SysAdmin("SysAdmin"),
         Customer("Customer"),
         EnterpriseAdmin("EnterpriseAdmin"),
-        ClinicFrontdesk("ClinicFrontdesk"),
-        ClinicDentist("ClinicDentist"),
-        ClinicManager("ClinicManager"),
-        InsuranceFrontdesk("InsuranceFrontdesk"),
-        InsuranceAdmin("InsuranceAdmin"),
+        DentalFrontdesk("DentalFrontdesk"),
+        DentalDentist("DentalDentist"),
+        DentalManager("DentalManager"),
+        InsuranceRepresentative("InsuranceRepresentative"),
         InsurancePolicyManager("InsurancePolicyManager"),
         InsuranceFinanceManager("InsuranceFinanceManager");
-        
-        
+
         private String value;
-        private RoleType(String value){
+
+        private RoleType(String value) {
             this.value = value;
         }
 
@@ -43,17 +42,24 @@ public abstract class Role {
             return value;
         }
     }
-    
-    public abstract JPanel createWorkArea(JPanel userProcessContainer, 
-            UserAccount account, 
-            Organization organization, 
-            Enterprise enterprise, 
-            EcoSystem business);
+
+    public abstract JPanel createWorkArea(JPanel userProcessContainer,
+        UserAccount account,
+        Organization organization,
+        Enterprise enterprise,
+        EcoSystem business);
 
     @Override
     public String toString() {
         return this.getClass().getName();
     }
-    
-    
+
+    public static Role createRole(String roleName) {
+        Role role = null;
+        if (roleName.equals(Role.RoleType.SysAdmin.getValue())) {
+            role = new SystemAdminRole();
+        }
+
+        return role;
+    }
 }
