@@ -21,6 +21,11 @@ public class EnterpriseAdminRole extends Role{
         return new AdminWorkAreaJPanel(userProcessContainer, enterprise);
     }
 
+    @Override
+    public RoleType getRoleType() {
+        return Role.RoleType.EnterpriseAdmin;
+    }
+
     
     
 }

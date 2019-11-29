@@ -6,11 +6,11 @@ package userinterface.SystemAdminWorkArea;
 
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;
-import java.awt.CardLayout;
+import Business.Organization.Organization;
+import Business.Role.EnterpriseAdminRole;
+import data.OrganizationDAO;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -290,7 +290,7 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
             String name = txtName.getText();
             Enterprise enterprise = Enterprise.createEnterprise(name, type.getValue());
             enterprise.setNetwork(network);
-            data.EnterpriseDAO.create(enterprise);
+            data.EnterpriseDAO.createWithAdminOrganization(enterprise);
             JOptionPane.showMessageDialog(this, "Created successfully!");
         } else if (currentAction.equals(ACTION_EDIT)) {
 

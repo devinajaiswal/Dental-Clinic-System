@@ -15,11 +15,16 @@ import javax.swing.JPanel;
  *
  * @author raunak
  */
-public class DoctorRole extends Role{
+public class DentalDentistRole extends Role{
 
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         return new DoctorWorkAreaJPanel(userProcessContainer, account, (DentalDentistOrganization)organization, enterprise);
+    }
+
+    @Override
+    public RoleType getRoleType() {
+        return Role.RoleType.DentalDentist;
     }
     
     

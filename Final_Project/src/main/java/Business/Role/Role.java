@@ -15,6 +15,8 @@ import javax.swing.JPanel;
  */
 public abstract class Role {
 
+    public abstract RoleType getRoleType();
+    
     public enum RoleType {
         SysAdmin("SysAdmin"),
         Customer("Customer"),
@@ -55,7 +57,7 @@ public abstract class Role {
     public static Role createRole(String roleName) {
         Role role = null;
         if (roleName.equals(Role.RoleType.SysAdmin.getValue())) {
-            role = new SystemAdminRole();
+            role = new SysAdminRole();
         }
 
         return role;

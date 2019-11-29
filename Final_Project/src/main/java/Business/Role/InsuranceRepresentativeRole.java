@@ -16,9 +16,14 @@ import userinterface.CustomerRepresentativeRole.CustomerRepresentativeAreaJPanel
  
  * @author devinajaiswal
  */
-public class CustomerRepresentativeRole extends Role{
+public class InsuranceRepresentativeRole extends Role{
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         return new CustomerRepresentativeAreaJPanel(userProcessContainer, account, (CustomerRepresentativeOrganization)organization, enterprise);
+    }
+
+    @Override
+    public RoleType getRoleType() {
+        return Role.RoleType.InsuranceRepresentative;
     }
 }

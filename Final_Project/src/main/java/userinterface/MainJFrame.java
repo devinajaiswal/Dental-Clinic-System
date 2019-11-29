@@ -5,7 +5,6 @@
 package userinterface;
 
 import Business.Enterprise.Enterprise;
-import Business.Network.Network;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
