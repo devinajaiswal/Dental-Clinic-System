@@ -5,15 +5,12 @@
  */
 package userinterface.SystemAdminWorkArea;
 
-import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;
 import Business.Organization.Organization;
 import java.awt.CardLayout;
-import java.awt.Container;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -26,14 +23,10 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     /**
      * Creates new form SystemAdminWorkAreaJPanel
      */
-<<<<<<< HEAD
-    public SystemAdminWorkAreaJPanel() {
-=======
+
     JPanel userProcessContainer;
-     EcoSystem ecosystem;
     
     public SystemAdminWorkAreaJPanel(JPanel userProcessContainer) {
->>>>>>> 37b8d98e2b29c4df644a52b92c9beeac6ea9ab29
         initComponents();
         populateTree();
     }
@@ -72,8 +65,8 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
                 organizationList = enterprise.getOrganizationDirectory().getOrganizationList();
                 for (int k = 0; k < organizationList.size(); k++) {
                     organization = organizationList.get(i);
-                    organizationNode = new DefaultMutableTreeNode(organization.getName());
-                    enterpriseNode.insert(organizationNode, k);
+//                    organizationNode = new DefaultMutableTreeNode(organization.getName());
+//                    enterpriseNode.insert(organizationNode, k);
                 }
             }
         }

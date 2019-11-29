@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class CustomerRepresentativeOrganization extends Organization {
     public CustomerRepresentativeOrganization() {
-        super(Organization.Type.CustomerRepresentativeOrganization.getValue());
+        super(Organization.Type.InsuranceRepresentative.getValue());
     }
     
     @Override

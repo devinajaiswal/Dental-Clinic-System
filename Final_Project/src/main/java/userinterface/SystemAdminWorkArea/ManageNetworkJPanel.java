@@ -4,7 +4,6 @@
  */
 package userinterface.SystemAdminWorkArea;
 
-import Business.EcoSystem;
 import Business.Network.Network;
 import java.awt.CardLayout;
 import java.awt.Color;

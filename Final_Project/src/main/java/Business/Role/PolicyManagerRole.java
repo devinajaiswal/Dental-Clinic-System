@@ -5,13 +5,11 @@
  */
 package Business.Role;
 
-import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.PolicyManagerOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
-import userinterface.FinanceManagerRole.FinanceManagerWorkAreaJpanel;
 import userinterface.PolicyManagerRole.PolicyManagerWorkAreaJPanel;
 
 /**
@@ -20,7 +18,7 @@ import userinterface.PolicyManagerRole.PolicyManagerWorkAreaJPanel;
  */
 public class PolicyManagerRole extends Role {
     @Override
-    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         return new PolicyManagerWorkAreaJPanel(userProcessContainer, account, (PolicyManagerOrganization)organization, enterprise);
     }
 }

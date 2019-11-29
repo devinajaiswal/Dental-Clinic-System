@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class PolicyManagerOrganization extends Organization {
     public PolicyManagerOrganization() {
-        super(Organization.Type.PolicyManagerOrganization.getValue());
+        super(Organization.Type.InsurancePolicyManager.getValue());
     }
     
     @Override

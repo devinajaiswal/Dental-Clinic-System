@@ -46,16 +46,16 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
     public void populateEmployeeComboBox(Organization organization){
         employeeJComboBox.removeAllItems();
         
-        for (Employee employee : organization.getEmployeeDirectory().getEmployeeList()){
-            employeeJComboBox.addItem(employee);
-        }
+//        for (Employee employee : organization.getEmployeeDirectory().getEmployeeList()){
+//            employeeJComboBox.addItem(employee);
+//        }
     }
     
     private void populateRoleComboBox(Organization organization){
         roleJComboBox.removeAllItems();
-        for (Role role : organization.getSupportedRole()){
-            roleJComboBox.addItem(role);
-        }
+//        for (Role role : organization.getSupportedRole()){
+//            roleJComboBox.addItem(role);
+//        }
     }
 
     public void popData() {
@@ -65,12 +65,12 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
         for (Organization organization : enterprise.getOrganizationDirectory().getOrganizationList()) {
-            for (UserAccount ua : organization.getUserAccountDirectory().getUserAccountList()) {
-                Object row[] = new Object[2];
-                row[0] = ua;
-                row[1] = ua.getRole();
-                ((DefaultTableModel) userJTable.getModel()).addRow(row);
-            }
+//            for (UserAccount ua : organization.getUserAccountDirectory().getUserAccountList()) {
+//                Object row[] = new Object[2];
+//                row[0] = ua;
+//                row[1] = ua.getRole();
+//                ((DefaultTableModel) userJTable.getModel()).addRow(row);
+//            }
         }
     }
 
@@ -248,7 +248,7 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
         Employee employee = (Employee) employeeJComboBox.getSelectedItem();
         Role role = (Role) roleJComboBox.getSelectedItem();
         
-        organization.getUserAccountDirectory().createUserAccount(userName, password, employee, role);
+//        organization.getUserAccountDirectory().createUserAccount(userName, password, employee, role);
         
         popData();
     }//GEN-LAST:event_createUserJButtonActionPerformed

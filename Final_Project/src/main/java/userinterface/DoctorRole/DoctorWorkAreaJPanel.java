@@ -4,7 +4,6 @@
  */
 package userinterface.DoctorRole;
 
-import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.DentalDentistOrganization;
 import Business.UserAccount.UserAccount;

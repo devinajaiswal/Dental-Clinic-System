@@ -5,7 +5,6 @@
  */
 package Business.Role;
 
-import Business.EcoSystem;
 import Business.Enterprise.Enterprise;
 import Business.Organization.CustomerRepresentativeOrganization;
 import Business.Organization.Organization;
@@ -19,7 +18,7 @@ import userinterface.CustomerRepresentativeRole.CustomerRepresentativeAreaJPanel
  */
 public class CustomerRepresentativeRole extends Role{
     @Override
-    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         return new CustomerRepresentativeAreaJPanel(userProcessContainer, account, (CustomerRepresentativeOrganization)organization, enterprise);
     }
 }

@@ -21,8 +21,6 @@ public abstract class Organization {
     private EmployeeDirectory employeeDirectory;
     private UserAccountDirectory userAccountDirectory;
     private int organizationID;
-<<<<<<< HEAD
-    private static int counter = 0;
 
     public enum Type {
         DentalAdmin("Dental Admin Organization"),
@@ -34,16 +32,6 @@ public abstract class Organization {
         InsurancePolicyManager("Insurance Policy Manager Organization"),
         InsuranceFinanceManager("Insurance Finance Manager Organization");
         
-        
-=======
-    private static int counter=0;
-    
-    public enum Type{
-        Admin("Admin Organization"), Doctor("Doctor Organization"),CustomerRepresentativeOrganization(" Customer Representative"),FinanceManagerOrganization("Finance Manager Organization"), PolicyManagerOrganization("Policy Manager Organization");
-<<<<<<< HEAD
->>>>>>> 37b8d98e2b29c4df644a52b92c9beeac6ea9ab29
-=======
->>>>>>> 69e29b63ee9e4421195ff5fb2209e64001682b91
         private String value;
 
         private Type(String value) {
@@ -60,8 +48,6 @@ public abstract class Organization {
         workQueue = new WorkQueue();
         employeeDirectory = new EmployeeDirectory();
         userAccountDirectory = new UserAccountDirectory();
-        organizationID = counter;
-        ++counter;
     }
 
     public abstract ArrayList<Role> getSupportedRole();

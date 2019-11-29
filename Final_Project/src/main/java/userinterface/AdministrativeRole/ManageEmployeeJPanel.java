@@ -53,12 +53,12 @@ public class ManageEmployeeJPanel extends javax.swing.JPanel {
         
         model.setRowCount(0);
         
-        for (Employee employee : organization.getEmployeeDirectory().getEmployeeList()){
-            Object[] row = new Object[2];
-            row[0] = employee.getId();
-            row[1] = employee.getName();
-            model.addRow(row);
-        }
+//        for (Employee employee : organization.getEmployeeDirectory().getEmployeeList()){
+//            Object[] row = new Object[2];
+//            row[0] = employee.getId();
+//            row[1] = employee.getName();
+//            model.addRow(row);
+//        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -200,7 +200,7 @@ public class ManageEmployeeJPanel extends javax.swing.JPanel {
         Organization organization = (Organization) organizationEmpJComboBox.getSelectedItem();
         String name = nameJTextField.getText();
         
-        organization.getEmployeeDirectory().createEmployee(name);
+//        organization.getEmployeeDirectory().createEmployee(name);
         populateTable(organization);
         
     }//GEN-LAST:event_addJButtonActionPerformed
