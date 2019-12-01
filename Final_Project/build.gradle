@@ -35,5 +35,6 @@ dependencies {
     compile "org.springframework:spring-context:$springFrameworkVersion"
     compile "org.springframework:spring-test:$springFrameworkVersion"
     compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+    compile "com.twilio.sdk:twilio:7.1.0"
     compile group: 'org.netbeans.external', name: 'AbsoluteLayout', version: 'RELEASE112'
 }

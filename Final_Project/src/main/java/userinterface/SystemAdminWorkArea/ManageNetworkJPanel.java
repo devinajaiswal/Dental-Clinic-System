@@ -43,6 +43,13 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
         north.validate();
         north.repaint();
         jInternalFrame1.setVisible(false);
+        buttonEdit.setVisible(false);
+
+        comboNetworkName.removeAllItems();
+        ArrayList<String> states = data.Data.getAllStates();
+        for (String state : states) {
+            comboNetworkName.addItem(state);
+        }
     }
 
     private void populateNetworkTable() {
@@ -77,7 +84,7 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
         buttonConfirm = new javax.swing.JButton();
         buttonCancel = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        txtName = new javax.swing.JTextField();
+        comboNetworkName = new javax.swing.JComboBox<>();
 
         tableNetwork.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -159,8 +166,8 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboNetworkName, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonConfirm)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonCancel)
@@ -180,9 +187,9 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
                         .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(buttonConfirm)
-                        .addComponent(buttonCancel)))
+                        .addComponent(buttonCancel)
+                        .addComponent(comboNetworkName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(8, 8, 8))
         );
 
@@ -224,8 +231,8 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void resetInternalFrame() {
-        txtName.setBorder(new LineBorder(new Color(128, 128, 128)));
-        txtName.setText("");
+        comboNetworkName.setBorder(new LineBorder(new Color(128, 128, 128)));
+        comboNetworkName.setSelectedIndex(1);
         jInternalFrame1.setVisible(false);
         currentAction = null;
     }
@@ -238,7 +245,7 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
         if (tableNetwork.getSelectedRow() >= 0) {
             Network network = (Network) tableNetwork.getValueAt(tableNetwork.getSelectedRow(), 0);
-            txtName.setText(network.getName());
+//            txtName.setText(network.getName());
             currentAction = ACTION_EDIT;
             jInternalFrame1.setVisible(true);
             setButtonsEnabled(false);
@@ -259,29 +266,33 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonAddNewActionPerformed
 
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
-        txtName.setBorder(new LineBorder(new Color(128, 128, 128)));
-        if (!data.Data.requireNotEmpty(this, txtName)) {
+        comboNetworkName.setBorder(new LineBorder(new Color(128, 128, 128)));
+        String name = (String) comboNetworkName.getSelectedItem();
+
+        if (data.NetworkDAO.isNetworkNameExist(name)) {
+            comboNetworkName.setBorder(new LineBorder(Color.RED));
+            JOptionPane.showMessageDialog(this, "This network alread exists!");
             return;
         }
 
         if (currentAction.equals(ACTION_ADD)) {
             Network network = new Network();
-            network.setName(txtName.getText());
+            network.setName(name);
             data.NetworkDAO.create(network);
             tableNetwork.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Add successfully!");
         } else if (currentAction.equals(ACTION_EDIT)) {
             Network network = (Network) tableNetwork.getValueAt(tableNetwork.getSelectedRow(), 0);
-            if (network.getName().equals(txtName.getText())) {
-                resetInternalFrame();
-                tableNetwork.setEnabled(true);
-                return;
-            }
-            network.setName(txtName.getText());
+//            if (network.getName().equals(txtName.getText())) {
+//                resetInternalFrame();
+//                tableNetwork.setEnabled(true);
+//                return;
+//            }
+//            network.setName(txtName.getText());
             data.NetworkDAO.update(network);
             tableNetwork.setEnabled(true);
             JOptionPane.showMessageDialog(this, "Updated successfully!");
-            
+
         }
 
         populateNetworkTable();
@@ -304,6 +315,7 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonConfirm;
     private javax.swing.JButton buttonEdit;
+    private javax.swing.JComboBox<String> comboNetworkName;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -311,6 +323,5 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel labAvailable;
     private javax.swing.JLabel labUnavailable;
     private javax.swing.JTable tableNetwork;
-    private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }

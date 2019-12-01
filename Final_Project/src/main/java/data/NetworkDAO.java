@@ -81,4 +81,24 @@ public class NetworkDAO {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+        public static boolean isNetworkNameExist(String networkName) {
+        String sql = "SELECT * FROM Network WHERE network_name = ?";
+
+        try {
+            Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, networkName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return true;
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class
+                .getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false;
+    }
 }
