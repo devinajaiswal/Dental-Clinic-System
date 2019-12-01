@@ -58,6 +58,22 @@ public abstract class Role {
         Role role = null;
         if (roleName.equals(Role.RoleType.SysAdmin.getValue())) {
             role = new SysAdminRole();
+        } else if (roleName.equals(Role.RoleType.Customer.getValue())) {
+            role = new CustomerRole();
+        }else if (roleName.equals(Role.RoleType.EnterpriseAdmin.getValue())) {
+            role = new EnterpriseAdminRole();
+        }else if (roleName.equals(Role.RoleType.DentalDentist.getValue())) {
+            role = new DentalDentistRole();
+        }else if (roleName.equals(Role.RoleType.DentalFrontdesk.getValue())) {
+            role = new DentalFrontdeskRole();
+        }else if (roleName.equals(Role.RoleType.DentalManager.getValue())) {
+            role = new DentalManagerRole();
+        }else if (roleName.equals(Role.RoleType.InsuranceRepresentative.getValue())) {
+            role = new InsuranceRepresentativeRole();
+        }else if (roleName.equals(Role.RoleType.InsurancePolicyManager.getValue())) {
+            role = new InsurancePolicyManagerRole();
+        }else if (roleName.equals(Role.RoleType.InsuranceFinanceManager.getValue())) {
+            role = new InsuranceFinanceManagerRole();
         }
 
         return role;

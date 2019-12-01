@@ -151,4 +151,35 @@ public class UserDAO {
         }
     }
 
+    public static void createCustomer(UserAccount user) {
+        Connection conn = null;
+        try {
+            conn = data.Data.getConnection();
+            conn.setAutoCommit(false);
+            String sql = "INSERT INTO User values (?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.executeUpdate();
+
+            sql = "INSERT INTO Role_User values (?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getRole().getRoleType().getValue());
+            stmt.executeLargeUpdate();
+
+            conn.commit();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                conn.rollback();
+                conn.close();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+    }
+
 }
