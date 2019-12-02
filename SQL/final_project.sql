@@ -61,3 +61,25 @@ CREATE TABLE Final_Project.`Employee_User` (
   foreign key (`username`) references `User` (`username`)
 );
 
+CREATE TABLE Final_Project.`User_VerficationCodes` (
+  `username` varchar(50) NOT NULL,
+  `phone_code` varchar(50) NOT NULL,
+  `email_code` varchar(50) NOT NULL
+);
+
+CREATE TABLE Final_Project.`User_PersonalInfo` (
+  `username` varchar(50) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `ssn` varchar(50) NOT NULL,
+  `street` varchar(50) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(50) NOT NULL,
+  `postcode` varchar(50) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  PRIMARY KEY (`username`),
+  foreign key (`state`) references `States`(`state_name`),
+  foreign key (`username`) references `User` (`username`)
+);
+
