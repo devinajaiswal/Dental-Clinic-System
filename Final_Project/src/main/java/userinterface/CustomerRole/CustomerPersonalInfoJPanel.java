@@ -3,13 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.Customer;
+package userinterface.CustomerRole;
 
 import Business.UserAccount.UserAccount;
 import java.awt.Color;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 

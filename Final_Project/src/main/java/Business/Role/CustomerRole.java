@@ -10,6 +10,7 @@ import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import userinterface.DoctorRole.DoctorWorkAreaJPanel;
 import javax.swing.JPanel;
+import userinterface.CustomerRole.CustomerWorkAreaJPanel;
 
 /**
  *
@@ -19,7 +20,7 @@ public class CustomerRole extends Role{
 
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        return new DoctorWorkAreaJPanel(userProcessContainer, account, (DentalDentistOrganization)organization, enterprise);
+        return new CustomerWorkAreaJPanel(userProcessContainer, account, organization, enterprise);
     }
 
     @Override

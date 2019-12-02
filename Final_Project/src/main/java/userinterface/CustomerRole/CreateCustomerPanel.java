@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.Customer;
+package userinterface.CustomerRole;
 
 import Business.Role.CustomerRole;
 import Business.Role.Role;
