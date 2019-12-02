@@ -10,7 +10,7 @@ import Business.Organization.FinanceManagerOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
-import userinterface.FinanceManagerRole.FinanceManagerWorkAreaJpanel;
+import userinterface.InsuranceFinanceManagerRole.InsuranceFinanceManagerWorkAreaJPanel;
 
 /**
  *
@@ -19,7 +19,7 @@ import userinterface.FinanceManagerRole.FinanceManagerWorkAreaJpanel;
 public class InsuranceFinanceManagerRole extends Role {
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        return new FinanceManagerWorkAreaJpanel(userProcessContainer, account, (FinanceManagerOrganization)organization, enterprise);
+        return new InsuranceFinanceManagerWorkAreaJPanel(userProcessContainer, account, (FinanceManagerOrganization)organization, enterprise);
     }
 
     @Override

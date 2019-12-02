@@ -8,8 +8,8 @@ import Business.Enterprise.Enterprise;
 import Business.Organization.DentalDentistOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
-import userinterface.DoctorRole.DoctorWorkAreaJPanel;
 import javax.swing.JPanel;
+import userinterface.DentalDentistRole.DentalDentistWorkAreaJPanel;
 
 /**
  *
@@ -19,7 +19,7 @@ public class DentalDentistRole extends Role{
 
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        return new DoctorWorkAreaJPanel(userProcessContainer, account, (DentalDentistOrganization)organization, enterprise);
+        return new DentalDentistWorkAreaJPanel(userProcessContainer, account, (DentalDentistOrganization)organization, enterprise);
     }
 
     @Override

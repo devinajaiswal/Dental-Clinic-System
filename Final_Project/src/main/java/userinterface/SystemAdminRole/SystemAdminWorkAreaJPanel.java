@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.SystemAdminWorkArea;
+package userinterface.SystemAdminRole;
 
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;

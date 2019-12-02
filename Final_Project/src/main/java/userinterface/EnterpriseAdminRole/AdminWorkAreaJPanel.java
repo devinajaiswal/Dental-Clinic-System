@@ -1,6 +1,6 @@
 
 
-package userinterface.AdministrativeRole;
+package userinterface.EnterpriseAdminRole;
 
 import Business.Enterprise.Enterprise;
 import java.awt.CardLayout;
