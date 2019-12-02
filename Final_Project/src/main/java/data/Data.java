@@ -7,6 +7,8 @@ package data;
 
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
+import com.twilio.Twilio;
+import com.twilio.type.PhoneNumber;
 import com.twilio.type.PhoneNumberCapabilities;
 import java.awt.Color;
 import java.awt.Component;
@@ -17,13 +19,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import userinterface.MainJFrame;
 
 /**
  *
@@ -167,6 +183,52 @@ public class Data {
         Pattern p = Pattern.compile("^[a-zA-Z0-9_\\-\\.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$");
         Matcher m = p.matcher(email);
         return m.matches();
+    }
+
+    public static void sendEmail(String to, String title, String content) throws AddressException, MessagingException {
+        Properties prop = new Properties();
+        prop.put("mail.smtp.auth", true);
+        prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+        Session session = Session.getInstance(prop, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("final.project.javabean", "finalbean");
+            }
+        });
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress("final.project.javabean@gmail.com"));
+        message.setRecipients(
+            Message.RecipientType.TO, InternetAddress.parse(to));
+        message.setSubject(title);
+
+        String msg = content;
+
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent(msg, "text/html");
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
+
+        message.setContent(multipart);
+
+        Transport.send(message);
+
+    }
+
+    public static void sendSMS(String to, String text) {
+        String ACCOUNT_SID = "AC9f02539e506ffa7dc7247257a995c6b2";
+        String AUTH_TOKEN = "7c6387a3d3aebb356dbf89f38c16f8fa";
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message
+            .creator(new PhoneNumber("+1" + to), // to
+                new PhoneNumber("+12564149094"), // from
+                text)
+            .create();
     }
 
 }

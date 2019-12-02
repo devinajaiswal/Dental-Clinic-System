@@ -136,7 +136,6 @@ public class CustomerWorkAreaJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonPersonalInfoActionPerformed
 
     private void btnManageEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageEnterpriseActionPerformed
-        customerContainer.removeAll();
     }//GEN-LAST:event_btnManageEnterpriseActionPerformed
 
     private void buttonSearchClinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchClinicActionPerformed

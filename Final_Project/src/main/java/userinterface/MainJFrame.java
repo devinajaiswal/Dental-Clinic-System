@@ -10,9 +10,6 @@ import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
 import userinterface.CustomerRole.CreateCustomerPanel;
 
 /**
@@ -21,10 +18,7 @@ import userinterface.CustomerRole.CreateCustomerPanel;
  */
 public class MainJFrame extends javax.swing.JFrame {
 
-    public static final String ACCOUNT_SID
-        = "AC9f02539e506ffa7dc7247257a995c6b2";
-    public static final String AUTH_TOKEN
-        = "7c6387a3d3aebb356dbf89f38c16f8fa";
+
 
     /**
      * Creates new form MainJFrame
@@ -33,13 +27,6 @@ public class MainJFrame extends javax.swing.JFrame {
         initComponents();
         this.setSize(1200, 800);
         buttonLogout.setVisible(false);
-
-//        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-//        Message message = Message
-//            .creator(new PhoneNumber("+16177941416"), // to
-//                new PhoneNumber("+12564149094"), // from
-//                "Where's Wallace?")
-//            .create();
     }
 
     /**
