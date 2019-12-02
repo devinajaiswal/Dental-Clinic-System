@@ -8,7 +8,6 @@ import Business.Enterprise.Enterprise;
 import Business.Organization.DentalDentistOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
-import userinterface.DoctorRole.DoctorWorkAreaJPanel;
 import javax.swing.JPanel;
 import userinterface.CustomerRole.CustomerWorkAreaJPanel;
 
