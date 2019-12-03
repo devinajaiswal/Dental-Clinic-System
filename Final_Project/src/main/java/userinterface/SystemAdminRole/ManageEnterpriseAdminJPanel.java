@@ -9,13 +9,10 @@ import Business.Enterprise.Enterprise;
 import Business.Network.Network;
 import Business.Organization.Organization;
 import Business.Role.EnterpriseAdminRole;
-import Business.Role.Role;
 import Business.UserAccount.UserAccount;
-import java.awt.Color;
 import java.awt.Container;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -338,9 +335,12 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
         setComponentsBorderBlack();
         if (currentAction.equals(ACTION_ADD)) {
+            if (!userinterface.Util.requireSeletedItemNotNull(this, comboNetwork, comboEnterprise)) {
+                return;
+            }
             Enterprise enterprise = (Enterprise) comboEnterprise.getSelectedItem();
 
-            if (!data.Data.requireNotEmpty(this, txtName, txtPassword, txtRepassword)) {
+            if (!userinterface.Util.requireNotEmpty(this, txtName, txtPassword, txtRepassword)) {
                 return;
             }
 

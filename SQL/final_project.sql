@@ -7,8 +7,6 @@ CREATE TABLE Final_Project.`User` (
 ) ;
 insert into Final_Project.`User` values ('sysadmin', 'sysadmin');
 
-
-
 CREATE TABLE Final_Project.`Network` (
   `network_id` int NOT NULL,
   `network_name` varchar(50) NOT NULL,
@@ -63,8 +61,10 @@ CREATE TABLE Final_Project.`Employee_User` (
 
 CREATE TABLE Final_Project.`User_VerficationCodes` (
   `username` varchar(50) NOT NULL,
-  `phone_code` varchar(50) NOT NULL,
-  `email_code` varchar(50) NOT NULL
+  `phone_code` varchar(50) NULL,
+  `email_code` varchar(50) NULL,
+   PRIMARY KEY (`username`),
+   foreign key (`username`) references `User` (`username`)
 );
 
 CREATE TABLE Final_Project.`User_PersonalInfo` (
