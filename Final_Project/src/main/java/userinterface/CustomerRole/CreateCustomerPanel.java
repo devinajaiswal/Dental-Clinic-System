@@ -8,9 +8,12 @@ package userinterface.CustomerRole;
 import Business.Role.CustomerRole;
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import userinterface.WelcomeJPanel;
 
 /**
  *
@@ -18,12 +21,14 @@ import javax.swing.border.LineBorder;
  */
 public class CreateCustomerPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+
     /**
      * Creates new form CustomerPersonalInfoJPanel
      */
-
-    public CreateCustomerPanel() {
+    public CreateCustomerPanel(JPanel userProcessContainer) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
     }
 
     /**
@@ -123,15 +128,15 @@ public class CreateCustomerPanel extends javax.swing.JPanel {
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         setComponentsBorderBlack();
 
-        if (!data.Data.requireNotEmpty(this, txtUsername, txtPassword, txtRePassword)){
+        if (!userinterface.Util.requireNotEmpty(this, txtUsername, txtPassword, txtRePassword)) {
             return;
         }
 
         if (data.UserDAO.isUsernameExist(txtUsername.getText())) {
-             JOptionPane.showMessageDialog(this, "This username already exists, please choose another one!");
+            JOptionPane.showMessageDialog(this, "This username already exists, please choose another one!");
             return;
         }
-        
+
         String password = String.valueOf(txtPassword.getPassword());
         String rePassword = String.valueOf(txtRePassword.getPassword());
         if (!password.equals(rePassword)) {
@@ -139,7 +144,6 @@ public class CreateCustomerPanel extends javax.swing.JPanel {
             return;
         }
 
-        
         UserAccount user = new UserAccount();
         user.setUsername(txtUsername.getText());
         user.setPassword(password);
@@ -147,6 +151,10 @@ public class CreateCustomerPanel extends javax.swing.JPanel {
         data.UserDAO.createCustomer(user);
 
         JOptionPane.showMessageDialog(this, "Signing up successfully.");
+        userProcessContainer.removeAll();
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        userProcessContainer.add(new WelcomeJPanel());
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed

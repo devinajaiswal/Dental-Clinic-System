@@ -19,7 +19,6 @@ public class DentalFrontdeskRole extends Role{
 
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        // TODO create dental front desk page
         return new DentalFrontdeskWorkAreaJPanel(userProcessContainer, account, (DentalDentistOrganization)organization, enterprise);
     }
 

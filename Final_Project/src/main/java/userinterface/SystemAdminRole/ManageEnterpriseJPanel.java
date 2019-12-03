@@ -280,9 +280,12 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
         txtName.setBorder(new LineBorder(new Color(128, 128, 128)));
         if (currentAction.equals(ACTION_ADD)) {
+            if (!userinterface.Util.requireSeletedItemNotNull(this, comboNetwork, comboType)) {
+                return;
+            }
             Network network = (Network) comboNetwork.getSelectedItem();
             Enterprise.EnterpriseType type = (Enterprise.EnterpriseType) comboType.getSelectedItem();
-            if (!data.Data.requireNotEmpty(this, txtName)) {
+            if (!userinterface.Util.requireNotEmpty(this, txtName)) {
                 return;
             }
             String name = txtName.getText();
