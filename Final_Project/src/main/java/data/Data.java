@@ -5,6 +5,7 @@
  */
 package data;
 
+import Business.Employee.Employee;
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
 import com.twilio.Twilio;
@@ -83,6 +84,19 @@ public class Data {
                     rs.next();
                     String roleName = rs.getString("role_name");
                     account.setRole(Role.createRole(roleName));
+
+                    query = "SELECT * FROM Employee NATURAL JOIN Employee_User where username = ?";
+                    stat = conn.prepareStatement(query);
+                    stat.setString(1, userName);
+                    rs = stat.executeQuery();
+                    if (rs.next()) {
+                        Employee employee = new Employee();
+                        employee.setId(rs.getInt("employee_id"));
+                        employee.setName(rs.getString("employee_name"));
+                        employee.setEmail(rs.getString("email"));
+                        account.setEmployee(employee);
+                    }
+                    
                     return account;
                 }
             }

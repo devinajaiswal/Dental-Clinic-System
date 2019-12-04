@@ -1,21 +1,22 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package Business.Organization;
 
 import Business.Role.EnterpriseAdminRole;
+import Business.Role.InsuranceRepresentativeRole;
 import Business.Role.Role;
 import java.util.ArrayList;
 
 /**
  *
- * @author raunak
+ * @author devinajaiswal
  */
-public class DentalAdminOrganization extends Organization{
-
-    public DentalAdminOrganization() {
-        super(Type.DentalAdmin);
+public class InsuranceAdminOrganization extends Organization {
+    public InsuranceAdminOrganization() {
+        super(Organization.Type.InsuranceAdmin);
     }
     
     @Override
@@ -24,5 +25,4 @@ public class DentalAdminOrganization extends Organization{
         roles.add(new EnterpriseAdminRole());
         return roles;
     }
-     
 }

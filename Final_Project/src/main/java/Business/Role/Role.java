@@ -51,7 +51,7 @@ public abstract class Role {
 
     @Override
     public String toString() {
-        return this.getClass().getName();
+        return this.getRoleType().getValue();
     }
 
     public static Role createRole(String roleName) {

@@ -184,8 +184,8 @@ public class MainJFrame extends javax.swing.JFrame {
         //Step1: Check in the system admin user account directory if you have the user
         UserAccount userAccount = data.Data.login(userName, password);
 
-        Enterprise inEnterprise = null;
-        Organization inOrganization = null;
+        Enterprise inEnterprise = data.EnterpriseDAO.searchByUsername(userName);
+        Organization inOrganization = data.OrganizationDAO.searchByUsername(userName);
 
         if (userAccount == null) {
             JOptionPane.showMessageDialog(null, "Invalid credentials");

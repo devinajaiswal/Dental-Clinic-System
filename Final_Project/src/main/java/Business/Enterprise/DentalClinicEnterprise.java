@@ -5,7 +5,11 @@
  */
 package Business.Enterprise;
 
-import Business.Role.Role;
+import Business.Organization.DentalAdminOrganization;
+import Business.Organization.DentalDentistOrganization;
+import Business.Organization.DentalFrontDeskOrganization;
+import Business.Organization.DentalManagerOrganization;
+import Business.Organization.Organization;
 import java.util.ArrayList;
 
 /**
@@ -21,5 +25,15 @@ public class DentalClinicEnterprise extends Enterprise {
 //    public ArrayList<Role> getSupportedRole() {
 //        return null;
 //    }
+
+    @Override
+    public ArrayList<Organization> getSupportedOrganizations() {
+        ArrayList<Organization> list = new ArrayList<>();
+        list.add(new DentalAdminOrganization());
+        list.add(new DentalDentistOrganization());
+        list.add(new DentalFrontDeskOrganization());
+        list.add(new DentalManagerOrganization());
+        return list;
+    }
 
 }

@@ -221,24 +221,23 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
                     .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3)
-                        .addComponent(comboEnterprise, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboEnterprise, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1)
-                        .addComponent(comboNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(comboNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2))
                     .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4)))
                 .addGap(18, 18, 18)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7)
-                        .addComponent(txtRepassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtRepassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonCancel)
@@ -370,12 +369,25 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
             } else if (enterprise.getEnterpriseType().getValue().equals(Enterprise.EnterpriseType.INSURACE.getValue())) {
                 organizationType = Organization.Type.InsuranceAdmin;
             }
-            Organization organization = data.OrganizationDAO.searchByTypeAndEnterprise(organizationType.getValue(), enterprise.getEnterpriseId());
+            Organization organization = data.OrganizationDAO.searchByTypeAndEnterprise(
+                organizationType.getValue(), enterprise.getEnterpriseId());
             data.UserDAO.createWithEmployee(user, organization.getOrganizationID());
-
             JOptionPane.showMessageDialog(this, "Created successfully!");
         } else if (currentAction.equals(ACTION_EDIT)) {
+            if (!userinterface.Util.requireNotEmpty(this, txtName, txtPassword, txtRepassword)) {
+                return;
+            }
 
+            String password = String.valueOf(txtPassword.getPassword());
+            String rePassword = String.valueOf(txtRepassword.getPassword());
+            if (!password.equals(rePassword)) {
+                JOptionPane.showMessageDialog(this, "Two passwords don't mathch!");
+                return;
+            }
+            UserAccount user = (UserAccount) tableAdmin.getValueAt(tableAdmin.getSelectedRow(), 2);
+            data.UserDAO.updateNameAndPassword(user.getEmployee().getId(), txtName.getText(), 
+                user.getUsername(), password);
+            JOptionPane.showMessageDialog(this, "Updated successfully!");
         }
         populateTable();
         SystemAdminWorkAreaJPanel parent = (SystemAdminWorkAreaJPanel) userProcessContainer;

@@ -5,6 +5,8 @@
 package Business.Organization;
 
 import Business.Role.DentalDentistRole;
+import Business.Role.DentalFrontdeskRole;
+import Business.Role.DentalManagerRole;
 import Business.Role.Role;
 import java.util.ArrayList;
 
@@ -12,16 +14,16 @@ import java.util.ArrayList;
  *
  * @author raunak
  */
-public class DentalDentistOrganization extends Organization{
+public class DentalManagerOrganization extends Organization{
 
-    public DentalDentistOrganization() {
-        super(Organization.Type.DentalDentist);
+    public DentalManagerOrganization() {
+        super(Organization.Type.DentalManager);
     }
     
     @Override
     public ArrayList<Role> getSupportedRole() {
         ArrayList<Role> roles = new ArrayList();
-        roles.add(new DentalDentistRole());
+        roles.add(new DentalManagerRole());
         return roles;
     }
      
