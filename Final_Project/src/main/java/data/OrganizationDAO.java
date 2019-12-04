@@ -83,8 +83,6 @@ public class OrganizationDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, organizationType);
             stmt.setInt(2, enterpriseId);
-            System.out.println("org type: " + organizationType);
-            System.out.println("enterprise id: " + enterpriseId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 organization = Organization.createOrganization(organizationType);

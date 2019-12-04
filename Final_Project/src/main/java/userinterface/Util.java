@@ -36,6 +36,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
@@ -57,6 +58,17 @@ public class Util {
 
     public static boolean requireNotEmpty(Component parentComponent, JTextField... txtFields) {
         for (JTextField txtField : txtFields) {
+            if (txtField.getText() == null || txtField.getText().equals("")) {
+                txtField.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(parentComponent, "This text field can't be empty!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean requireNotEmpty(Component parentComponent, JTextArea... txtFields) {
+        for (JTextArea txtField : txtFields) {
             if (txtField.getText() == null || txtField.getText().equals("")) {
                 txtField.setBorder(new LineBorder(Color.RED));
                 JOptionPane.showMessageDialog(parentComponent, "This text field can't be empty!");
@@ -187,7 +199,6 @@ public class Util {
 //        } catch (NexmoClientException ex) {
 //            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-
     }
 
     public static String getRandomString(int n) {

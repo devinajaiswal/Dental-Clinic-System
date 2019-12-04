@@ -85,6 +85,31 @@ public class EnterpriseDAO {
         return result;
     }
 
+        public static ArrayList<Enterprise> getAllbyType(String type) {
+        ArrayList<Enterprise> result = new ArrayList<>();
+        String sql = "SELECT * FROM Enterprise WHERE enterprise_type = ?";
+
+        try {
+            Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, type);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Enterprise enterprise;
+                if (type.equals(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
+                    enterprise = new DentalClinicEnterprise(rs.getString("enterprise_name"));
+                } else {
+                    enterprise = new InsuranceEnterprise(rs.getString("enterprise_name"));
+                }
+                enterprise.setEnterpriseId(rs.getInt("enterprise_id"));
+                result.add(enterprise);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
     public static Enterprise searchByUsername(String Username) {
         Enterprise enterprise = null; 
         String sql = "SELECT * FROM ((Enterprise NATURAL JOIN Enterprise_User) NATURAL JOIN "

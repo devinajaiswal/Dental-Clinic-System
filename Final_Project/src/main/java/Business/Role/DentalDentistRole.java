@@ -19,7 +19,7 @@ public class DentalDentistRole extends Role{
 
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        return new DentalDentistWorkAreaJPanel(userProcessContainer, account, (DentalDentistOrganization)organization, enterprise);
+        return new DentalDentistWorkAreaJPanel(userProcessContainer, account, organization, enterprise);
     }
 
     @Override
