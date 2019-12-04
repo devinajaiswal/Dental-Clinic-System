@@ -85,6 +85,31 @@ public class EnterpriseDAO {
         return result;
     }
 
+    public static Enterprise searchByUsername(String Username) {
+        Enterprise enterprise = null; 
+        String sql = "SELECT * FROM ((Enterprise NATURAL JOIN Enterprise_User) NATURAL JOIN "
+            + "Network_Enterprise) NATURAL JOIN Network WHERE username = ?";
+
+        try {
+            Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, Username);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String type = rs.getString("enterprise_type");
+                enterprise = Enterprise.createEnterprise(rs.getString("enterprise_name"), type);
+                enterprise.setEnterpriseId(rs.getInt("enterprise_id"));
+                Network network = new Network();
+                network.setId(rs.getInt("network_id"));
+                network.setName(rs.getString("network_name"));
+                enterprise.setNetwork(network);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return enterprise;
+    }
+
     private static int generateId() {
         try {
             String sql = "SELECT max(enterprise_id) from Enterprise";
@@ -100,7 +125,7 @@ public class EnterpriseDAO {
         return 1;
     }
 
-    public static void createWithAdminOrganization(Enterprise enterprise) {
+    public static void createWithAdminOrganization(String enterpriseName, Enterprise.EnterpriseType type, int netwokdId) {
         Connection conn = null;
         try {
             conn = getConnection();
@@ -109,27 +134,22 @@ public class EnterpriseDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             int id = generateId();
             stmt.setInt(1, id);
-            stmt.setString(2, enterprise.getEnterpriseName());
-            stmt.setString(3, enterprise.getEnterpriseType().getValue());
-            enterprise.setEnterpriseId(id);
+            stmt.setString(2, enterpriseName);
+            stmt.setString(3, type.getValue());
             stmt.executeUpdate();
 
             sql = "INSERT INTO Network_Enterprise VALUES (?, ?)";
             stmt = conn.prepareCall(sql);
-            stmt.setInt(1, id);
-            stmt.setInt(2, enterprise.getNetwork().getId());
+            stmt.setInt(1, netwokdId);
+            stmt.setInt(2, id);
             stmt.executeUpdate();
 
             Organization organization = null;
-            System.out.println(enterprise.getEnterpriseType().getValue());
-            if (enterprise.getEnterpriseType().getValue().equals(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
+            if (type.getValue().equals(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
                 organization = Organization.createOrganization(Organization.Type.DentalAdmin.getValue());
-                organization.setType(Organization.Type.DentalAdmin);
-            } else if (enterprise.getEnterpriseType().getValue().equals(Enterprise.EnterpriseType.INSURACE.getValue())) {
+            } else if (type.getValue().equals(Enterprise.EnterpriseType.INSURACE.getValue())) {
                 organization = Organization.createOrganization(Organization.Type.InsuranceAdmin.getValue());
-                organization.setType(Organization.Type.InsuranceAdmin);
             }
-            organization.setEnterprise(enterprise);
             organization.setName("Default Admin Organization");
 
             sql = "INSERT INTO Organization VALUES (?, ?, ?, ?)";
@@ -138,7 +158,7 @@ public class EnterpriseDAO {
             stmt.setInt(1, organizationId);
             stmt.setString(2, organization.getType().getValue());
             stmt.setString(3, organization.getName());
-            stmt.setInt(4, organization.getEnterprise().getEnterpriseId());
+            stmt.setInt(4, id);
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException ex) {
@@ -152,13 +172,13 @@ public class EnterpriseDAO {
         }
     }
 
-    public static void update(Enterprise enterprise) {
+    public static void updateEnterpriseName(String enterpriseName, int enterpriseId) {
         try {
             Connection conn = getConnection();
-            String sql = "UPDATE Enterprise SET enterprise_name = ? WHERE network_id = ?";
+            String sql = "UPDATE Enterprise SET enterprise_name = ? WHERE enterprise_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, enterprise.getEnterpriseName());
-            stmt.setInt(2, enterprise.getEnterpriseId());
+            stmt.setString(1, enterpriseName);
+            stmt.setInt(2, enterpriseId);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);

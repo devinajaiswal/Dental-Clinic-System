@@ -5,7 +5,7 @@
  */
 package Business.Organization;
 
-import Business.Role.InsuranceFinanceManagerRole;
+import Business.Role.InsurancePolicyManagerRole;
 import Business.Role.Role;
 import java.util.ArrayList;
 
@@ -13,15 +13,15 @@ import java.util.ArrayList;
  *
  * @author devinajaiswal
  */
-public class FinanceManagerOrganization extends Organization {
-    public FinanceManagerOrganization() {
-        super(Organization.Type.InsuranceFinanceManager.getValue());
+public class InsurancePolicyManagerOrganization extends Organization {
+    public InsurancePolicyManagerOrganization() {
+        super(Organization.Type.InsurancePolicyManager);
     }
     
     @Override
     public ArrayList<Role> getSupportedRole() {
         ArrayList<Role> roles = new ArrayList();
-        roles.add(new InsuranceFinanceManagerRole());
+        roles.add(new InsurancePolicyManagerRole());
         return roles;
     }
 }

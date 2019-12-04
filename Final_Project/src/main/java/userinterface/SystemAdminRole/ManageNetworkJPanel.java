@@ -185,7 +185,7 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
                         .addComponent(jLabel3)
                         .addComponent(buttonConfirm)
                         .addComponent(buttonCancel)
-                        .addComponent(comboNetworkName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(comboNetworkName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(8, 8, 8))
         );
 

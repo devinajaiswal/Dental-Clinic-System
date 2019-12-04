@@ -9,6 +9,7 @@ import Business.Customer.CustomerPersonalInfo;
 import Business.Employee.Employee;
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;
+import Business.Organization.Organization;
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
 import java.sql.Connection;
@@ -42,13 +43,12 @@ public class UserDAO {
                 UserAccount user = new UserAccount();
                 user.setUsername(rs.getString("username"));
                 Enterprise enterprise = Enterprise.createEnterprise(rs.getString("enterprise_name"), rs.getString("enterprise_type"));
-                System.out.println(rs.getString("enterprise_name"));
-                System.out.println(rs.getString("enterprise_type"));
                 enterprise.setEnterpriseId(rs.getInt("enterprise_id"));
                 Network network = new Network();
                 network.setId(rs.getInt("network_id"));
                 network.setName(rs.getString("network_name"));
                 Employee employee = new Employee();
+                employee.setId(rs.getInt("employee_id"));
                 employee.setName(rs.getString("employee_name"));
                 employee.setEmail(rs.getString("email"));
                 enterprise.setNetwork(network);
@@ -64,6 +64,45 @@ public class UserDAO {
         return result;
     }
 
+    public static ArrayList<UserAccount> getAllUsersByEnterpriseId(int enpterpriseId) {
+        ArrayList<UserAccount> result = new ArrayList<>();
+
+        String sql = "SELECT * FROM ((((((Enterprise natural join Enterprise_User) natural join Employee_User)\n" +
+"            natural join User) natural join Role_User) natural join Employee) \n" +
+"            natural join Organization_User) natural join Organization\n" +
+"            where enterprise_id = ?";
+        try {
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, enpterpriseId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                UserAccount user = new UserAccount();
+                user.setUsername(rs.getString("username"));
+                Enterprise enterprise = Enterprise.createEnterprise(rs.getString("enterprise_name"), rs.getString("enterprise_type"));
+                enterprise.setEnterpriseId(rs.getInt("enterprise_id"));
+                Employee employee = new Employee();
+                employee.setId(rs.getInt("employee_id"));
+                employee.setName(rs.getString("employee_name"));
+                employee.setEmail(rs.getString("email"));
+                Organization org = Organization.createOrganization(rs.getString("organization_type"));
+                org.setOrganizationID(rs.getInt("organization_id"));
+                org.setName(rs.getString("organization_name"));
+                Role role = Role.createRole(rs.getString("role_name"));
+                user.setEnterprise(enterprise);
+                user.setEmployee(employee);
+                user.setOrganization(org);
+                user.setRole(role);
+                result.add(user);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return result;
+    }
     public static int generateEmployeeId() {
         try {
             String sql = "SELECT max(employee_id) from Employee";
@@ -410,4 +449,45 @@ public class UserDAO {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public static ArrayList<String> searchUsernamesByOrganizationId(int organizationId) {
+        ArrayList<String> result = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * from Organization_User natural join User  where organization_id = ?";
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, organizationId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                result.add(rs.getString("username"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public static void updateNameAndPassword(int employeeId, String name, String username, String password) {
+        try {
+            Connection conn = data.Data.getConnection();
+            conn.setAutoCommit(false);
+            String sql = "Update Employee SET employee_name = ?  where employee_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setInt(2, employeeId);
+            stmt.executeUpdate();
+
+            sql = "UPDATE User SET password = ? WHERE username = ?";
+            stmt = conn.prepareCall(sql);
+            stmt.setString(1, password);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

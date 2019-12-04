@@ -38,7 +38,7 @@ public abstract class Organization {
         InsuranceRepresentative("Insurance Representative Organization"),
         InsurancePolicyManager("Insurance Policy Manager Organization"),
         InsuranceFinanceManager("Insurance Finance Manager Organization");
-        
+
         private String value;
 
         private Type(String value) {
@@ -48,10 +48,15 @@ public abstract class Organization {
         public String getValue() {
             return value;
         }
+
+        @Override
+        public String toString() {
+            return getValue();
+        }
     }
 
-    public Organization(String name) {
-        this.name = name;
+    public Organization(Type type) {
+        this.type = type;
         workQueue = new WorkQueue();
         employeeDirectory = new EmployeeDirectory();
         userAccountDirectory = new UserAccountDirectory();
@@ -105,7 +110,11 @@ public abstract class Organization {
 
     @Override
     public String toString() {
-        return name;
+        if (this.name == null || this.name.equals("")) {
+            return getType().getValue();
+        } else {
+            return this.name;
+        }
     }
 
     public static Organization createOrganization(String organizationType) {
@@ -113,6 +122,20 @@ public abstract class Organization {
 
         if (organizationType.equals(Organization.Type.DentalAdmin.getValue())) {
             organization = new DentalAdminOrganization();
+        } else if (organizationType.equals(Organization.Type.DentalDentist.getValue())) {
+            organization = new DentalDentistOrganization();
+        } else if (organizationType.equals(Organization.Type.DentalFrontDesk.getValue())) {
+            organization = new DentalFrontDeskOrganization();
+        } else if (organizationType.equals(Organization.Type.DentalManager.getValue())) {
+            organization = new DentalManagerOrganization();
+        } else if (organizationType.equals(Organization.Type.InsuranceAdmin.getValue())) {
+            organization = new InsuranceAdminOrganization();
+        } else if (organizationType.equals(Organization.Type.InsuranceFinanceManager.getValue())) {
+            organization = new InsuranceFinanceManagerOrganization();
+        } else if (organizationType.equals(Organization.Type.InsurancePolicyManager.getValue())) {
+            organization = new InsurancePolicyManagerOrganization();
+        } else if (organizationType.equals(Organization.Type.InsuranceRepresentative.getValue())) {
+            organization = new InsuranceRepresentativeOrganization();
         }
 
         return organization;

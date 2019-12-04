@@ -117,9 +117,8 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btnManageNetwork" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="btnManageEnterprise" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnManageAdmin" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="btnManageOrganization" alignment="1" pref="186" max="32767" attributes="0"/>
+                                  <Component id="btnManageUser" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -129,44 +128,34 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                              <Component id="btnManageNetwork" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnManageOrganization" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnManageEnterprise" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnManageAdmin" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnManageUser" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="632" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JButton" name="btnManageNetwork">
+                    <Component class="javax.swing.JButton" name="btnManageOrganization">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Manage Network"/>
+                        <Property name="text" type="java.lang.String" value="Manage Organization"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageNetworkActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageOrganizationActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="btnManageEnterprise">
+                    <Component class="javax.swing.JButton" name="btnManageUser">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Manage Enterprise"/>
+                        <Property name="text" type="java.lang.String" value="Manage User"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageEnterpriseActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="btnManageAdmin">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Manage Enterprise Admin"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageAdminActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageUserActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="sysadminContainer">
+                <Container class="javax.swing.JPanel" name="enterpriseAdminContainer">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                       <JSplitPaneConstraints position="right"/>
