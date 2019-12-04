@@ -4,8 +4,9 @@
  */
 package Business.WorkQueue;
 
+import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -16,12 +17,37 @@ public abstract class WorkRequest {
     private String message;
     private UserAccount sender;
     private UserAccount receiver;
+    private Organization receiverOrganization;
     private String status;
-    private Date requestDate;
-    private Date resolveDate;
-    
-    public WorkRequest(){
-        requestDate = new Date();
+    private LocalDateTime requestTime;
+    private LocalDateTime resolveTime;
+
+    public WorkRequest() {
+        requestTime = LocalDateTime.now();
+    }
+
+    public Organization getReceiverOrganization() {
+        return receiverOrganization;
+    }
+
+    public void setReceiverOrganization(Organization organization) {
+        this.receiverOrganization = organization;
+    }
+
+    public LocalDateTime getRequestTime() {
+        return requestTime;
+    }
+
+    public void setRequestTime(LocalDateTime requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    public LocalDateTime getResolveTime() {
+        return resolveTime;
+    }
+
+    public void setResolveTime(LocalDateTime resolveTime) {
+        this.resolveTime = resolveTime;
     }
 
     public String getMessage() {
@@ -56,19 +82,4 @@ public abstract class WorkRequest {
         this.status = status;
     }
 
-    public Date getRequestDate() {
-        return requestDate;
-    }
-
-    public void setRequestDate(Date requestDate) {
-        this.requestDate = requestDate;
-    }
-
-    public Date getResolveDate() {
-        return resolveDate;
-    }
-
-    public void setResolveDate(Date resolveDate) {
-        this.resolveDate = resolveDate;
-    }
 }

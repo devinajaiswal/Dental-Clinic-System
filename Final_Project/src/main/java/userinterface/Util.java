@@ -123,7 +123,7 @@ public class Util {
     }
 
     private static boolean emailPatternCorrect(String email) {
-        Pattern p = Pattern.compile("^[a-zA-Z0-9_\\-\\.]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+$");
+        Pattern p = Pattern.compile("^(.+)@(.+)$");
         Matcher m = p.matcher(email);
         return m.matches();
     }

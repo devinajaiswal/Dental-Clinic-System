@@ -145,6 +145,8 @@ public class UserDAO {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.executeUpdate();
+            System.out.println(user.getUsername());
+            System.out.println(user.getPassword());
 
             sql = "INSERT INTO Employee values (?, ?, ?)";
             stmt = conn.prepareStatement(sql);
@@ -153,24 +155,28 @@ public class UserDAO {
             stmt.setString(2, user.getEmployee().getName());
             stmt.setString(3, user.getEmployee().getEmail());
             stmt.executeLargeUpdate();
+            System.out.println("2");
 
             sql = "INSERT INTO Employee_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, employeeId);
             stmt.setString(2, user.getUsername());
             stmt.executeLargeUpdate();
+            System.out.println("3");
 
             sql = "INSERT INTO Role_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getRole().getRoleType().getValue());
             stmt.executeLargeUpdate();
+            System.out.println("4");
 
             sql = "INSERT INTO Organization_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, organizationId);
             stmt.setString(2, user.getUsername());
             stmt.executeLargeUpdate();
+            System.out.println("5");
 
             sql = "INSERT INTO Enterprise_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
@@ -477,6 +483,29 @@ public class UserDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, name);
             stmt.setInt(2, employeeId);
+            stmt.executeUpdate();
+
+            sql = "UPDATE User SET password = ? WHERE username = ?";
+            stmt = conn.prepareCall(sql);
+            stmt.setString(1, password);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
+            conn.commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+        public static void updateNameAndPasswordAndEmail(int employeeId, String name, String email,
+            String username, String password) {
+        try {
+            Connection conn = data.Data.getConnection();
+            conn.setAutoCommit(false);
+            String sql = "Update Employee SET employee_name = ?, email = ? where employee_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            stmt.setInt(3, employeeId);
             stmt.executeUpdate();
 
             sql = "UPDATE User SET password = ? WHERE username = ?";
