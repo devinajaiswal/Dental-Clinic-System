@@ -54,7 +54,7 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(200);
 
-        buttonPersonalInfo.setText("Personal Information");
+        buttonPersonalInfo.setText("Inquiries");
         buttonPersonalInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPersonalInfoActionPerformed(evt);
@@ -131,8 +131,8 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
 
     private void buttonPersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPersonalInfoActionPerformed
         customerContainer.removeAll();
-        CustomerPersonalInfoJPanel customerPersonalInfoJPanel = new CustomerPersonalInfoJPanel(account);
-        customerContainer.add(customerPersonalInfoJPanel);
+        DentalFrontDeskInquiriesJPanel inquiryJpanel = new DentalFrontDeskInquiriesJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(inquiryJpanel);
         CardLayout layout = (CardLayout) customerContainer.getLayout();
         layout.next(customerContainer);
     }//GEN-LAST:event_buttonPersonalInfoActionPerformed

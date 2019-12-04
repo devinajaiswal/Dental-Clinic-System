@@ -2,14 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.CustomerRole;
+package userinterface.DentalFrontdeskRole;
 
-import userinterface.SystemAdminRole.*;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.InquiryWorkRequest;
 import Business.WorkQueue.Message;
+import Business.WorkQueue.WorkRequest;
 import java.awt.Container;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
@@ -21,42 +21,41 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author raunak
  */
-public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
+public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
     private UserAccount account;
+    private Organization organization;
+    private Enterprise enterprise;
 
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public CustomerSearchClinicJPanel(UserAccount account) {
+    public DentalFrontDeskInquiriesJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
         this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
 
         populateTable();
-        BasicInternalFrameUI ui = (BasicInternalFrameUI) frameInquiry.getUI();
+        BasicInternalFrameUI ui = (BasicInternalFrameUI) frameReply.getUI();
         Container north = (Container) ui.getNorthPane();
         north.remove(0);
         north.validate();
         north.repaint();
-        frameInquiry.setVisible(false);
-
-        ui = (BasicInternalFrameUI) frameAppointment.getUI();
-        north = (Container) ui.getNorthPane();
-        north.remove(0);
-        north.validate();
-        north.repaint();
-        frameAppointment.setVisible(false);
+        frameReply.setVisible(false);
     }
 
     private void populateTable() {
-        DefaultTableModel model = (DefaultTableModel) tableClinic.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableToOrg.getModel();
 
         model.setRowCount(0);
-        for (Enterprise enterprise : data.EnterpriseDAO.getAllbyType(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
+        for (WorkRequest request : data.WorkRequestDAO.searchByOrgId(organization.getOrganizationID())) { 
             Object[] row = new Object[3];
-            row[0] = enterprise;
-            row[1] = "";
-            row[2] = "";
+            row[0] = request.getSenderUsername();
+            row[1] = request.getRequestTime();
+            row[2] = request;
             model.addRow(row);
         }
     }
@@ -71,42 +70,30 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableClinic = new javax.swing.JTable();
-        buttonAppointment = new javax.swing.JButton();
+        tableToOrg = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        frameInquiry = new javax.swing.JInternalFrame();
+        frameReply = new javax.swing.JInternalFrame();
         labAvailable = new javax.swing.JLabel();
         labUnavailable = new javax.swing.JLabel();
-        buttonConfirmInquiry = new javax.swing.JButton();
-        buttonCancelInquiry = new javax.swing.JButton();
+        buttonConfirm = new javax.swing.JButton();
+        buttonCancel = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        txtInquiry = new javax.swing.JTextArea();
-        buttonInquiry = new javax.swing.JButton();
+        txtReply = new javax.swing.JTextArea();
+        buttonReply = new javax.swing.JButton();
         txtSearch = new javax.swing.JTextField();
         buttonSearch = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txtSearch1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
-        frameAppointment = new javax.swing.JInternalFrame();
-        labAvailable1 = new javax.swing.JLabel();
-        labUnavailable1 = new javax.swing.JLabel();
-        buttonConfirmAppointment = new javax.swing.JButton();
-        buttonCancelAppointment = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
-        txtName1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        comboNetwork1 = new javax.swing.JComboBox();
-        jLabel10 = new javax.swing.JLabel();
-        comboType1 = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableToYou = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
 
-        tableClinic.setModel(new javax.swing.table.DefaultTableModel(
+        tableToOrg.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Clinic Name", "Address", "Rate"
+                "From", "Sent Time", "Message"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -117,79 +104,77 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tableClinic);
-
-        buttonAppointment.setText("Make An Appointment");
-        buttonAppointment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAppointmentActionPerformed(evt);
-            }
-        });
+        jScrollPane1.setViewportView(tableToOrg);
+        if (tableToOrg.getColumnModel().getColumnCount() > 0) {
+            tableToOrg.getColumnModel().getColumn(0).setPreferredWidth(20);
+            tableToOrg.getColumnModel().getColumn(1).setPreferredWidth(20);
+            tableToOrg.getColumnModel().getColumn(2).setPreferredWidth(150);
+        }
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel4.setText("Search Dental Clinic");
+        jLabel4.setText("Patients Inquries");
 
-        frameInquiry.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        frameInquiry.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        frameInquiry.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        frameInquiry.setEnabled(false);
-        frameInquiry.setVisible(true);
+        frameReply.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        frameReply.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        frameReply.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        frameReply.setEnabled(false);
+        frameReply.setVisible(true);
 
-        buttonConfirmInquiry.setText("Confirm");
-        buttonConfirmInquiry.addActionListener(new java.awt.event.ActionListener() {
+        buttonConfirm.setText("Confirm");
+        buttonConfirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonConfirmInquiryActionPerformed(evt);
+                buttonConfirmActionPerformed(evt);
             }
         });
 
-        buttonCancelInquiry.setText("Cancel");
-        buttonCancelInquiry.addActionListener(new java.awt.event.ActionListener() {
+        buttonCancel.setText("Cancel");
+        buttonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCancelInquiryActionPerformed(evt);
+                buttonCancelActionPerformed(evt);
             }
         });
 
-        txtInquiry.setColumns(20);
-        txtInquiry.setRows(5);
-        jScrollPane2.setViewportView(txtInquiry);
+        txtReply.setColumns(20);
+        txtReply.setRows(5);
+        jScrollPane2.setViewportView(txtReply);
 
-        javax.swing.GroupLayout frameInquiryLayout = new javax.swing.GroupLayout(frameInquiry.getContentPane());
-        frameInquiry.getContentPane().setLayout(frameInquiryLayout);
-        frameInquiryLayout.setHorizontalGroup(
-            frameInquiryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frameInquiryLayout.createSequentialGroup()
+        javax.swing.GroupLayout frameReplyLayout = new javax.swing.GroupLayout(frameReply.getContentPane());
+        frameReply.getContentPane().setLayout(frameReplyLayout);
+        frameReplyLayout.setHorizontalGroup(
+            frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameReplyLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(frameInquiryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(frameInquiryLayout.createSequentialGroup()
+                .addGroup(frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(frameReplyLayout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 847, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(frameInquiryLayout.createSequentialGroup()
-                        .addComponent(buttonConfirmInquiry)
+                    .addGroup(frameReplyLayout.createSequentialGroup()
+                        .addComponent(buttonConfirm)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonCancelInquiry)))
+                        .addComponent(buttonCancel)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        frameInquiryLayout.setVerticalGroup(
-            frameInquiryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frameInquiryLayout.createSequentialGroup()
-                .addGroup(frameInquiryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        frameReplyLayout.setVerticalGroup(
+            frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameReplyLayout.createSequentialGroup()
+                .addGroup(frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(frameInquiryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonConfirmInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonCancelInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        buttonInquiry.setText("Make An Inquiry");
-        buttonInquiry.addActionListener(new java.awt.event.ActionListener() {
+        buttonReply.setText("Make An Reply");
+        buttonReply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonInquiryActionPerformed(evt);
+                buttonReplyActionPerformed(evt);
             }
         });
 
@@ -197,89 +182,34 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
         jLabel6.setText("Keyword");
 
-        jLabel7.setText("Postcode");
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        jLabel1.setText("To the Organization");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "5 Miles", "10 Miles", "20 Miles", "50Miles" }));
+        tableToYou.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jLabel8.setText("Distance");
+            },
+            new String [] {
+                "From", "Sent Time", "Message"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
 
-        frameAppointment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        frameAppointment.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        frameAppointment.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        frameAppointment.setEnabled(false);
-        frameAppointment.setVisible(true);
-
-        buttonConfirmAppointment.setText("Confirm");
-        buttonConfirmAppointment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonConfirmAppointmentActionPerformed(evt);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
+        jScrollPane3.setViewportView(tableToYou);
+        if (tableToYou.getColumnModel().getColumnCount() > 0) {
+            tableToYou.getColumnModel().getColumn(0).setPreferredWidth(20);
+            tableToYou.getColumnModel().getColumn(1).setPreferredWidth(20);
+            tableToYou.getColumnModel().getColumn(2).setPreferredWidth(150);
+        }
 
-        buttonCancelAppointment.setText("Cancel");
-        buttonCancelAppointment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCancelAppointmentActionPerformed(evt);
-            }
-        });
-
-        jLabel9.setText("Enterprise Name");
-
-        jLabel2.setText("Network");
-
-        jLabel10.setText("Enterprise Type");
-
-        javax.swing.GroupLayout frameAppointmentLayout = new javax.swing.GroupLayout(frameAppointment.getContentPane());
-        frameAppointment.getContentPane().setLayout(frameAppointmentLayout);
-        frameAppointmentLayout.setHorizontalGroup(
-            frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frameAppointmentLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(frameAppointmentLayout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtName1))
-                    .addGroup(frameAppointmentLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboNetwork1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboType1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(50, 50, 50)
-                .addComponent(labAvailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(labUnavailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(frameAppointmentLayout.createSequentialGroup()
-                .addComponent(buttonConfirmAppointment)
-                .addGap(18, 18, 18)
-                .addComponent(buttonCancelAppointment)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        frameAppointmentLayout.setVerticalGroup(
-            frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frameAppointmentLayout.createSequentialGroup()
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labAvailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labUnavailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel9)
-                        .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(comboNetwork1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(comboType1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonConfirmAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonCancelAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
+        jLabel3.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        jLabel3.setText("To You");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -288,100 +218,76 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(frameInquiry, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(frameReply, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel7))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(buttonInquiry)
-                                .addGap(18, 18, 18)
-                                .addComponent(buttonAppointment)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buttonReply)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(frameAppointment))
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addContainerGap()
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(buttonReply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(frameInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(frameAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addComponent(frameReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void resetFrameInquiry() {
-        frameInquiry.setVisible(false);
-        tableClinic.setEnabled(true);
-        txtInquiry.setText("");
+    private void resetFrameReply() {
+        frameReply.setVisible(false);
+        tableToOrg.setEnabled(true);
+        txtReply.setText("");
     }
 
-    private void resetFrameAppointment() {
-        frameAppointment.setVisible(false);
-        tableClinic.setEnabled(true);
-        //TODO
-    }
 
     private void setButtonsEnabled(boolean enable) {
-        buttonAppointment.setEnabled(enable);
-        buttonInquiry.setEnabled(enable);
+        buttonReply.setEnabled(enable);
     }
 
-    private void buttonAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAppointmentActionPerformed
-        if (tableClinic.getSelectedRow() >= 0) {
-            Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
-            frameAppointment.setVisible(true);
-            setButtonsEnabled(false);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a record first");
+    private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
+        if (!userinterface.Util.requireNotEmpty(this, txtReply)) {
             return;
         }
-    }//GEN-LAST:event_buttonAppointmentActionPerformed
-
-    private void buttonConfirmInquiryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmInquiryActionPerformed
-        if (!userinterface.Util.requireNotEmpty(this, txtInquiry)) {
-            return;
-        }
-        String messageText = txtInquiry.getText();
+        String messageText = txtReply.getText();
         InquiryWorkRequest request = new InquiryWorkRequest();
-        request.setSender(account);
         request.setRequestTime(LocalDateTime.now());
-        Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
+        Enterprise enterprise = (Enterprise) tableToOrg.getValueAt(tableToOrg.getSelectedRow(), 0);
         Organization org = data.OrganizationDAO.searchByTypeAndEnterprise(
             Organization.Type.DentalFrontDesk.getValue(), enterprise.getEnterpriseId());
         if (org == null) {
@@ -389,7 +295,6 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
             return;
         }
         
-        request.setReceiverOrganization(org);
         int requestId = data.WorkRequestDAO.create(request);
 
         Message message;
@@ -401,68 +306,45 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
         JOptionPane.showMessageDialog(this, "Messasge Sent!");
 
-        resetFrameInquiry();
+        resetFrameReply();
         setButtonsEnabled(true);
-    }//GEN-LAST:event_buttonConfirmInquiryActionPerformed
+    }//GEN-LAST:event_buttonConfirmActionPerformed
 
-    private void buttonCancelInquiryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelInquiryActionPerformed
-        frameInquiry.setVisible(false);
-        resetFrameInquiry();
+    private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
+        frameReply.setVisible(false);
+        resetFrameReply();
         setButtonsEnabled(true);
-    }//GEN-LAST:event_buttonCancelInquiryActionPerformed
+    }//GEN-LAST:event_buttonCancelActionPerformed
 
-    private void buttonInquiryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInquiryActionPerformed
-        if (tableClinic.getSelectedRow() >= 0) {
-            Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
-            frameInquiry.setVisible(true);
+    private void buttonReplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReplyActionPerformed
+        if (tableToOrg.getSelectedRow() >= 0) {
+            frameReply.setVisible(true);
             setButtonsEnabled(false);
-            tableClinic.setEnabled(false);
+            tableToOrg.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a record first");
             return;
         }
-    }//GEN-LAST:event_buttonInquiryActionPerformed
-
-    private void buttonConfirmAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmAppointmentActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonConfirmAppointmentActionPerformed
-
-    private void buttonCancelAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelAppointmentActionPerformed
-        frameAppointment.setVisible(false);
-        resetFrameAppointment();
-        setButtonsEnabled(true);
-    }//GEN-LAST:event_buttonCancelAppointmentActionPerformed
+    }//GEN-LAST:event_buttonReplyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonAppointment;
-    private javax.swing.JButton buttonCancelAppointment;
-    private javax.swing.JButton buttonCancelInquiry;
-    private javax.swing.JButton buttonConfirmAppointment;
-    private javax.swing.JButton buttonConfirmInquiry;
-    private javax.swing.JButton buttonInquiry;
+    private javax.swing.JButton buttonCancel;
+    private javax.swing.JButton buttonConfirm;
+    private javax.swing.JButton buttonReply;
     private javax.swing.JButton buttonSearch;
-    private javax.swing.JComboBox comboNetwork1;
-    private javax.swing.JComboBox comboType1;
-    private javax.swing.JInternalFrame frameAppointment;
-    private javax.swing.JInternalFrame frameInquiry;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JInternalFrame frameReply;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labAvailable;
-    private javax.swing.JLabel labAvailable1;
     private javax.swing.JLabel labUnavailable;
-    private javax.swing.JLabel labUnavailable1;
-    private javax.swing.JTable tableClinic;
-    private javax.swing.JTextArea txtInquiry;
-    private javax.swing.JTextField txtName1;
+    private javax.swing.JTable tableToOrg;
+    private javax.swing.JTable tableToYou;
+    private javax.swing.JTextArea txtReply;
     private javax.swing.JTextField txtSearch;
-    private javax.swing.JTextField txtSearch1;
     // End of variables declaration//GEN-END:variables
 }
