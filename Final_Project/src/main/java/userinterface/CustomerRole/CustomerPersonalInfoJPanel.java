@@ -5,9 +5,17 @@
  */
 package userinterface.CustomerRole;
 
+import Business.Customer.CustomerPersonalInfo;
 import Business.UserAccount.UserAccount;
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Container;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 /**
@@ -20,10 +28,43 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
      * Creates new form CustomerPersonalInfoJPanel
      */
     private UserAccount account;
+    private final String ACTION_Add = "ADD";
+    private final String ACTION_UPDATE = "UPDATE";
+    private String action;
+    private CustomerPersonalInfo personalInfo;
 
     public CustomerPersonalInfoJPanel(UserAccount account) {
         initComponents();
         this.account = account;
+
+        comboState.removeAllItems();
+        ArrayList<String> states = data.Data.getAllStates();
+        for (String state : states) {
+            comboState.addItem(state);
+        }
+
+        if (!data.UserDAO.isPersonalInfoComplete(account.getUsername())) {
+            action = ACTION_Add;
+        } else {
+            action = ACTION_UPDATE;
+            personalInfo = data.UserDAO.searchPersonalInfo(account.getUsername());
+            txtFirstName.setText(personalInfo.getFirstName());
+            txtFirstName.setEnabled(false);
+            txtLastName.setText(personalInfo.getLastName());
+            txtLastName.setEnabled(false);
+            txtSSN.setText(personalInfo.getSsn());
+            txtSSN.setEnabled(false);
+            txtStreet.setText(personalInfo.getStreet());
+            txtCity.setText(personalInfo.getCity());
+            comboState.setSelectedItem(personalInfo.getState());
+            txtPostcode.setText(personalInfo.getPostcode());
+            txtPhone.setText(personalInfo.getPhone());
+            buttonEmailCode.setVisible(false);
+            txtEmail.setText(personalInfo.getEmail());
+            txtEmail.setEnabled(false);
+            labelEmailCode.setVisible(false);
+            txtEmailCode.setVisible(false);
+        }
     }
 
     /**
@@ -35,33 +76,31 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         labelHead = new javax.swing.JLabel();
         lblRoutingNo = new javax.swing.JLabel();
         lblAccNo = new javax.swing.JLabel();
         txtStreet = new javax.swing.JTextField();
         txtPostcode = new javax.swing.JTextField();
         lblBalance4 = new javax.swing.JLabel();
-        btnCreate = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
         txtPhone = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
         lblBalance3 = new javax.swing.JLabel();
         lblRoutingNo1 = new javax.swing.JLabel();
         txtCity = new javax.swing.JTextField();
-        btnCancel = new javax.swing.JButton();
         lblRoutingNo2 = new javax.swing.JLabel();
         labelFirstName = new javax.swing.JLabel();
         txtFirstName = new javax.swing.JTextField();
         labelLastName = new javax.swing.JLabel();
         txtLastName = new javax.swing.JTextField();
         labelDriversLiscence = new javax.swing.JLabel();
-        txtDriverLiscence = new javax.swing.JTextField();
+        txtSSN = new javax.swing.JTextField();
         buttonPhoneCode = new javax.swing.JButton();
         txtPhoneCode = new javax.swing.JTextField();
         lblBalance5 = new javax.swing.JLabel();
         buttonEmailCode = new javax.swing.JButton();
-        txtPhoneCode1 = new javax.swing.JTextField();
-        lblBalance6 = new javax.swing.JLabel();
+        txtEmailCode = new javax.swing.JTextField();
+        labelEmailCode = new javax.swing.JLabel();
         comboState = new javax.swing.JComboBox<>();
 
         labelHead.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -79,10 +118,10 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
 
         lblBalance4.setText("Email *");
 
-        btnCreate.setText("Create");
-        btnCreate.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateActionPerformed(evt);
+                btnUpdateActionPerformed(evt);
             }
         });
 
@@ -108,13 +147,6 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnCancel.setText("Cancel");
-        btnCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelActionPerformed(evt);
-            }
-        });
-
         lblRoutingNo2.setText("State *");
 
         labelFirstName.setText("First Name *");
@@ -124,6 +156,11 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
         labelDriversLiscence.setText("SSN *");
 
         buttonPhoneCode.setText("Send Phone Verification Code");
+        buttonPhoneCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPhoneCodeActionPerformed(evt);
+            }
+        });
 
         txtPhoneCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,14 +171,19 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
         lblBalance5.setText("Phone Code *");
 
         buttonEmailCode.setText("Send Email Verification Code");
-
-        txtPhoneCode1.addActionListener(new java.awt.event.ActionListener() {
+        buttonEmailCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPhoneCode1ActionPerformed(evt);
+                buttonEmailCodeActionPerformed(evt);
             }
         });
 
-        lblBalance6.setText("Email Code *");
+        txtEmailCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmailCodeActionPerformed(evt);
+            }
+        });
+
+        labelEmailCode.setText("Email Code *");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -158,7 +200,7 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtLastName, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                            .addComponent(txtDriverLiscence)))
+                            .addComponent(txtSSN)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -170,16 +212,12 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
                                     .addComponent(lblBalance3)
                                     .addComponent(lblBalance4)
                                     .addComponent(lblBalance5)
-                                    .addComponent(lblBalance6))
+                                    .addComponent(labelEmailCode))
                                 .addGap(18, 18, 18))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(labelFirstName)
                                 .addGap(18, 18, 18)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCreate)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnCancel))
                             .addComponent(txtStreet)
                             .addComponent(txtCity)
                             .addComponent(txtPostcode)
@@ -190,8 +228,11 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
                             .addComponent(labelHead)
                             .addComponent(txtFirstName)
                             .addComponent(buttonEmailCode, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtPhoneCode1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(comboState, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(txtEmailCode, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(comboState, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(88, 88, 88)
+                                .addComponent(btnUpdate)))))
                 .addContainerGap(175, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -209,7 +250,7 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
                     .addComponent(labelLastName))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDriverLiscence, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                    .addComponent(txtSSN, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                     .addComponent(labelDriversLiscence))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -245,12 +286,10 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
                 .addComponent(buttonEmailCode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPhoneCode1, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(lblBalance6))
+                    .addComponent(txtEmailCode, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                    .addComponent(labelEmailCode))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancel)
-                    .addComponent(btnCreate))
+                .addComponent(btnUpdate)
                 .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -259,7 +298,7 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
     private void txtStreetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStreetActionPerformed
     }//GEN-LAST:event_txtStreetActionPerformed
 
-    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         txtStreet.setBorder(new LineBorder(new Color(128, 128, 128)));
         txtCity.setBorder(new LineBorder(new Color(128, 128, 128)));
         comboState.setBorder(new LineBorder(new Color(128, 128, 128)));
@@ -268,11 +307,105 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
         txtEmail.setBorder(new LineBorder(new Color(128, 128, 128)));
         txtFirstName.setBorder(new LineBorder(new Color(128, 128, 128)));
         txtLastName.setBorder(new LineBorder(new Color(128, 128, 128)));
-        txtDriverLiscence.setBorder(new LineBorder(new Color(128, 128, 128)));
+        txtSSN.setBorder(new LineBorder(new Color(128, 128, 128)));
+        txtPhoneCode.setBorder(new LineBorder(new Color(128, 128, 128)));
+        txtEmailCode.setBorder(new LineBorder(new Color(128, 128, 128)));
+        if (action.equals(ACTION_Add)) {
+            if (!userinterface.Util.requireSeletedItemNotNull(this, comboState)) {
+                return;
+            }
 
-    
-        JOptionPane.showMessageDialog(this, "Create customer successfully.");
-    }//GEN-LAST:event_btnCreateActionPerformed
+            if (!userinterface.Util.requireNotEmpty(this, txtFirstName, txtLastName, txtSSN, txtStreet, txtCity,
+                txtPostcode, txtPhone, txtPhoneCode, txtEmail, txtEmailCode)) {
+                return;
+            }
+
+            if (data.UserDAO.isSSNExist(txtSSN.getText())) {
+                txtSSN.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(this, "This SSN already exists in the system.");
+                return;
+            }
+
+            if (data.UserDAO.isEmailExist(txtEmail.getText())) {
+                txtEmail.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(this, "This Email already exists in the system.");
+                return;
+            }
+
+            if (!userinterface.Util.requirePostcode(this, txtPostcode)) {
+                return;
+            }
+
+            if (!userinterface.Util.requirePhoneNumber(this, txtPhone)) {
+                return;
+            }
+
+            if (!userinterface.Util.requireEmail(this, txtEmail)) {
+                return;
+            }
+
+            if (!data.UserDAO.checkPhoneCode(account.getUsername(), txtPhoneCode.getText())) {
+                txtPhoneCode.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(this, "Phone code doesn't match!");
+                return;
+            }
+
+            if (!data.UserDAO.checkEmailCode(account.getUsername(), txtEmailCode.getText())) {
+                txtEmailCode.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(this, "Email code doesn't match!");
+                return;
+            }
+
+            CustomerPersonalInfo personalInfo = new CustomerPersonalInfo();
+            personalInfo.setFirstName(txtFirstName.getText());
+            personalInfo.setLastName(txtLastName.getText());
+            personalInfo.setSsn(txtSSN.getText());
+            personalInfo.setStreet(txtStreet.getText());
+            personalInfo.setCity(txtCity.getText());
+            personalInfo.setState((String) comboState.getSelectedItem());
+            personalInfo.setPostcode(txtPostcode.getText());
+            personalInfo.setPhone(txtPhone.getText());
+            personalInfo.setEmail(txtEmail.getText());
+            data.UserDAO.createPersonalInfo(account.getUsername(), personalInfo);
+
+            JOptionPane.showMessageDialog(this, "Personal infomation updated successfully.");
+            Container container = this.getParent();
+            container.removeAll();
+            container.add(new JPanel());
+            CardLayout layout = (CardLayout) container.getLayout();
+            layout.next(container);
+        } else if (action.equals(ACTION_UPDATE)) {
+            if (!userinterface.Util.requireSeletedItemNotNull(this, comboState)) {
+                return;
+            }
+
+            if (!userinterface.Util.requireNotEmpty(this, txtStreet, txtCity, txtPostcode, txtPhone)) {
+                return;
+            }
+            if (!personalInfo.getPhone().equals(txtPhone.getText())) {
+                if (!userinterface.Util.requireNotEmpty(this, txtPhoneCode)) {
+                    return;
+                }
+                if (!data.UserDAO.checkPhoneCode(account.getUsername(), txtPhoneCode.getText())) {
+                    txtPhoneCode.setBorder(new LineBorder(Color.RED));
+                    JOptionPane.showMessageDialog(this, "Phone code doesn't match!");
+                    return;
+                }
+            }
+            personalInfo.setStreet(txtStreet.getText());
+            personalInfo.setCity(txtCity.getText());
+            personalInfo.setState((String) comboState.getSelectedItem());
+            personalInfo.setPostcode(txtPostcode.getText());
+            personalInfo.setPhone(txtPhone.getText());
+            data.UserDAO.updatePersonalInfo(account.getUsername(), personalInfo);
+            JOptionPane.showMessageDialog(this, "Personal infomation updated successfully.");
+            Container container = this.getParent();
+            container.removeAll();
+            container.add(new JPanel());
+            CardLayout layout = (CardLayout) container.getLayout();
+            layout.next(container);
+        }
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void txtCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCityActionPerformed
     }//GEN-LAST:event_txtCityActionPerformed
@@ -283,26 +416,48 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
     private void txtPhoneCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneCodeActionPerformed
     }//GEN-LAST:event_txtPhoneCodeActionPerformed
 
-    private void txtPhoneCode1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneCode1ActionPerformed
-    }//GEN-LAST:event_txtPhoneCode1ActionPerformed
-
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-    }//GEN-LAST:event_btnCancelActionPerformed
+    private void txtEmailCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailCodeActionPerformed
+    }//GEN-LAST:event_txtEmailCodeActionPerformed
 
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtEmailActionPerformed
 
-    
+    private void buttonPhoneCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPhoneCodeActionPerformed
+        if (!userinterface.Util.requirePhoneNumber(this, txtPhone)) {
+            JOptionPane.showMessageDialog(this, "Phone pattern doesn't match!");
+        }
+        String code = userinterface.Util.getRandomString(6);
+        userinterface.Util.sendSMS(txtPhone.getText(), code);
+        data.UserDAO.updatePhoneCode(account.getUsername(), code);
+        buttonPhoneCode.setEnabled(false);
+        JOptionPane.showMessageDialog(this, "Code sent, please check your phone.");
+    }//GEN-LAST:event_buttonPhoneCodeActionPerformed
+
+    private void buttonEmailCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEmailCodeActionPerformed
+        if (!userinterface.Util.requireEmail(this, txtEmail)) {
+            JOptionPane.showMessageDialog(this, "Email pattern doesn't match!");
+            return;
+        }
+        String code = userinterface.Util.getRandomString(6);
+        try {
+            userinterface.Util.sendEmail(txtEmail.getText(), "Verification Code", code);
+        } catch (MessagingException ex) {
+            Logger.getLogger(CustomerPersonalInfoJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        data.UserDAO.updateEmailCode(account.getUsername(), code);
+        buttonEmailCode.setEnabled(false);
+        JOptionPane.showMessageDialog(this, "Code sent, please check your email.");
+    }//GEN-LAST:event_buttonEmailCodeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnCreate;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JButton buttonEmailCode;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton buttonPhoneCode;
     private javax.swing.JComboBox<String> comboState;
     private javax.swing.JLabel labelDriversLiscence;
+    private javax.swing.JLabel labelEmailCode;
     private javax.swing.JLabel labelFirstName;
     private javax.swing.JLabel labelHead;
     private javax.swing.JLabel labelLastName;
@@ -310,19 +465,18 @@ public class CustomerPersonalInfoJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblBalance3;
     private javax.swing.JLabel lblBalance4;
     private javax.swing.JLabel lblBalance5;
-    private javax.swing.JLabel lblBalance6;
     private javax.swing.JLabel lblRoutingNo;
     private javax.swing.JLabel lblRoutingNo1;
     private javax.swing.JLabel lblRoutingNo2;
     private javax.swing.JTextField txtCity;
-    private javax.swing.JTextField txtDriverLiscence;
     private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtEmailCode;
     private javax.swing.JTextField txtFirstName;
     private javax.swing.JTextField txtLastName;
     private javax.swing.JTextField txtPhone;
     private javax.swing.JTextField txtPhoneCode;
-    private javax.swing.JTextField txtPhoneCode1;
     private javax.swing.JTextField txtPostcode;
+    private javax.swing.JTextField txtSSN;
     private javax.swing.JTextField txtStreet;
     // End of variables declaration//GEN-END:variables
 }

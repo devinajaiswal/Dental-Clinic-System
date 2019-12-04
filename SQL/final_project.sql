@@ -1,5 +1,3 @@
-
-drop table Final_Project.`User`;
 CREATE TABLE Final_Project.`User` (
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
@@ -45,7 +43,6 @@ CREATE TABLE Final_Project.`Roles` (
 );
 insert into Final_Project.roles values ('sysadmin', 'SysAdmin');
 
-drop table Final_Project.`Employee`;
 CREATE TABLE Final_Project.`Employee` (
   `employee_id` int NOT NULL,
   `employee_name` varchar(50) NOT NULL,
@@ -61,25 +58,117 @@ CREATE TABLE Final_Project.`Employee_User` (
   foreign key (`username`) references `User` (`username`)
 );
 
-CREATE TABLE Final_Project.`User_VerficationCodes` (
-  `username` varchar(50) NOT NULL,
-  `phone_code` varchar(50) NOT NULL,
-  `email_code` varchar(50) NOT NULL
+
+-- added
+create table Final_Project.EnterpriseOrganization (
+	organization_id int not null,
+    organization_type varchar(50) not null,
+    organization_name varchar(50) not null,
+    enterprise_id int not null,
+    PRIMARY KEY (organization_id),
+    constraint foreign key (enterprise_id) references enterprise (enterprise_id),
+    unique (enterprise_id, organization_name)
 );
 
-CREATE TABLE Final_Project.`User_PersonalInfo` (
-  `username` varchar(50) NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
-  `ssn` varchar(50) NOT NULL,
-  `street` varchar(50) NOT NULL,
-  `city` varchar(50) NOT NULL,
-  `state` varchar(50) NOT NULL,
-  `postcode` varchar(50) NOT NULL,
-  `phone` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  PRIMARY KEY (`username`),
-  foreign key (`state`) references `States`(`state_name`),
-  foreign key (`username`) references `User` (`username`)
+
+
+create table Final_Project.OrganizationType (
+	enterprise_type varchar(50) not null,
+    organization_type varchar(50) not null,
+    primary key (enterprise_type, organization_type)
 );
+
+create table Final_Project.RoleType (
+	role_type varchar(50) not null,
+    primary key (role_type)
+);
+insert into  Final_Project.RoleType values ('SysAdmin'), ('Customer'), ('EnterpriseAdmin'),
+('DentalFrontdesk'), ('DentalDentist'), ('DentalManager'), ('InsuranceRepresentative'), 
+('InsurancePolicyManager'), ('InsuranceFinanceManager');
+
+alter table Final_Project.Roles 
+add constraint foreign key (role_name) references Final_Project.RoleType (role_type);
+
+create table Final_Project.EnterpriseUser (
+    enterprise_id int not null,
+    username varchar(50) not null,
+    PRIMARY KEY (enterprise_id, username),
+    constraint foreign key (enterprise_id) references enterprise (enterprise_id),
+    constraint foreign key (username) references User (username)
+);
+
+rename table Roles to Role_User;
+rename table EnterpriseOrganization to Organization;
+rename table EnterpriseUser to Enterprise_User;
+rename table NetworkEnterprise to Network_Enterprise;
+ALTER TABLE Employee MODIFY email VARCHAR(50);
+
+CREATE TABLE Final_Project.`Organization_User` (
+  `organization_id` int NOT NULL,
+  `username` varchar(50) NOT NULL,
+  PRIMARY KEY (`username`,  `organization_id`),
+  foreign key (username) references User (username),
+  foreign key (organization_id) references Organization (organization_id)
+);
+
+CREATE TABLE Final_Project.States (
+  `state_name` varchar(50) NOT NULL UNIQUE
+);
+insert into Final_Project.States values ('Alabama'),
+('Alaska'),
+('Arizona'),
+('Arkansas'),
+('California'),
+('Colorado'),
+('Connecticut'),
+('Delaware'),
+('District of Columbia'),
+('Florida'),
+('Georgia'),
+('Hawaii'),
+('Idaho'),
+('Illinois'),
+('Indiana'),
+('Iowa'),
+('Kansas'),
+('Kentucky'),
+('Louisiana'),
+('Maine'),
+('Maryland'),
+('Massachusetts'),
+('Michigan'),
+('Minnesota'),
+('Mississippi'),
+('Missouri'),
+('Montana'),
+('Nebraska'),
+('Nevada'),
+('New Hampshire'),
+('New Jersey'),
+('New Mexico'),
+('New York'),
+('North Carolina'),
+('North Dakota'),
+('Ohio'),
+('Oklahoma'),
+('Oregon'),
+('Pennsylvania'),
+('Puerto Rico'),
+('Rhode Island'),
+('South Carolina'),
+('South Dakota'),
+('Tennessee'),
+('Texas'),
+('Utah'),
+('Vermont'),
+('Virginia'),
+('Washington'),
+('West Virginia'),
+('Wisconsin'),
+('Wyoming');
+
+alter table Final_Project.Network 
+add constraint foreign key (network_name) references Final_Project.States (state_name);
+alter table Final_Project.Network 
+MODIFY network_name VARCHAR(50) NOT NULL unique;
 

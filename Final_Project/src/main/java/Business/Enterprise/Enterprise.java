@@ -8,6 +8,7 @@ package Business.Enterprise;
 import Business.Network.Network;
 import Business.Organization.Organization;
 import Business.Organization.OrganizationDirectory;
+import java.util.ArrayList;
 
 /**
  *
@@ -28,6 +29,8 @@ public abstract class Enterprise {
     public Network getNetwork() {
         return network;
     }
+
+    public abstract ArrayList<Organization> getSupportedOrganizations();
 
     public void setNetwork(Network network) {
         this.network = network;

@@ -162,7 +162,7 @@
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="buttonConfirm" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="buttonCancel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="comboNetworkName" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="comboNetworkName" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>

@@ -6,7 +6,7 @@
 package Business.Role;
 
 import Business.Enterprise.Enterprise;
-import Business.Organization.CustomerRepresentativeOrganization;
+import Business.Organization.InsuranceRepresentativeOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
@@ -19,7 +19,7 @@ import userinterface.InsuranceRepresentativeRole.InsuranceRepresentativeWorkArea
 public class InsuranceRepresentativeRole extends Role{
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        return new InsuranceRepresentativeWorkAreaJPanel(userProcessContainer, account, (CustomerRepresentativeOrganization)organization, enterprise);
+        return new InsuranceRepresentativeWorkAreaJPanel(userProcessContainer, account, (InsuranceRepresentativeOrganization)organization, enterprise);
     }
 
     @Override

@@ -6,7 +6,7 @@
 package Business.Role;
 
 import Business.Enterprise.Enterprise;
-import Business.Organization.PolicyManagerOrganization;
+import Business.Organization.InsurancePolicyManagerOrganization;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import javax.swing.JPanel;
@@ -19,7 +19,7 @@ import userinterface.InsurancePolicyManagerRole.InsurancePolicyManagerWorkAreaJP
 public class InsurancePolicyManagerRole extends Role {
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
-        return new InsurancePolicyManagerWorkAreaJPanel(userProcessContainer, account, (PolicyManagerOrganization)organization, enterprise);
+        return new InsurancePolicyManagerWorkAreaJPanel(userProcessContainer, account, (InsurancePolicyManagerOrganization)organization, enterprise);
     }
 
     @Override

@@ -5,7 +5,6 @@
  */
 package userinterface.EnterpriseAdminRole;
 
-import userinterface.SystemAdminRole.*;
 import Business.Enterprise.Enterprise;
 import Business.Network.Network;
 import Business.Organization.Organization;
@@ -32,6 +31,7 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
 
     public EnterpriseAdminWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
         this.account = account;
         this.organization = organization;
         this.enterprise = enterprise;
@@ -40,10 +40,14 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
 
     public void populateTree() {
         DefaultTreeModel model = (DefaultTreeModel) jTree.getModel();
-        ArrayList<Network> networkList = data.NetworkDAO.getAll();
+        ArrayList<Network> networkList = new ArrayList<>();
+        networkList.add(enterprise.getNetwork());
 
-        ArrayList<Enterprise> enterpriseList;
+        ArrayList<Enterprise> enterpriseList = new ArrayList<>();
+        enterpriseList.add(enterprise);
+
         ArrayList<Organization> organizationList;
+        ArrayList<String> userList;
 
         Network network;
         Enterprise enterprise;
@@ -57,23 +61,30 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
         DefaultMutableTreeNode networkNode;
         DefaultMutableTreeNode enterpriseNode;
         DefaultMutableTreeNode organizationNode;
+        DefaultMutableTreeNode userNode;
 
         for (int i = 0; i < networkList.size(); i++) {
             network = networkList.get(i);
             networkNode = new DefaultMutableTreeNode(network.getName());
             networks.insert(networkNode, i);
 
-            enterpriseList = data.EnterpriseDAO.getAllbyNetworkName(network.getName());
             for (int j = 0; j < enterpriseList.size(); j++) {
                 enterprise = enterpriseList.get(j);
                 enterpriseNode = new DefaultMutableTreeNode(enterprise.getEnterpriseName());
                 networkNode.insert(enterpriseNode, j);
 
-                organizationList = enterprise.getOrganizationDirectory().getOrganizationList();
+                organizationList = data.OrganizationDAO.searchByEnterpriseId(enterprise.getEnterpriseId());
                 for (int k = 0; k < organizationList.size(); k++) {
-                    organization = organizationList.get(i);
-//                    organizationNode = new DefaultMutableTreeNode(organization.getName());
-//                    enterpriseNode.insert(organizationNode, k);
+                    organization = organizationList.get(k);
+                    organizationNode = new DefaultMutableTreeNode(organization.getName());
+                    enterpriseNode.insert(organizationNode, k);
+
+                    userList = data.UserDAO.searchUsernamesByOrganizationId(organization.getOrganizationID());
+                    for (int l = 0; l < userList.size(); l++) {
+                        String username = userList.get(l);
+                        userNode = new DefaultMutableTreeNode(username);
+                        organizationNode.insert(userNode, l);
+                    }
                 }
             }
         }
@@ -96,10 +107,9 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
-        btnManageNetwork = new javax.swing.JButton();
-        btnManageEnterprise = new javax.swing.JButton();
-        btnManageAdmin = new javax.swing.JButton();
-        sysadminContainer = new javax.swing.JPanel();
+        btnManageOrganization = new javax.swing.JButton();
+        btnManageUser = new javax.swing.JButton();
+        enterpriseAdminContainer = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -131,24 +141,17 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(200);
 
-        btnManageNetwork.setText("Manage Network");
-        btnManageNetwork.addActionListener(new java.awt.event.ActionListener() {
+        btnManageOrganization.setText("Manage Organization");
+        btnManageOrganization.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageNetworkActionPerformed(evt);
+                btnManageOrganizationActionPerformed(evt);
             }
         });
 
-        btnManageEnterprise.setText("Manage Enterprise");
-        btnManageEnterprise.addActionListener(new java.awt.event.ActionListener() {
+        btnManageUser.setText("Manage User");
+        btnManageUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageEnterpriseActionPerformed(evt);
-            }
-        });
-
-        btnManageAdmin.setText("Manage Enterprise Admin");
-        btnManageAdmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageAdminActionPerformed(evt);
+                btnManageUserActionPerformed(evt);
             }
         });
 
@@ -159,27 +162,24 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnManageNetwork, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnManageEnterprise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnManageAdmin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnManageOrganization, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                    .addComponent(btnManageUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(btnManageNetwork)
+                .addComponent(btnManageOrganization)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnManageEnterprise)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnManageAdmin)
-                .addContainerGap())
+                .addComponent(btnManageUser)
+                .addGap(632, 632, 632))
         );
 
         jSplitPane1.setLeftComponent(jPanel3);
 
-        sysadminContainer.setLayout(new java.awt.CardLayout());
-        jSplitPane1.setRightComponent(sysadminContainer);
+        enterpriseAdminContainer.setLayout(new java.awt.CardLayout());
+        jSplitPane1.setRightComponent(enterpriseAdminContainer);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -202,24 +202,29 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
         add(jSplitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnManageNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageNetworkActionPerformed
-    }//GEN-LAST:event_btnManageNetworkActionPerformed
+    private void btnManageOrganizationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageOrganizationActionPerformed
+        enterpriseAdminContainer.removeAll();
+        enterpriseAdminContainer.add(new ManageOrganizationJPanel(this, account, organization, enterprise));
+        CardLayout layout = (CardLayout) enterpriseAdminContainer.getLayout();
+        layout.next(enterpriseAdminContainer);
+    }//GEN-LAST:event_btnManageOrganizationActionPerformed
 
-    private void btnManageEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageEnterpriseActionPerformed
-    }//GEN-LAST:event_btnManageEnterpriseActionPerformed
-
-    private void btnManageAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageAdminActionPerformed
-    }//GEN-LAST:event_btnManageAdminActionPerformed
+    private void btnManageUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageUserActionPerformed
+        enterpriseAdminContainer.removeAll();
+        enterpriseAdminContainer.add(new ManageUserAccountJPanel(this, account, organization, enterprise));
+        CardLayout layout = (CardLayout) enterpriseAdminContainer.getLayout();
+        layout.next(enterpriseAdminContainer);
+    }//GEN-LAST:event_btnManageUserActionPerformed
 
     private void jTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTreeValueChanged
-      
+
     }//GEN-LAST:event_jTreeValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnManageAdmin;
-    private javax.swing.JButton btnManageEnterprise;
-    private javax.swing.JButton btnManageNetwork;
+    private javax.swing.JButton btnManageOrganization;
+    private javax.swing.JButton btnManageUser;
+    private javax.swing.JPanel enterpriseAdminContainer;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -227,6 +232,5 @@ public class EnterpriseAdminWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTree jTree;
-    private javax.swing.JPanel sysadminContainer;
     // End of variables declaration//GEN-END:variables
 }

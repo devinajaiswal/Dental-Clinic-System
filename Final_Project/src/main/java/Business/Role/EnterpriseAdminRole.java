@@ -7,7 +7,6 @@ package Business.Role;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
-import userinterface.EnterpriseAdminRole.AdminWorkAreaJPanel;
 import javax.swing.JPanel;
 import userinterface.EnterpriseAdminRole.EnterpriseAdminWorkAreaJPanel;
 

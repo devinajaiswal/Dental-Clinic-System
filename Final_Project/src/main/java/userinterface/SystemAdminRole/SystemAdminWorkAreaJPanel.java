@@ -23,9 +23,8 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     /**
      * Creates new form SystemAdminWorkAreaJPanel
      */
-
     JPanel userProcessContainer;
-    
+
     public SystemAdminWorkAreaJPanel(JPanel userProcessContainer) {
         initComponents();
         populateTree();
@@ -37,6 +36,7 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
 
         ArrayList<Enterprise> enterpriseList;
         ArrayList<Organization> organizationList;
+        ArrayList<String> userList;
 
         Network network;
         Enterprise enterprise;
@@ -50,6 +50,7 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
         DefaultMutableTreeNode networkNode;
         DefaultMutableTreeNode enterpriseNode;
         DefaultMutableTreeNode organizationNode;
+        DefaultMutableTreeNode userNode;
 
         for (int i = 0; i < networkList.size(); i++) {
             network = networkList.get(i);
@@ -62,11 +63,18 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
                 enterpriseNode = new DefaultMutableTreeNode(enterprise.getEnterpriseName());
                 networkNode.insert(enterpriseNode, j);
 
-                organizationList = enterprise.getOrganizationDirectory().getOrganizationList();
+                organizationList = data.OrganizationDAO.searchByEnterpriseId(enterprise.getEnterpriseId());
                 for (int k = 0; k < organizationList.size(); k++) {
-                    organization = organizationList.get(i);
-//                    organizationNode = new DefaultMutableTreeNode(organization.getName());
-//                    enterpriseNode.insert(organizationNode, k);
+                    organization = organizationList.get(k);
+                    organizationNode = new DefaultMutableTreeNode(organization.getName());
+                    enterpriseNode.insert(organizationNode, k);
+
+                    userList = data.UserDAO.searchUsernamesByOrganizationId(organization.getOrganizationID());
+                    for (int l = 0; l < userList.size(); l++) {
+                        String username = userList.get(l);
+                        userNode = new DefaultMutableTreeNode(username);
+                        organizationNode.insert(userNode, l);
+                    }
                 }
             }
         }
@@ -89,8 +97,6 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        lblSelectedNode = new javax.swing.JLabel();
         btnManageNetwork = new javax.swing.JButton();
         btnManageEnterprise = new javax.swing.JButton();
         btnManageAdmin = new javax.swing.JButton();
@@ -126,10 +132,6 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(200);
 
-        jLabel1.setText("Selected Node:");
-
-        lblSelectedNode.setText("<View_selected_node>");
-
         btnManageNetwork.setText("Manage Network");
         btnManageNetwork.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -159,11 +161,6 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnManageNetwork, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(lblSelectedNode))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(btnManageEnterprise, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnManageAdmin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -171,11 +168,7 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblSelectedNode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(20, 20, 20)
                 .addComponent(btnManageNetwork)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnManageEnterprise)
@@ -237,7 +230,6 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
 
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
         if (selectedNode != null) {
-            lblSelectedNode.setText(selectedNode.toString());
         }
     }//GEN-LAST:event_jTreeValueChanged
 
@@ -246,7 +238,6 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnManageAdmin;
     private javax.swing.JButton btnManageEnterprise;
     private javax.swing.JButton btnManageNetwork;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -254,7 +245,6 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTree jTree;
-    private javax.swing.JLabel lblSelectedNode;
     private javax.swing.JPanel sysadminContainer;
     // End of variables declaration//GEN-END:variables
 }
