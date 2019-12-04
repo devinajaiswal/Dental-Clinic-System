@@ -14,10 +14,11 @@ import java.time.LocalDateTime;
  */
 public abstract class WorkRequest {
 
+    private int requestId;
     private String message;
-    private UserAccount sender;
-    private UserAccount receiver;
-    private Organization receiverOrganization;
+    private String senderUsername;
+    private String receiverUsername;
+    private int receiverOrganizationId;
     private String status;
     private LocalDateTime requestTime;
     private LocalDateTime assignTime;
@@ -44,6 +45,38 @@ public abstract class WorkRequest {
             this.value = value;
         }
 
+    }
+
+    public String getSenderUsername() {
+        return senderUsername;
+    }
+
+    public void setSenderUsername(String senderUsername) {
+        this.senderUsername = senderUsername;
+    }
+
+    public String getReceiverUsername() {
+        return receiverUsername;
+    }
+
+    public void setReceiverUsername(String receiverUsername) {
+        this.receiverUsername = receiverUsername;
+    }
+
+    public int getReceiverOrganizationId() {
+        return receiverOrganizationId;
+    }
+
+    public void setReceiverOrganizationId(int receiverOrganizationId) {
+        this.receiverOrganizationId = receiverOrganizationId;
+    }
+
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
     }
 
     public LocalDateTime getAssignTime() {
@@ -74,13 +107,7 @@ public abstract class WorkRequest {
         requestTime = LocalDateTime.now();
     }
 
-    public Organization getReceiverOrganization() {
-        return receiverOrganization;
-    }
 
-    public void setReceiverOrganization(Organization organization) {
-        this.receiverOrganization = organization;
-    }
 
     public LocalDateTime getRequestTime() {
         return requestTime;
@@ -98,21 +125,7 @@ public abstract class WorkRequest {
         this.message = message;
     }
 
-    public UserAccount getSender() {
-        return sender;
-    }
 
-    public void setSender(UserAccount sender) {
-        this.sender = sender;
-    }
-
-    public UserAccount getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(UserAccount receiver) {
-        this.receiver = receiver;
-    }
 
     public String getStatus() {
         return status;
@@ -120,6 +133,11 @@ public abstract class WorkRequest {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return this.message;
     }
 
 }

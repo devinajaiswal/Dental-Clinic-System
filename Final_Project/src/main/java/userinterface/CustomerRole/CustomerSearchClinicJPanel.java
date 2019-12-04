@@ -4,7 +4,6 @@
  */
 package userinterface.CustomerRole;
 
-import userinterface.SystemAdminRole.*;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
@@ -13,7 +12,6 @@ import Business.WorkQueue.Message;
 import java.awt.Container;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -379,7 +377,8 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         }
         String messageText = txtInquiry.getText();
         InquiryWorkRequest request = new InquiryWorkRequest();
-        request.setSender(account);
+        request.setSenderUsername(account.getUsername());
+        request.setMessage(messageText);
         request.setRequestTime(LocalDateTime.now());
         Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
         Organization org = data.OrganizationDAO.searchByTypeAndEnterprise(
@@ -389,7 +388,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
             return;
         }
         
-        request.setReceiverOrganization(org);
+        request.setReceiverOrganizationId(org.getOrganizationID());
         int requestId = data.WorkRequestDAO.create(request);
 
         Message message;
