@@ -20,7 +20,55 @@ public abstract class WorkRequest {
     private Organization receiverOrganization;
     private String status;
     private LocalDateTime requestTime;
-    private LocalDateTime resolveTime;
+    private LocalDateTime assignTime;
+    private LocalDateTime finishTime;
+    private LocalDateTime confirmTime;
+
+    public enum Status {
+        SENT("SENT"),
+        ASSIGNED("ASSIGNED"),
+        FINISHED("FINISHED"),
+        CONFIRMED("CONFIRMED");
+
+        private Status(String value) {
+            this.value = value;
+        }
+
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+    }
+
+    public LocalDateTime getAssignTime() {
+        return assignTime;
+    }
+
+    public void setAssignTime(LocalDateTime assignTime) {
+        this.assignTime = assignTime;
+    }
+
+    public LocalDateTime getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(LocalDateTime finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    public LocalDateTime getConfirmTime() {
+        return confirmTime;
+    }
+
+    public void setConfirmTime(LocalDateTime confirmTime) {
+        this.confirmTime = confirmTime;
+    }
 
     public WorkRequest() {
         requestTime = LocalDateTime.now();
@@ -40,14 +88,6 @@ public abstract class WorkRequest {
 
     public void setRequestTime(LocalDateTime requestTime) {
         this.requestTime = requestTime;
-    }
-
-    public LocalDateTime getResolveTime() {
-        return resolveTime;
-    }
-
-    public void setResolveTime(LocalDateTime resolveTime) {
-        this.resolveTime = resolveTime;
     }
 
     public String getMessage() {
