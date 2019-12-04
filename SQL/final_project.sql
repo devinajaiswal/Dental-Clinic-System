@@ -172,3 +172,61 @@ add constraint foreign key (network_name) references Final_Project.States (state
 alter table Final_Project.Network 
 MODIFY network_name VARCHAR(50) NOT NULL unique;
 
+
+CREATE TABLE Final_Project.`User_PersonalInfo` (
+  `username` varchar(50) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `ssn`varchar(50) NOT NULL,
+  `street` varchar(50) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(50) NOT NULL,
+  `postcode` varchar(50) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  PRIMARY KEY (`username`),
+  foreign key (username) references User (username),
+  foreign key (state) references States (state_name)
+);
+
+CREATE TABLE Final_Project.`User_Verficationcodes` (
+  `username` varchar(50) NOT NULL,
+  `phone_code` varchar(50) NULL,
+  `email_code` varchar(50) NULL,
+  PRIMARY KEY (`username`),
+  foreign key (username) references User (username)
+);
+
+CREATE TABLE Final_Project.`TreatmentType` (
+  `treatment_type` varchar(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`treatment_type`)
+);
+insert into Final_Project.TreatmentType values ('Filling'),
+('Root Canal'), ('SRP');
+
+CREATE TABLE Final_Project.`TreatmentPrice` (
+  `enterprise_id` int NOT NULL,
+  `treatment_type` varchar(50) NOT NULL,
+  `price` double,
+  PRIMARY KEY (`enterprise_id`,`treatment_type`),
+  foreign key (enterprise_id) references Enterprise (enterprise_id),
+  foreign key (treatment_type) references TreatmentType (treatment_type)
+);
+
+CREATE TABLE Final_Project.`InsurancePlan` (
+    `plan_id` int NOT NULL,
+    `plan_name` varchar(50) NOT NULL,
+    `price` double NOT NULL,
+    `enterprise_id` int NOT NULL,
+	PRIMARY KEY (`plan_id`),
+	foreign key (enterprise_id) references Enterprise (enterprise_id)
+);
+
+CREATE TABLE Final_Project.`PlanCoverage` (
+	`plan_id` int NOT NULL,
+    `treatment_type` varchar(50) NOT NULL,
+    `coverage` double NOT NULL,
+    PRIMARY KEY (`plan_id`, `treatment_type`),
+    foreign key (plan_id) references InsurancePlan (plan_id),
+	foreign key (treatment_type) references TreatmentType (treatment_type)
+);

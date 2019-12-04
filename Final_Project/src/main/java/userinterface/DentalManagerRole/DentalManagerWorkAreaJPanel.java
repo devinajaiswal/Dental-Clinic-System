@@ -55,14 +55,14 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(200);
 
-        buttonPersonalInfo.setText("Personal Information");
+        buttonPersonalInfo.setText("Clinic Information");
         buttonPersonalInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPersonalInfoActionPerformed(evt);
             }
         });
 
-        btnManageEnterprise.setText("Medical Information");
+        btnManageEnterprise.setText("Price Information");
         btnManageEnterprise.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManageEnterpriseActionPerformed(evt);
