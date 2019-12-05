@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.DentalFrontdeskRole;
+package userinterface.CustomerRole;
 
+import userinterface.DentalFrontdeskRole.*;
+import userinterface.ConversationJPanel;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
@@ -12,16 +14,19 @@ import Business.WorkQueue.Message;
 import Business.WorkQueue.WorkRequest;
 import java.awt.Container;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import userinterface.DetailJFrame;
 
 /**
  *
  * @author raunak
  */
-public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
+public class CustomerInquiriesJPanel extends javax.swing.JPanel {
 
     private JPanel userProcessContainer;
     private UserAccount account;
@@ -31,14 +36,15 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public DentalFrontDeskInquiriesJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
+    public CustomerInquiriesJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.account = account;
         this.organization = organization;
         this.enterprise = enterprise;
 
-        populateTable();
+        populateInquiryTable(data.WorkRequestDAO.searchByToUser(account.getUsername()));
+        populateHistoryTable(data.WorkRequestDAO.searchByFromUser(account.getUsername()));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) frameReply.getUI();
         Container north = (Container) ui.getNorthPane();
         north.remove(0);
@@ -47,14 +53,27 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
         frameReply.setVisible(false);
     }
 
-    private void populateTable() {
-        DefaultTableModel model = (DefaultTableModel) tableToOrg.getModel();
-
+    private void populateInquiryTable(ArrayList<InquiryWorkRequest> list) {
+        DefaultTableModel model = (DefaultTableModel) tableToYou.getModel();
         model.setRowCount(0);
-        for (WorkRequest request : data.WorkRequestDAO.searchByOrgId(organization.getOrganizationID())) { 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+        for (WorkRequest request : list) {
             Object[] row = new Object[3];
             row[0] = request.getSenderUsername();
-            row[1] = request.getRequestTime();
+            row[1] = formatter.format(request.getRequestTime());
+            row[2] = request;
+            model.addRow(row);
+        }
+    }
+
+    private void populateHistoryTable(ArrayList<InquiryWorkRequest> list) {
+        DefaultTableModel model = (DefaultTableModel) tableHistory.getModel();
+        model.setRowCount(0);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+        for (WorkRequest request : list) {
+            Object[] row = new Object[3];
+            row[0] = request.getReceiverUsername();
+            row[1] = formatter.format(request.getRequestTime());
             row[2] = request;
             model.addRow(row);
         }
@@ -69,8 +88,6 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tableToOrg = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         frameReply = new javax.swing.JInternalFrame();
         labAvailable = new javax.swing.JLabel();
@@ -83,36 +100,17 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
         txtSearch = new javax.swing.JTextField();
         buttonSearch = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tableToYou = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-
-        tableToOrg.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "From", "Sent Time", "Message"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tableToOrg);
-        if (tableToOrg.getColumnModel().getColumnCount() > 0) {
-            tableToOrg.getColumnModel().getColumn(0).setPreferredWidth(20);
-            tableToOrg.getColumnModel().getColumn(1).setPreferredWidth(20);
-            tableToOrg.getColumnModel().getColumn(2).setPreferredWidth(150);
-        }
+        buttonHistory = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tableHistory = new javax.swing.JTable();
+        buttonHistoryHistory = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel4.setText("Patients Inquries");
+        jLabel4.setText("Inquries");
 
         frameReply.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         frameReply.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -163,7 +161,7 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
                 .addGroup(frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -179,11 +177,13 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
         });
 
         buttonSearch.setText("Search");
+        buttonSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSearchActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Keyword");
-
-        jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        jLabel1.setText("To the Organization");
 
         tableToYou.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -208,8 +208,48 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
             tableToYou.getColumnModel().getColumn(2).setPreferredWidth(150);
         }
 
-        jLabel3.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        jLabel3.setText("To You");
+        buttonHistory.setText("View Conversation History");
+        buttonHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonHistoryActionPerformed(evt);
+            }
+        });
+
+        tableHistory.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "From", "Sent Time", "Message"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(tableHistory);
+        if (tableHistory.getColumnModel().getColumnCount() > 0) {
+            tableHistory.getColumnModel().getColumn(0).setPreferredWidth(20);
+            tableHistory.getColumnModel().getColumn(1).setPreferredWidth(20);
+            tableHistory.getColumnModel().getColumn(2).setPreferredWidth(150);
+        }
+
+        buttonHistoryHistory.setText("View Conversation History");
+        buttonHistoryHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonHistoryHistoryActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        jLabel1.setText("Inquries NOT Replied");
+
+        jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        jLabel2.setText("History Inquries");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -219,27 +259,32 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(frameReply, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(buttonReply)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane3)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonReply)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonHistory)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonHistoryHistory)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -248,36 +293,40 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonReply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(frameReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonHistoryHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(buttonReply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(frameReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void resetFrameReply() {
         frameReply.setVisible(false);
-        tableToOrg.setEnabled(true);
+        tableToYou.setEnabled(true);
         txtReply.setText("");
     }
 
-
     private void setButtonsEnabled(boolean enable) {
         buttonReply.setEnabled(enable);
+        buttonHistory.setEnabled(enable);
     }
 
     private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
@@ -285,29 +334,27 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
             return;
         }
         String messageText = txtReply.getText();
-        InquiryWorkRequest request = new InquiryWorkRequest();
+        InquiryWorkRequest request = (InquiryWorkRequest) tableToYou.getValueAt(tableToYou.getSelectedRow(), 2);
+        request.setMessage(messageText);
         request.setRequestTime(LocalDateTime.now());
-        Enterprise enterprise = (Enterprise) tableToOrg.getValueAt(tableToOrg.getSelectedRow(), 0);
-        Organization org = data.OrganizationDAO.searchByTypeAndEnterprise(
-            Organization.Type.DentalFrontDesk.getValue(), enterprise.getEnterpriseId());
-        if (org == null) {
-            JOptionPane.showMessageDialog(this, "The clinic is not setting up properly right now, please try later!");
-            return;
-        }
-        
-        int requestId = data.WorkRequestDAO.create(request);
+        request.setReceiverUsername(request.getSenderUsername());
+        request.setSenderUsername(account.getUsername());
+        data.WorkRequestDAO.update(request);
 
         Message message;
         message = new Message();
-        message.setFrom(account);
+        message.setFromUsername(account.getUsername());
+        message.setToUsername(request.getReceiverUsername());
         message.setMessage(messageText);
         message.setSentTime(LocalDateTime.now());
-        data.InquiryWorkRequestDAO.create(requestId, message);
+        data.InquiryWorkRequestDAO.create(request.getRequestId(), message);
 
         JOptionPane.showMessageDialog(this, "Messasge Sent!");
 
         resetFrameReply();
         setButtonsEnabled(true);
+        populateInquiryTable(data.WorkRequestDAO.searchByToUser(account.getUsername()));
+        populateHistoryTable(data.WorkRequestDAO.searchByFromUser(account.getUsername()));
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
@@ -317,32 +364,92 @@ public class DentalFrontDeskInquiriesJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void buttonReplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReplyActionPerformed
-        if (tableToOrg.getSelectedRow() >= 0) {
+        if (tableToYou.getSelectedRow() >= 0) {
             frameReply.setVisible(true);
             setButtonsEnabled(false);
-            tableToOrg.setEnabled(false);
+            tableToYou.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a record first");
             return;
         }
     }//GEN-LAST:event_buttonReplyActionPerformed
 
+    private void buttonHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHistoryActionPerformed
+        if (tableToYou.getSelectedRow() >= 0) {
+            InquiryWorkRequest request = (InquiryWorkRequest) tableToYou.getValueAt(tableToYou.getSelectedRow(), 2);
+            DetailJFrame customerJFrame = new DetailJFrame();
+            customerJFrame.setSize(600, 400);
+            customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+            customerJFrame.setLocationRelativeTo(this);
+            customerJFrame.setContentPane(new ConversationJPanel(account, request));
+            customerJFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a record first");
+            return;
+        }
+
+    }//GEN-LAST:event_buttonHistoryActionPerformed
+
+    private void buttonHistoryHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHistoryHistoryActionPerformed
+        if (tableHistory.getSelectedRow() >= 0) {
+            InquiryWorkRequest request = (InquiryWorkRequest) tableHistory.getValueAt(tableHistory.getSelectedRow(), 2);
+            DetailJFrame customerJFrame = new DetailJFrame();
+            customerJFrame.setSize(600, 400);
+            customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+            customerJFrame.setLocationRelativeTo(this);
+            customerJFrame.setContentPane(new ConversationJPanel(account, request));
+            customerJFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a record first");
+            return;
+        }
+    }//GEN-LAST:event_buttonHistoryHistoryActionPerformed
+
+    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
+        userinterface.Util.setBorderBlack(txtSearch);
+        if (!userinterface.Util.requireNotEmpty(this, txtSearch)) {
+            return;
+        }
+        String keyword = txtSearch.getText();
+        ArrayList<InquiryWorkRequest> list = data.WorkRequestDAO.searchByToUser(account.getUsername());
+        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
+        for (InquiryWorkRequest request : list) {
+            if (request.getMessage().contains(keyword) || request.getSenderUsername().contains(keyword)
+                || request.getReceiverUsername().contains(keyword)) {
+                result.add(request);
+            }
+        }
+        populateInquiryTable(result);
+
+        list = data.WorkRequestDAO.searchByFromUser(account.getUsername());
+        result = new ArrayList<>();
+        for (InquiryWorkRequest request : list) {
+            if (request.getMessage().contains(keyword) || request.getSenderUsername().contains(keyword)
+                || request.getReceiverUsername().contains(keyword)) {
+                result.add(request);
+            }
+        }
+        populateHistoryTable(result);
+    }//GEN-LAST:event_buttonSearchActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonConfirm;
+    private javax.swing.JButton buttonHistory;
+    private javax.swing.JButton buttonHistoryHistory;
     private javax.swing.JButton buttonReply;
     private javax.swing.JButton buttonSearch;
     private javax.swing.JInternalFrame frameReply;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel labAvailable;
     private javax.swing.JLabel labUnavailable;
-    private javax.swing.JTable tableToOrg;
+    private javax.swing.JTable tableHistory;
     private javax.swing.JTable tableToYou;
     private javax.swing.JTextArea txtReply;
     private javax.swing.JTextField txtSearch;

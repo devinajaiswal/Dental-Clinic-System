@@ -14,41 +14,49 @@ import java.time.LocalDateTime;
  */
 public class Message {
 
-        private String message;
-        private UserAccount from;
-        private UserAccount to;
-        private LocalDateTime sentTime;
+    private int id;
+    private String message;
+    private String fromUsername;
+    private String toUsername;
+    private LocalDateTime sentTime;
 
-        public String getMessage() {
-            return message;
-        }
+    public int getId() {
+        return id;
+    }
 
-        public void setMessage(String message) {
-            this.message = message;
-        }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-        public UserAccount getFrom() {
-            return from;
-        }
+    public String getMessage() {
+        return message;
+    }
 
-        public void setFrom(UserAccount from) {
-            this.from = from;
-        }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-        public UserAccount getTo() {
-            return to;
-        }
+    public String getFromUsername() {
+        return fromUsername;
+    }
 
-        public void setTo(UserAccount to) {
-            this.to = to;
-        }
+    public void setFromUsername(String from) {
+        this.fromUsername = from;
+    }
 
-        public LocalDateTime getSentTime() {
-            return sentTime;
-        }
+    public String getToUsername() {
+        return toUsername;
+    }
 
-        public void setSentTime(LocalDateTime sentTime) {
-            this.sentTime = sentTime;
-        }
+    public void setToUsername(String to) {
+        this.toUsername = to;
+    }
+
+    public LocalDateTime getSentTime() {
+        return sentTime;
+    }
+
+    public void setSentTime(LocalDateTime sentTime) {
+        this.sentTime = sentTime;
+    }
 }
-    
