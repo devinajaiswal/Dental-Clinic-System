@@ -81,10 +81,18 @@ public class WorkRequestDAO {
                 request.setReceiverUsername(rs.getString("receiver_username"));
                 request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
                 request.setStatus(rs.getString("request_status"));
-                request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
-                request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
+                if (rs.getTimestamp("request_time") != null) {
+                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("assign_time") != null) {
+                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("finish_time") != null) {
+                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("confirm_time") != null) {
+                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
+                }
                 result.add(request);
             }
         } catch (SQLException ex) {
@@ -109,10 +117,18 @@ public class WorkRequestDAO {
                 request.setReceiverUsername(rs.getString("receiver_username"));
                 request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
                 request.setStatus(rs.getString("request_status"));
-                request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
-                request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
+                if (rs.getTimestamp("request_time") != null) {
+                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("assign_time") != null) {
+                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("finish_time") != null) {
+                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("confirm_time") != null) {
+                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
+                }
                 result.add(request);
             }
         } catch (SQLException ex) {
@@ -125,7 +141,7 @@ public class WorkRequestDAO {
         ArrayList<InquiryWorkRequest> result = new ArrayList<>();
         try {
             Connection conn = getConnection();
-            String sql = "SELECT * FROM WorkRequest WHERE receiver_org_id = ?";
+            String sql = "SELECT * FROM WorkRequest WHERE receiver_org_id = ? and receiver_username is null;";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, orgId);
             ResultSet rs = stmt.executeQuery();
@@ -155,6 +171,23 @@ public class WorkRequestDAO {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+
+    public static void update(WorkRequest workRequest) {
+        try {
+            Connection conn = getConnection();
+            String sql = "Update WorkRequest set message = ?, sender_username = ?,"
+                + " receiver_username = ?, request_time = ? where request_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, workRequest.getMessage());
+            stmt.setString(2, workRequest.getSenderUsername());
+            stmt.setString(3, workRequest.getReceiverUsername());
+            stmt.setTimestamp(4, Timestamp.valueOf(workRequest.getRequestTime()));
+            stmt.setInt(5, workRequest.getRequestId() == -1 ? null : workRequest.getRequestId());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

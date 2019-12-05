@@ -393,7 +393,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
         Message message;
         message = new Message();
-        message.setFrom(account);
+        message.setFromUsername(account.getUsername());
         message.setMessage(messageText);
         message.setSentTime(LocalDateTime.now());
         data.InquiryWorkRequestDAO.create(requestId, message);

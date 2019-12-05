@@ -307,12 +307,13 @@ CREATE TABLE Final_Project.`Enterprise_Address` (
 );
 
 CREATE TABLE Final_Project.`Message` (
+	`message_id` INT NOT NULL,
     `request_id` INT NOT NULL,
     `from_username` VARCHAR(50) NOT NULL,
     `to_username` VARCHAR(50) NULL,
     `message` VARCHAR(500) NOT NULL,
     `sent_time` DATETIME NOT NULL,
-    PRIMARY KEY (`request_id`),
+    PRIMARY KEY (`message_id`),
     FOREIGN KEY (request_id)
         REFERENCES WorkRequest (request_id),
     FOREIGN KEY (from_username)

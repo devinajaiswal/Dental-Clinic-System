@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,33 +25,56 @@ import java.util.logging.Logger;
  */
 public class InquiryWorkRequestDAO {
 
-    public static void create(int workRequestId, Message message) {
+    private static int generateId() {
+        try {
+            String sql = "SELECT max(message_id) from Message";
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.next();
+            int max = rs.getInt(1);
+            return max + 1;
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 1;
+    }
+
+    public static int create(int workRequestId, Message message) {
+        int id = -1;
         try {
             Connection conn = getConnection();
-            String sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ? )";
+            String sql = "INSERT INTO Message VALUES (?, ?, ?, ?, ?, ? )";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, workRequestId);
-            stmt.setString(2, message.getFrom().getUsername());
-            stmt.setString(3, message.getTo() == null ? null : message.getTo().getUsername());
-            stmt.setString(4, message.getMessage());
-            stmt.setTimestamp(5, Timestamp.valueOf(message.getSentTime()));
+            id = generateId();
+            stmt.setInt(1, id);
+            stmt.setInt(2, workRequestId);
+            stmt.setString(3, message.getFromUsername());
+            stmt.setString(4, message.getToUsername());
+            stmt.setString(5, message.getMessage());
+            stmt.setTimestamp(6, Timestamp.valueOf(message.getSentTime()));
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return id;
     }
 
-        public static InquiryWorkRequest searchById(int workRequestId) {
-        InquiryWorkRequest result = null;
+    public static ArrayList<Message> searchMessagesById(int workRequestId) {
+        ArrayList<Message> result = new ArrayList<>();
         try {
-            String sql = "SELECT * from WorkRequest where request_id = ?";
+            String sql = "SELECT * from Message where request_id = ? order by sent_time asc";
             Connection conn = data.Data.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, workRequestId);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                result = new InquiryWorkRequest();
-                result.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
+            while (rs.next()) {
+                Message message = new Message();
+                message.setMessage(rs.getString("message"));
+                message.setFromUsername(rs.getString("from_username"));
+                message.setToUsername(rs.getString("to_username"));
+                message.setSentTime(rs.getTimestamp("sent_time").toLocalDateTime());
+                result.add(message);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
