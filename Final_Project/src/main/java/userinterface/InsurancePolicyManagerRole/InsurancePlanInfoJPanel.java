@@ -66,6 +66,11 @@ public class InsurancePlanInfoJPanel extends javax.swing.JPanel {
         });
 
         btnUpload.setText("Upload");
+        btnUpload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUploadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -78,10 +83,8 @@ public class InsurancePlanInfoJPanel extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
                     .addComponent(lblPlanName)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblPlanId)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(132, 132, 132)
+                    .addComponent(lblPlanId))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtPlanId)
                     .addComponent(txtPlanName)
@@ -132,6 +135,10 @@ public class InsurancePlanInfoJPanel extends javax.swing.JPanel {
     private void txtPlanIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlanIdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPlanIdActionPerformed
+
+    private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnUploadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
