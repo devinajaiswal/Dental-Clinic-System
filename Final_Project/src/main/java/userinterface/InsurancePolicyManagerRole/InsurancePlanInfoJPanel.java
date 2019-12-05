@@ -5,6 +5,8 @@
  */
 package userinterface.InsurancePolicyManagerRole;
 
+import Business.UserAccount.UserAccount;
+
 /**
  *
  * @author devinajaiswal
@@ -14,9 +16,13 @@ public class InsurancePlanInfoJPanel extends javax.swing.JPanel {
     /**
      * Creates new form InsurancePlanInfoJPanel
      */
-    public InsurancePlanInfoJPanel() {
+    UserAccount account;
+    public InsurancePlanInfoJPanel(UserAccount account) {
         initComponents();
+        this.account = account;
     }
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,19 +33,119 @@ public class InsurancePlanInfoJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblHeading = new javax.swing.JLabel();
+        lblPlanId = new javax.swing.JLabel();
+        lblPlanName = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtPlanId = new javax.swing.JTextField();
+        txtPlanName = new javax.swing.JTextField();
+        txtPrice = new javax.swing.JTextField();
+        txtTreatmentType = new javax.swing.JTextField();
+        txtCoverage = new javax.swing.JTextField();
+        btnUpload = new javax.swing.JButton();
+
+        lblHeading.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lblHeading.setText("Enter Insurance Policy Details");
+
+        lblPlanId.setText("Plan Id*");
+
+        lblPlanName.setText("Plan name*");
+
+        jLabel2.setText("Price*");
+
+        jLabel3.setText("Treatment Type*");
+
+        jLabel4.setText("Coverage*");
+
+        txtPlanId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPlanIdActionPerformed(evt);
+            }
+        });
+
+        btnUpload.setText("Upload");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(168, 168, 168)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(lblPlanName)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblPlanId)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(132, 132, 132)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtPlanId)
+                    .addComponent(txtPlanName)
+                    .addComponent(txtPrice)
+                    .addComponent(txtTreatmentType)
+                    .addComponent(txtCoverage, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                .addGap(146, 146, 146))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblHeading)
+                .addGap(220, 220, 220))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(351, 351, 351)
+                .addComponent(btnUpload)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(lblHeading)
+                .addGap(74, 74, 74)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPlanId)
+                    .addComponent(txtPlanId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPlanName)
+                    .addComponent(txtPlanName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtTreatmentType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtCoverage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addComponent(btnUpload)
+                .addGap(272, 272, 272))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtPlanIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlanIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPlanIdActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnUpload;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel lblHeading;
+    private javax.swing.JLabel lblPlanId;
+    private javax.swing.JLabel lblPlanName;
+    private javax.swing.JTextField txtCoverage;
+    private javax.swing.JTextField txtPlanId;
+    private javax.swing.JTextField txtPlanName;
+    private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtTreatmentType;
     // End of variables declaration//GEN-END:variables
 }
