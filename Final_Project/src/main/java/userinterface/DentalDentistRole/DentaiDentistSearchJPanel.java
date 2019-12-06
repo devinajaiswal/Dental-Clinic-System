@@ -37,6 +37,7 @@ public class DentaiDentistSearchJPanel extends javax.swing.JPanel {
         addJButton = new javax.swing.JButton();
         buttonPhoneCode = new javax.swing.JButton();
         buttonEmailCode = new javax.swing.JButton();
+        backjButton1 = new javax.swing.JButton();
 
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -136,6 +137,14 @@ public class DentaiDentistSearchJPanel extends javax.swing.JPanel {
                 .addContainerGap(114, Short.MAX_VALUE))
         );
 
+        backjButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        backjButton1.setText("<< Back");
+        backjButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backjButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,6 +153,10 @@ public class DentaiDentistSearchJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(backjButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 19, Short.MAX_VALUE)
@@ -155,7 +168,9 @@ public class DentaiDentistSearchJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel6)
-                .addContainerGap(374, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 313, Short.MAX_VALUE)
+                .addComponent(backjButton1)
+                .addGap(30, 30, 30))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -200,9 +215,16 @@ public class DentaiDentistSearchJPanel extends javax.swing.JPanel {
 //        JOptionPane.showMessageDialog(this, "Code sent, please check your email.");
     }//GEN-LAST:event_buttonEmailCodeActionPerformed
 
+    private void backjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backjButton1ActionPerformed
+//        container.remove(this);
+//        CardLayout layout = (CardLayout) container.getLayout();
+//        layout.previous(container);
+    }//GEN-LAST:event_backjButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
+    private javax.swing.JButton backjButton1;
     private javax.swing.JButton buttonEmailCode;
     private javax.swing.JButton buttonPhoneCode;
     private javax.swing.JLabel jLabel1;

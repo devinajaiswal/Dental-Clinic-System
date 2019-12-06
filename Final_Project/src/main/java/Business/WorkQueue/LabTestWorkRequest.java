@@ -19,6 +19,4 @@ public class LabTestWorkRequest extends WorkRequest{
     public void setTestResult(String testResult) {
         this.testResult = testResult;
     }
-    
-    
 }

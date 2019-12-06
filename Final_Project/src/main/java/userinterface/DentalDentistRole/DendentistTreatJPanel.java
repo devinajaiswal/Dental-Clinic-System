@@ -39,6 +39,9 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         addJButton = new javax.swing.JButton();
+        labelFirstName1 = new javax.swing.JLabel();
+        txtFirstName1 = new javax.swing.JTextField();
+        backjButton1 = new javax.swing.JButton();
 
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -98,13 +101,23 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
                 .addComponent(jCheckBox2)
                 .addGap(18, 18, 18)
                 .addComponent(jCheckBox3)
-                .addGap(0, 43, Short.MAX_VALUE))
+                .addGap(0, 57, Short.MAX_VALUE))
         );
 
         addJButton.setText("Confirm");
         addJButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addJButtonActionPerformed(evt);
+            }
+        });
+
+        labelFirstName1.setText("Appointment Num *");
+
+        backjButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        backjButton1.setText("<< Back");
+        backjButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backjButton1ActionPerformed(evt);
             }
         });
 
@@ -118,24 +131,28 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(87, 87, 87)
+                        .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
                                 .addComponent(labelFirstName)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtFirstName))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(labelFirstName1)
+                                    .addComponent(labelLastName)
+                                    .addComponent(backjButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(labelLastName)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtLastName, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(addJButton)
-                                            .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE)))))))
+                                        .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(txtFirstName1)
+                                    .addComponent(txtLastName, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(addJButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -151,11 +168,17 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtLastName, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                     .addComponent(labelLastName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFirstName1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelFirstName1))
                 .addGap(18, 18, 18)
-                .addComponent(addJButton)
-                .addGap(93, 93, 93))
+                .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addJButton)
+                    .addComponent(backjButton1))
+                .addGap(23, 23, 23))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -172,9 +195,16 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
         //        populateTable(organization);
     }//GEN-LAST:event_addJButtonActionPerformed
 
+    private void backjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backjButton1ActionPerformed
+        //        container.remove(this);
+        //        CardLayout layout = (CardLayout) container.getLayout();
+        //        layout.previous(container);
+    }//GEN-LAST:event_backjButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
+    private javax.swing.JButton backjButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
@@ -183,8 +213,10 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel labAvailable;
     private javax.swing.JLabel labUnavailable;
     private javax.swing.JLabel labelFirstName;
+    private javax.swing.JLabel labelFirstName1;
     private javax.swing.JLabel labelLastName;
     private javax.swing.JTextField txtFirstName;
+    private javax.swing.JTextField txtFirstName1;
     private javax.swing.JTextField txtLastName;
     // End of variables declaration//GEN-END:variables
 }

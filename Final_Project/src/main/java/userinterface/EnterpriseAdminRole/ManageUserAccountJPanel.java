@@ -70,7 +70,7 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
 
     private void populateOrganizationComboBox() {
         comboOrganization.removeAllItems();
-        for (Organization org : enterprise.getSupportedOrganizations()) {
+        for (Organization org : data.OrganizationDAO.searchByEnterpriseId(enterprise.getEnterpriseId())) {
             comboOrganization.addItem(org);
         }
     }
@@ -331,6 +331,7 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
         txtName.setText("");
         txtPassword.setText("");
         txtRepassword.setText("");
+        txtEmail.setText("");
         comboRole.setSelectedIndex(0);
         comboOrganization.setSelectedIndex(0);
         jInternalFrame1.setVisible(false);
@@ -362,9 +363,13 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
             if (!userinterface.Util.requireSeletedItemNotNull(this, comboRole, comboOrganization)) {
                 return;
             }
-            Enterprise enterprise = (Enterprise) comboOrganization.getSelectedItem();
+            Organization org = (Organization) comboOrganization.getSelectedItem();
+            Role role = (Role) comboRole.getSelectedItem();
 
-            if (!userinterface.Util.requireNotEmpty(this, txtName, txtPassword, txtRepassword)) {
+            if (!userinterface.Util.requireNotEmpty(this, txtName, txtPassword, txtRepassword, txtEmail)) {
+                return;
+            }
+            if (!userinterface.Util.requireEmail(this, txtEmail)) {
                 return;
             }
 
@@ -384,22 +389,16 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
             user.setEnterprise(enterprise);
             user.setUsername(txtUsername.getText());
             user.setPassword(password);
-            user.setRole(new EnterpriseAdminRole());
+            user.setRole(role);
+            user.setOrganization(org);
             Employee employee = new Employee();
             employee.setName(txtName.getText());
+            employee.setEmail(txtEmail.getText());
             user.setEmployee(employee);
-            Organization.Type organizationType = null;
-            if (enterprise.getEnterpriseType().getValue().equals(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
-                organizationType = Organization.Type.DentalAdmin;
-            } else if (enterprise.getEnterpriseType().getValue().equals(Enterprise.EnterpriseType.INSURACE.getValue())) {
-                organizationType = Organization.Type.InsuranceAdmin;
-            }
-            Organization organization = data.OrganizationDAO.searchByTypeAndEnterprise(
-                organizationType.getValue(), enterprise.getEnterpriseId());
-            data.UserDAO.createWithEmployee(user, organization.getOrganizationID());
+            data.UserDAO.createWithEmployee(user, org.getOrganizationID());
             JOptionPane.showMessageDialog(this, "Created successfully!");
         } else if (currentAction.equals(ACTION_EDIT)) {
-            if (!userinterface.Util.requireNotEmpty(this, txtName, txtPassword, txtRepassword)) {
+            if (!userinterface.Util.requireNotEmpty(this, txtName, txtPassword, txtRepassword, txtEmail)) {
                 return;
             }
 
@@ -409,13 +408,16 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Two passwords don't mathch!");
                 return;
             }
+            if (!userinterface.Util.requireEmail(this, txtEmail)) {
+                return;
+            }
             UserAccount user = (UserAccount) tableUsers.getValueAt(tableUsers.getSelectedRow(), 2);
-            data.UserDAO.updateNameAndPassword(user.getEmployee().getId(), txtName.getText(),
-                user.getUsername(), password);
+            data.UserDAO.updateNameAndPasswordAndEmail(user.getEmployee().getId(), txtName.getText(),
+                txtEmail.getText(), user.getUsername(), password);
             JOptionPane.showMessageDialog(this, "Updated successfully!");
         }
         populateTable();
-        SystemAdminWorkAreaJPanel parent = (SystemAdminWorkAreaJPanel) userProcessContainer;
+        EnterpriseAdminWorkAreaJPanel parent = (EnterpriseAdminWorkAreaJPanel) userProcessContainer;
         parent.populateTree();
         resetInternalFrame();
         jInternalFrame1.setVisible(false);
@@ -444,8 +446,11 @@ public class ManageUserAccountJPanel extends javax.swing.JPanel {
             UserAccount user = (UserAccount) tableUsers.getValueAt(tableUsers.getSelectedRow(), 2);
             txtName.setText(user.getEmployee().getName());
             txtUsername.setText(user.getUsername());
+            txtEmail.setText(user.getEmployee().getEmail());
             comboRole.setSelectedItem(user.getEnterprise().getNetwork());
-            comboOrganization.setSelectedItem(user.getEnterprise());
+            comboOrganization.setSelectedItem(user.getOrganization());
+            populateRoleComboBox(user.getOrganization());
+            comboRole.setSelectedItem(user.getRole());
             currentAction = ACTION_EDIT;
             jInternalFrame1.setVisible(true);
             setButtonsEnabled(false);
