@@ -5,6 +5,11 @@
  */
 package userinterface.DentalDentistRole;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author z9737
@@ -14,9 +19,17 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
     /**
      * Creates new form DendentistTreatJPanel
      */
-    public DendentistTreatJPanel() {
+    JPanel userProcessContainer;
+    UserAccount account;
+    Organization organization;
+    Enterprise enterprise;
+
+    DendentistTreatJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         initComponents();
-       
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
     }
 
     /**

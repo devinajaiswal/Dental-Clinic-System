@@ -113,7 +113,7 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnSearchClinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchClinicActionPerformed
         dentistContainer.removeAll();
-        DentaiDentistSearchJPanel searchJpanel = new DentaiDentistSearchJPanel();
+        DentaiDentistSearchJPanel searchJpanel = new DentaiDentistSearchJPanel(userProcessContainer, account, organization, enterprise);
         dentistContainer.add(searchJpanel);
         CardLayout layout = (CardLayout) dentistContainer.getLayout();
         layout.next(dentistContainer);
@@ -126,7 +126,7 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
         //        CardLayout layout = (CardLayout) customerContainer.getLayout();
         //        layout.next(customerContainer);
         dentistContainer.removeAll();
-        DendentistTreatJPanel treatJpanel = new DendentistTreatJPanel();
+        DendentistTreatJPanel treatJpanel = new DendentistTreatJPanel(userProcessContainer, account, organization, enterprise);
         dentistContainer.add(treatJpanel);
         CardLayout layout = (CardLayout) dentistContainer.getLayout();
         layout.next(dentistContainer);

@@ -132,7 +132,7 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
 
     private void buttonPersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPersonalInfoActionPerformed
         dentalManagerContainer.removeAll();
-        DentalTreatMnagerJPanel treatManagerJpanel = new DentalTreatMnagerJPanel();
+        DentalTreatMnagerJPanel treatManagerJpanel = new DentalTreatMnagerJPanel(userProcessContainer, account, organization, enterprise);
         dentalManagerContainer.add(treatManagerJpanel);
         CardLayout layout = (CardLayout) dentalManagerContainer.getLayout();
         layout.next(treatManagerJpanel);
