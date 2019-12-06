@@ -362,3 +362,11 @@ CREATE TABLE Final_Project.`Treatment` (
     FOREIGN KEY (request_id)
         REFERENCES WorkRequest (request_id)
 );
+create table DentalTreatmentPlans(
+  plan_id int not null,
+  plan_name varchar(50) not null,
+   `price` DOUBLE NOT NULL,
+    `enterprise_id` INT NOT NULL,
+    treatmentType varchar(50) not null,
+    coverage DOUBLE NOT NULL
+);
