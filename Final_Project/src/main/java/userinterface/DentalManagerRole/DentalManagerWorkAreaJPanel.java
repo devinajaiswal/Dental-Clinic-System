@@ -51,11 +51,11 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
         btnManageEnterprise = new javax.swing.JButton();
         buttonSearchClinic = new javax.swing.JButton();
         buttonSearchInsurance = new javax.swing.JButton();
-        customerContainer = new javax.swing.JPanel();
+        dentalManagerContainer = new javax.swing.JPanel();
 
         jSplitPane1.setDividerLocation(200);
 
-        buttonPersonalInfo.setText("Clinic Information");
+        buttonPersonalInfo.setText("Deal Treatment Record");
         buttonPersonalInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPersonalInfoActionPerformed(evt);
@@ -94,7 +94,7 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
                     .addComponent(btnManageEnterprise, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonPersonalInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonSearchInsurance, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,8 +112,8 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setLeftComponent(jPanel3);
 
-        customerContainer.setLayout(new java.awt.CardLayout());
-        jSplitPane1.setRightComponent(customerContainer);
+        dentalManagerContainer.setLayout(new java.awt.CardLayout());
+        jSplitPane1.setRightComponent(dentalManagerContainer);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -131,15 +131,15 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonPersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPersonalInfoActionPerformed
-        customerContainer.removeAll();
-        CustomerPersonalInfoJPanel customerPersonalInfoJPanel = new CustomerPersonalInfoJPanel(account);
-        customerContainer.add(customerPersonalInfoJPanel);
-        CardLayout layout = (CardLayout) customerContainer.getLayout();
-        layout.next(customerContainer);
+        dentalManagerContainer.removeAll();
+        DentalTreatMnagerJPanel treatManagerJpanel = new DentalTreatMnagerJPanel();
+        dentalManagerContainer.add(treatManagerJpanel);
+        CardLayout layout = (CardLayout) dentalManagerContainer.getLayout();
+        layout.next(treatManagerJpanel);
     }//GEN-LAST:event_buttonPersonalInfoActionPerformed
 
     private void btnManageEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageEnterpriseActionPerformed
-        customerContainer.removeAll();
+        dentalManagerContainer.removeAll();
     }//GEN-LAST:event_btnManageEnterpriseActionPerformed
 
     private void buttonSearchClinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchClinicActionPerformed
@@ -154,7 +154,7 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
     private javax.swing.JButton buttonPersonalInfo;
     private javax.swing.JButton buttonSearchClinic;
     private javax.swing.JButton buttonSearchInsurance;
-    private javax.swing.JPanel customerContainer;
+    private javax.swing.JPanel dentalManagerContainer;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables

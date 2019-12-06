@@ -42,7 +42,6 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
         addJButton = new javax.swing.JButton();
         labelFirstName1 = new javax.swing.JLabel();
         txtFirstName1 = new javax.swing.JTextField();
-        backjButton1 = new javax.swing.JButton();
 
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -102,7 +101,7 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
                 .addComponent(jCheckBox2)
                 .addGap(18, 18, 18)
                 .addComponent(jCheckBox3)
-                .addGap(0, 71, Short.MAX_VALUE))
+                .addGap(0, 73, Short.MAX_VALUE))
         );
 
         addJButton.setText("Confirm");
@@ -114,14 +113,6 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
 
         labelFirstName1.setText("Appointment Num *");
 
-        backjButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        backjButton1.setText("<< Back");
-        backjButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backjButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,14 +123,14 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(labelFirstName1)
-                                .addComponent(labelLastName)
-                                .addComponent(backjButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(52, 52, 52)
+                                .addGap(53, 53, 53)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(labelFirstName1)
+                                    .addComponent(labelLastName)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(87, 87, 87)
                                 .addComponent(labelFirstName)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,10 +166,8 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addJButton)
-                    .addComponent(backjButton1))
-                .addGap(23, 23, 23))
+                .addComponent(addJButton)
+                .addGap(31, 31, 31))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -195,16 +184,9 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
         //        populateTable(organization);
     }//GEN-LAST:event_addJButtonActionPerformed
 
-    private void backjButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backjButton1ActionPerformed
-        //        container.remove(this);
-        //        CardLayout layout = (CardLayout) container.getLayout();
-        //        layout.previous(container);
-    }//GEN-LAST:event_backjButton1ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addJButton;
-    private javax.swing.JButton backjButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
