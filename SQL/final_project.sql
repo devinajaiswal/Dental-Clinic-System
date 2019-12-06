@@ -322,6 +322,15 @@ CREATE TABLE Final_Project.`Message` (
         REFERENCES User (username)
 );
 
+create table DentalTreatmentPlans(
+  plan_id int not null,
+  plan_name varchar(50) not null,
+   `price` DOUBLE NOT NULL,
+    `enterprise_id` INT NOT NULL,
+    treatmentType varchar(50) not null,
+    coverage DOUBLE NOT NULL
+);
+
 -- add 3
 
 CREATE TABLE Final_Project.`User_MedicalInfo` (
