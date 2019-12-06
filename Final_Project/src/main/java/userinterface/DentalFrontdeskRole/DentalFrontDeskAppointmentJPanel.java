@@ -678,17 +678,20 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
         }
         AppointmentWorkRequest request = (AppointmentWorkRequest) tableAppointment.getValueAt(tableAppointment.getSelectedRow(), 3);
         request.setMessage("Checked In");
-        request.setAssignTime(LocalDateTime.now());
+        request.setConfirmTime(LocalDateTime.now());
         request.setStatus(WorkRequest.Status.CONFIRMED.getValue());
         data.WorkRequestDAO.update(request);
 
         TreatmentWorkRequest treatRequest = new TreatmentWorkRequest();
+        treatRequest.setRequestId(request.getRequestId());
         treatRequest.setPatientUsername(request.getSenderUsername());
         treatRequest.setStatus(WorkRequest.Status.SENT.getValue());
         treatRequest.setSenderUsername(account.getUsername());
         treatRequest.setReceiverUsername(dentist);
         treatRequest.setMessage("Treatment request");
         treatRequest.setRequestTime(LocalDateTime.now());
+        int requestId = data.WorkRequestDAO.create(treatRequest);
+        data.TreatmentWorkRequestDAO.createTreatment(requestId, treatRequest);
 
         JOptionPane.showMessageDialog(this, "Checked In");
         resetFrameAppointment();

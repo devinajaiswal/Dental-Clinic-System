@@ -52,7 +52,11 @@ public class WorkRequestDAO {
             stmt.setString(2, workRequest.getMessage());
             stmt.setString(3, workRequest.getSenderUsername());
             stmt.setString(4, workRequest.getReceiverUsername());
-            stmt.setInt(5, workRequest.getReceiverOrganizationId());
+            if (workRequest.getReceiverOrganizationId() > 0) {
+                stmt.setInt(5, workRequest.getReceiverOrganizationId());
+            } else {
+                stmt.setNull(5, java.sql.Types.INTEGER);
+            }
             stmt.setString(6, WorkRequest.Status.SENT.getValue());
             stmt.setTimestamp(7, Timestamp.valueOf(workRequest.getRequestTime()));
             stmt.setString(8, null);
@@ -76,7 +80,11 @@ public class WorkRequestDAO {
             stmt.setString(1, workRequest.getMessage());
             stmt.setString(2, workRequest.getSenderUsername());
             stmt.setString(3, workRequest.getReceiverUsername());
-            stmt.setInt(4, workRequest.getReceiverOrganizationId());
+            if (workRequest.getReceiverOrganizationId() > 0) {
+                stmt.setInt(4, workRequest.getReceiverOrganizationId());
+            } else {
+                stmt.setNull(4, java.sql.Types.INTEGER);
+            }
             stmt.setString(5, workRequest.getStatus());
             if (workRequest.getRequestTime() != null) {
                 stmt.setTimestamp(6, Timestamp.valueOf(workRequest.getRequestTime()));
