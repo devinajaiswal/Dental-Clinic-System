@@ -5,6 +5,7 @@
  */
 package data;
 
+import Business.Customer.CustomerMedicalInfo;
 import Business.Customer.CustomerPersonalInfo;
 import Business.Employee.Employee;
 import Business.Enterprise.Enterprise;
@@ -17,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,10 +69,10 @@ public class UserDAO {
     public static ArrayList<UserAccount> getAllUsersByEnterpriseId(int enpterpriseId) {
         ArrayList<UserAccount> result = new ArrayList<>();
 
-        String sql = "SELECT * FROM ((((((Enterprise natural join Enterprise_User) natural join Employee_User)\n" +
-"            natural join User) natural join Role_User) natural join Employee) \n" +
-"            natural join Organization_User) natural join Organization\n" +
-"            where enterprise_id = ?";
+        String sql = "SELECT * FROM ((((((Enterprise natural join Enterprise_User) natural join Employee_User)\n"
+            + "            natural join User) natural join Role_User) natural join Employee) \n"
+            + "            natural join Organization_User) natural join Organization\n"
+            + "            where enterprise_id = ?";
         try {
             Connection conn = data.Data.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -103,6 +105,7 @@ public class UserDAO {
 
         return result;
     }
+
     public static int generateEmployeeId() {
         try {
             String sql = "SELECT max(employee_id) from Employee";
@@ -408,6 +411,22 @@ public class UserDAO {
         return false;
     }
 
+    public static boolean isMedicalInfoComplete(String username) {
+        try {
+            String sql = "SELECT gender from User_MedicalInfo where username = ?";
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public static CustomerPersonalInfo searchPersonalInfo(String username) {
         CustomerPersonalInfo result = null;
         try {
@@ -475,6 +494,26 @@ public class UserDAO {
         return result;
     }
 
+        public static ArrayList<String> searchUsernamesByEnterpriseIdAndRole(int enterpriseid, String role) {
+        ArrayList<String> result = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * from (Enterprise_User natural join User) natural join Role_User \n"
+                + "where enterprise_id = ? AND role_name = ?";
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, enterpriseid);
+            stmt.setString(2, role);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                result.add(rs.getString("username"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
     public static void updateNameAndPassword(int employeeId, String name, String username, String password) {
         try {
             Connection conn = data.Data.getConnection();
@@ -496,8 +535,8 @@ public class UserDAO {
         }
     }
 
-        public static void updateNameAndPasswordAndEmail(int employeeId, String name, String email,
-            String username, String password) {
+    public static void updateNameAndPasswordAndEmail(int employeeId, String name, String email,
+        String username, String password) {
         try {
             Connection conn = data.Data.getConnection();
             conn.setAutoCommit(false);
@@ -517,6 +556,71 @@ public class UserDAO {
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static void createMedicalInfo(String username, CustomerMedicalInfo info) {
+        try {
+            Connection conn = data.Data.getConnection();
+            String sql = "INSERT INTO User_MedicalInfo VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, info.getGender());
+            stmt.setTimestamp(3, Timestamp.valueOf(info.getDob()));
+            stmt.setBoolean(4, info.isSmoking());
+            stmt.setBoolean(5, info.isSweet());
+            stmt.setBoolean(6, info.isDiabetes());
+            stmt.setBoolean(7, info.isCardio());
+            stmt.setBoolean(8, info.isImmune());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void updateMedicalInfo(String username, CustomerMedicalInfo info) {
+        try {
+            Connection conn = data.Data.getConnection();
+            String sql = "Update User_MedicalInfo SET gender = ?, smoking = ?, sweet = ?, diabetes = ?, "
+                + "cardio = ?, immune = ?, dob = ? where username = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, info.getGender());
+            stmt.setBoolean(2, info.isSmoking());
+            stmt.setBoolean(3, info.isSweet());
+            stmt.setBoolean(4, info.isDiabetes());
+            stmt.setBoolean(5, info.isCardio());
+            stmt.setBoolean(6, info.isImmune());
+            stmt.setTimestamp(7, Timestamp.valueOf(info.getDob()));
+            stmt.setString(8, username);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static CustomerMedicalInfo searchMedicalInfo(String username) {
+        CustomerMedicalInfo result = null;
+        try {
+            String sql = "SELECT * from User_MedicalInfo where username = ?";
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                result = new CustomerMedicalInfo();
+                result.setGender(rs.getString("gender"));
+                result.setDob(rs.getTimestamp("dob").toLocalDateTime());
+                System.out.println(rs.getDate("dob"));
+                System.out.println(rs.getDate("dob").toLocalDate());
+                result.setSmoking(rs.getBoolean("smoking"));
+                result.setSweet(rs.getBoolean("sweet"));
+                result.setDiabetes(rs.getBoolean("diabetes"));
+                result.setCardio(rs.getBoolean("cardio"));
+                result.setImmune(rs.getBoolean("immune"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
 
 }

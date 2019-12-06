@@ -5,12 +5,19 @@
  */
 package userinterface.CustomerRole;
 
+import Business.Customer.CustomerMedicalInfo;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -34,11 +41,57 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
         initComponents();
         this.account = account;
 
-
-        if (!data.UserDAO.isPersonalInfoComplete(account.getUsername())) {
+        if (!data.UserDAO.isMedicalInfoComplete(account.getUsername())) {
             action = ACTION_Add;
         } else {
             action = ACTION_UPDATE;
+            CustomerMedicalInfo info = data.UserDAO.searchMedicalInfo(account.getUsername());
+            if (info.getGender().equals("M")) {
+                radioMale.setSelected(true);
+            } else {
+                radioFemale.setSelected(true);
+            }
+//            dateDOB.setEnabled(false);
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            String dateString = info.getDob().format(formatter);
+            try {
+                Date date;
+                date = df.parse(dateString);
+                dateDOB.setDate(date);
+            } catch (ParseException ex) {
+                Logger.getLogger(CustomerMedicalInfoJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if (info.isSmoking()) {
+                checkboxSmoking.setSelected(true);
+            } else {
+                checkboxSmoking.setSelected(false);
+            }
+
+            if (info.isSweet()) {
+                checkboxSweet.setSelected(true);
+            } else {
+                checkboxSweet.setSelected(false);
+            }
+
+            if (info.isDiabetes()) {
+                checkboxDiabetes.setSelected(true);
+            } else {
+                checkboxDiabetes.setSelected(false);
+            }
+
+            if (info.isCardio()) {
+                checkboxCardio.setSelected(true);
+            } else {
+                checkboxCardio.setSelected(false);
+            }
+
+            if (info.isImmune()) {
+                checkboxImmune.setSelected(true);
+            } else {
+                checkboxImmune.setSelected(false);
+            }
         }
 
         BasicInternalFrameUI ui = (BasicInternalFrameUI) jInternalFrame1.getUI();
@@ -72,9 +125,9 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
         jInternalFrame1 = new javax.swing.JInternalFrame();
         labAvailable = new javax.swing.JLabel();
         labUnavailable = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
+        checkboxDiabetes = new javax.swing.JCheckBox();
+        checkboxCardio = new javax.swing.JCheckBox();
+        checkboxImmune = new javax.swing.JCheckBox();
         dateDOB = new com.toedter.calendar.JDateChooser();
 
         labelHead.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -111,14 +164,14 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
         jInternalFrame1.setMinimumSize(new java.awt.Dimension(100, 25));
         jInternalFrame1.setVisible(true);
 
-        jCheckBox1.setText("Diabetes");
+        checkboxDiabetes.setText("Diabetes");
 
-        jCheckBox2.setText("Cardiovascular Disease");
+        checkboxCardio.setText("Cardiovascular Disease");
 
-        jCheckBox3.setText("Other Autoimmune Disorders");
-        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+        checkboxImmune.setText("Other Autoimmune Disorders");
+        checkboxImmune.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox3ActionPerformed(evt);
+                checkboxImmuneActionPerformed(evt);
             }
         });
 
@@ -129,10 +182,10 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
             .addGroup(jInternalFrame1Layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox3)
-                    .addComponent(jCheckBox2)
+                    .addComponent(checkboxImmune)
+                    .addComponent(checkboxCardio)
                     .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
+                        .addComponent(checkboxDiabetes)
                         .addGap(70, 70, 70)
                         .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -146,14 +199,14 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
                     .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jInternalFrame1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jCheckBox1))
+                        .addComponent(checkboxDiabetes))
                     .addGroup(jInternalFrame1Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox2)
+                .addComponent(checkboxCardio)
                 .addGap(18, 18, 18)
-                .addComponent(jCheckBox3)
+                .addComponent(checkboxImmune)
                 .addGap(0, 23, Short.MAX_VALUE))
         );
 
@@ -164,10 +217,9 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(158, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                .addContainerGap(149, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
@@ -191,11 +243,12 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
                             .addComponent(checkboxSweet)
                             .addComponent(dateDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblRoutingNo1)))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(labelHead)
-                        .addGap(60, 60, 60)))
-                .addContainerGap(159, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60))
+                    .addComponent(jInternalFrame1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(150, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnUpdate)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -230,17 +283,62 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnUpdate)
-                .addGap(51, 51, 51))
+                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(48, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-//TODO add update function for medical info
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         dateDOB.setBorder(new LineBorder(new Color(128, 128, 128)));
-        LocalDate dob = dateDOB.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-     
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        String dateString = df.format(dateDOB.getDate());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+        LocalDateTime dob = LocalDateTime.parse(dateString + " 00:00", formatter);
+        if (dob == null || dob.isBefore(LocalDateTime.parse("01/01/1900 00:00", formatter))) {
+            dateDOB.setBorder(new LineBorder(Color.RED));
+            JOptionPane.showMessageDialog(this, "Please check the date of birth field!");
+            return;
+        }
+        CustomerMedicalInfo info = new CustomerMedicalInfo();
+        info.setDob(dob);
+        if (radioMale.isSelected()) {
+            info.setGender("M");
+        } else {
+            info.setGender("F");
+        }
+
+        if (checkboxSmoking.isSelected()) {
+            info.setSmoking(true);
+        } else {
+            info.setSmoking(false);
+        }
+
+        if (checkboxSweet.isSelected()) {
+            info.setSweet(true);
+        } else {
+            info.setSweet(false);
+        }
+
+        if (checkboxDiabetes.isSelected()) {
+            info.setDiabetes(true);
+        } else {
+            info.setDiabetes(false);
+        }
+
+        if (checkboxCardio.isSelected()) {
+            info.setCardio(true);
+        } else {
+            info.setCardio(false);
+        }
+
+        if (checkboxImmune.isSelected()) {
+            info.setImmune(true);
+        } else {
+            info.setImmune(false);
+        }
+
         if (action.equals(ACTION_Add)) {
+            data.UserDAO.createMedicalInfo(account.getUsername(), info);
             JOptionPane.showMessageDialog(this, "Personal infomation updated successfully.");
             Container container = this.getParent();
             container.removeAll();
@@ -248,6 +346,7 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
             CardLayout layout = (CardLayout) container.getLayout();
             layout.next(container);
         } else if (action.equals(ACTION_UPDATE)) {
+            data.UserDAO.updateMedicalInfo(account.getUsername(), info);
             JOptionPane.showMessageDialog(this, "Personal infomation updated successfully.");
             Container container = this.getParent();
             container.removeAll();
@@ -257,20 +356,19 @@ public class CustomerMedicalInfoJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
+    private void checkboxImmuneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxImmuneActionPerformed
+    }//GEN-LAST:event_checkboxImmuneActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnUpdate;
     private javax.swing.ButtonGroup buttonGroupGender;
+    private javax.swing.JCheckBox checkboxCardio;
+    private javax.swing.JCheckBox checkboxDiabetes;
+    private javax.swing.JCheckBox checkboxImmune;
     private javax.swing.JCheckBox checkboxSmoking;
     private javax.swing.JCheckBox checkboxSweet;
     private com.toedter.calendar.JDateChooser dateDOB;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JInternalFrame jInternalFrame1;
     private javax.swing.JLabel labAvailable;
     private javax.swing.JLabel labUnavailable;

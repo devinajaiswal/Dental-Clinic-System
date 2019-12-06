@@ -50,7 +50,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="buttonSearchClinic" alignment="0" max="32767" attributes="0"/>
+                          <Component id="buttonAppointments" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnManageEnterprise" alignment="0" max="32767" attributes="0"/>
                           <Component id="buttonSearchInsurance" max="32767" attributes="0"/>
                           <Component id="buttonPersonalInfo" max="32767" attributes="0"/>
@@ -67,7 +67,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="buttonPersonalInfo" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonSearchClinic" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="buttonAppointments" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="buttonSearchInsurance" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="413" max="-2" attributes="0"/>
@@ -92,12 +92,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageEnterpriseActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="buttonSearchClinic">
+            <Component class="javax.swing.JButton" name="buttonAppointments">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Search Clinic"/>
+                <Property name="text" type="java.lang.String" value="Appointments"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSearchClinicActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAppointmentsActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="buttonSearchInsurance">
