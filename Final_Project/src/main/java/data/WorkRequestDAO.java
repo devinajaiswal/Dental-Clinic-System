@@ -65,125 +65,40 @@ public class WorkRequestDAO {
         return id;
     }
 
-    public static ArrayList<InquiryWorkRequest> searchByToUser(String toUsername) {
-        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
-        try {
-            Connection conn = getConnection();
-            String sql = "SELECT * FROM WorkRequest WHERE receiver_username = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, toUsername);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                InquiryWorkRequest request = new InquiryWorkRequest();
-                request.setMessage(rs.getString("message"));
-                request.setRequestId(rs.getInt("request_id"));
-                request.setSenderUsername(rs.getString("sender_username"));
-                request.setReceiverUsername(rs.getString("receiver_username"));
-                request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
-                request.setStatus(rs.getString("request_status"));
-                if (rs.getTimestamp("request_time") != null) {
-                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("assign_time") != null) {
-                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("finish_time") != null) {
-                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("confirm_time") != null) {
-                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
-                }
-                result.add(request);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    public static ArrayList<InquiryWorkRequest> searchByFromUser(String fromUsername) {
-        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
-        try {
-            Connection conn = getConnection();
-            String sql = "SELECT * FROM WorkRequest WHERE sender_username = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, fromUsername);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                InquiryWorkRequest request = new InquiryWorkRequest();
-                request.setMessage(rs.getString("message"));
-                request.setRequestId(rs.getInt("request_id"));
-                request.setSenderUsername(rs.getString("sender_username"));
-                request.setReceiverUsername(rs.getString("receiver_username"));
-                request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
-                request.setStatus(rs.getString("request_status"));
-                if (rs.getTimestamp("request_time") != null) {
-                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("assign_time") != null) {
-                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("finish_time") != null) {
-                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("confirm_time") != null) {
-                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
-                }
-                result.add(request);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
-    public static ArrayList<InquiryWorkRequest> searchByOrgId(int orgId) {
-        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
-        try {
-            Connection conn = getConnection();
-            String sql = "SELECT * FROM WorkRequest WHERE receiver_org_id = ? and receiver_username is null;";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, orgId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                InquiryWorkRequest request = new InquiryWorkRequest();
-                request.setMessage(rs.getString("message"));
-                request.setRequestId(rs.getInt("request_id"));
-                request.setSenderUsername(rs.getString("sender_username"));
-                request.setReceiverUsername(rs.getString("receiver_username"));
-                request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
-                request.setStatus(rs.getString("request_status"));
-                if (rs.getTimestamp("request_time") != null) {
-                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("assign_time") != null) {
-                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("finish_time") != null) {
-                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("confirm_time") != null) {
-                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
-                }
-                result.add(request);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-
     public static void update(WorkRequest workRequest) {
         try {
             Connection conn = getConnection();
             String sql = "Update WorkRequest set message = ?, sender_username = ?,"
-                + " receiver_username = ?, request_time = ? where request_id = ?";
+                + " receiver_username = ?, receiver_org_id = ?, request_status = ?, "
+                + " request_time = ?, assign_time = ?, finish_time = ?, confirm_time = ?"
+                + " where request_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, workRequest.getMessage());
             stmt.setString(2, workRequest.getSenderUsername());
             stmt.setString(3, workRequest.getReceiverUsername());
-            stmt.setTimestamp(4, Timestamp.valueOf(workRequest.getRequestTime()));
-            stmt.setInt(5, workRequest.getRequestId() == -1 ? null : workRequest.getRequestId());
+            stmt.setInt(4, workRequest.getReceiverOrganizationId());
+            stmt.setString(5, workRequest.getStatus());
+            if (workRequest.getRequestTime() != null) {
+                stmt.setTimestamp(6, Timestamp.valueOf(workRequest.getRequestTime()));
+            } else {
+                stmt.setTimestamp(6, null);
+            }
+            if (workRequest.getAssignTime() != null) {
+                stmt.setTimestamp(7, Timestamp.valueOf(workRequest.getAssignTime()));
+            } else {
+                stmt.setTimestamp(7, null);
+            }
+            if (workRequest.getFinishTime() != null) {
+                stmt.setTimestamp(8, Timestamp.valueOf(workRequest.getFinishTime()));
+            } else {
+                stmt.setTimestamp(8, null);
+            }
+            if (workRequest.getConfirmTime() != null) {
+                stmt.setTimestamp(9, Timestamp.valueOf(workRequest.getConfirmTime()));
+            } else {
+                stmt.setTimestamp(9, null);
+            }
+            stmt.setInt(10, workRequest.getRequestId());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);

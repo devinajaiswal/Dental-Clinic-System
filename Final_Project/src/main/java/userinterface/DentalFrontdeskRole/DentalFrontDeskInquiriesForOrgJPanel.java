@@ -54,7 +54,7 @@ public class DentalFrontDeskInquiriesForOrgJPanel extends javax.swing.JPanel {
 
         model.setRowCount(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm");
-        for (WorkRequest request : data.WorkRequestDAO.searchByOrgId(organization.getOrganizationID())) {
+        for (WorkRequest request : data.InquiryWorkRequestDAO.searchByOrgId(organization.getOrganizationID())) {
             Object[] row = new Object[3];
             row[0] = request.getSenderUsername();
             row[1] = formatter.format(request.getRequestTime());
@@ -236,7 +236,7 @@ public class DentalFrontDeskInquiriesForOrgJPanel extends javax.swing.JPanel {
         message.setToUsername(request.getReceiverUsername());
         message.setMessage(messageText);
         message.setSentTime(LocalDateTime.now());
-        data.InquiryWorkRequestDAO.create(request.getRequestId(), message);
+        data.InquiryWorkRequestDAO.createMessage(request.getRequestId(), message);
 
         JOptionPane.showMessageDialog(this, "Messasge Sent!");
 
