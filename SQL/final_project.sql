@@ -307,7 +307,7 @@ CREATE TABLE Final_Project.`Enterprise_Address` (
 );
 
 CREATE TABLE Final_Project.`Message` (
-	`message_id` INT NOT NULL,
+    `message_id` INT NOT NULL,
     `request_id` INT NOT NULL,
     `from_username` VARCHAR(50) NOT NULL,
     `to_username` VARCHAR(50) NULL,
@@ -322,3 +322,43 @@ CREATE TABLE Final_Project.`Message` (
         REFERENCES User (username)
 );
 
+-- add 3
+
+CREATE TABLE Final_Project.`User_MedicalInfo` (
+    `username` VARCHAR(50) NOT NULL,
+    `gender` VARCHAR(5) NOT NULL,
+    `dob` DATE NOT NULL,
+    `smoking` VARCHAR(5) NOT NULL,
+    `sweet` VARCHAR(5) NOT NULL,
+    `diabetes` VARCHAR(5) NOT NULL,
+    `cardio` VARCHAR(5) NOT NULL,
+    `immune` VARCHAR(5) NOT NULL,
+    PRIMARY KEY (`username`),
+    FOREIGN KEY (username)
+        REFERENCES User (username)
+);
+
+CREATE TABLE Final_Project.`Appointment` (
+    `appointment_id` INT NOT NULL,
+    `request_id` INT NOT NULL,
+    `appointment_time` TIMESTAMP NOT NULL,
+    PRIMARY KEY (`appointment_id`),
+    FOREIGN KEY (request_id)
+        REFERENCES WorkRequest (request_id)
+);
+
+alter table User_MedicalInfo modify column dob timestamp NOT NULL;
+
+CREATE TABLE Final_Project.`Treatment` (
+    `treatment_id` INT NOT NULL,
+    `request_id` INT NOT NULL,
+    `patient_username` VARCHAR(50) NOT NULL,
+    `hygieneScore` INT NOT NULL,
+    `type` VARCHAR(50) NOT NULL,
+    `note` VARCHAR(500) NOT NULL,
+    PRIMARY KEY (`treatment_id`),
+    FOREIGN KEY (patient_username)
+        REFERENCES User (username),
+    FOREIGN KEY (request_id)
+        REFERENCES WorkRequest (request_id)
+);

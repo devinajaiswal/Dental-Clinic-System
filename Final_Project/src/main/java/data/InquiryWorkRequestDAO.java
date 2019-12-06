@@ -7,7 +7,6 @@ package data;
 
 import Business.WorkQueue.InquiryWorkRequest;
 import Business.WorkQueue.Message;
-import Business.WorkQueue.WorkRequest;
 import static data.Data.getConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,7 +39,7 @@ public class InquiryWorkRequestDAO {
         return 1;
     }
 
-    public static int create(int workRequestId, Message message) {
+    public static int createMessage(int workRequestId, Message message) {
         int id = -1;
         try {
             Connection conn = getConnection();
@@ -75,6 +74,117 @@ public class InquiryWorkRequestDAO {
                 message.setToUsername(rs.getString("to_username"));
                 message.setSentTime(rs.getTimestamp("sent_time").toLocalDateTime());
                 result.add(message);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public static ArrayList<InquiryWorkRequest> searchByToUser(String toUsername) {
+        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
+        try {
+            Connection conn = getConnection();
+            String sql = "SELECT * FROM WorkRequest WHERE receiver_username = ? And \n"
+                + "exists (SELECT * FROM Message where Message.request_id = WorkRequest.request_id)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, toUsername);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                InquiryWorkRequest request = new InquiryWorkRequest();
+                request.setMessage(rs.getString("message"));
+                request.setRequestId(rs.getInt("request_id"));
+                request.setSenderUsername(rs.getString("sender_username"));
+                request.setReceiverUsername(rs.getString("receiver_username"));
+                request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
+                request.setStatus(rs.getString("request_status"));
+                if (rs.getTimestamp("request_time") != null) {
+                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("assign_time") != null) {
+                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("finish_time") != null) {
+                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("confirm_time") != null) {
+                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
+                }
+                result.add(request);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public static ArrayList<InquiryWorkRequest> searchByFromUser(String fromUsername) {
+        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
+        try {
+            Connection conn = getConnection();
+            String sql = "SELECT * FROM WorkRequest WHERE sender_username = ? And \n"
+                + "exists (SELECT * FROM Message where Message.request_id = WorkRequest.request_id)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, fromUsername);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                InquiryWorkRequest request = new InquiryWorkRequest();
+                request.setMessage(rs.getString("message"));
+                request.setRequestId(rs.getInt("request_id"));
+                request.setSenderUsername(rs.getString("sender_username"));
+                request.setReceiverUsername(rs.getString("receiver_username"));
+                request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
+                request.setStatus(rs.getString("request_status"));
+                if (rs.getTimestamp("request_time") != null) {
+                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("assign_time") != null) {
+                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("finish_time") != null) {
+                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("confirm_time") != null) {
+                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
+                }
+                result.add(request);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public static ArrayList<InquiryWorkRequest> searchByOrgId(int orgId) {
+        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
+        try {
+            Connection conn = getConnection();
+            String sql = "SELECT * FROM WorkRequest WHERE receiver_org_id = ? and receiver_username is null And \n"
+                + "exists (SELECT * FROM Message where Message.request_id = WorkRequest.request_id);";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, orgId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                InquiryWorkRequest request = new InquiryWorkRequest();
+                request.setMessage(rs.getString("message"));
+                request.setRequestId(rs.getInt("request_id"));
+                request.setSenderUsername(rs.getString("sender_username"));
+                request.setReceiverUsername(rs.getString("receiver_username"));
+                request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
+                request.setStatus(rs.getString("request_status"));
+                if (rs.getTimestamp("request_time") != null) {
+                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("assign_time") != null) {
+                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("finish_time") != null) {
+                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
+                }
+                if (rs.getTimestamp("confirm_time") != null) {
+                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
+                }
+                result.add(request);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);

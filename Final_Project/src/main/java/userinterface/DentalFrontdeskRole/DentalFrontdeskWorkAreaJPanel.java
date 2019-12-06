@@ -48,7 +48,7 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         buttonPersonalInfo = new javax.swing.JButton();
         btnManageEnterprise = new javax.swing.JButton();
-        buttonSearchClinic = new javax.swing.JButton();
+        buttonAppointments = new javax.swing.JButton();
         buttonSearchInsurance = new javax.swing.JButton();
         customerContainer = new javax.swing.JPanel();
 
@@ -68,10 +68,10 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        buttonSearchClinic.setText("Search Clinic");
-        buttonSearchClinic.addActionListener(new java.awt.event.ActionListener() {
+        buttonAppointments.setText("Appointments");
+        buttonAppointments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSearchClinicActionPerformed(evt);
+                buttonAppointmentsActionPerformed(evt);
             }
         });
 
@@ -89,7 +89,7 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(buttonSearchClinic, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonAppointments, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnManageEnterprise, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonSearchInsurance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonPersonalInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -103,7 +103,7 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonPersonalInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonSearchClinic, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonAppointments, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonSearchInsurance, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(413, 413, 413))
@@ -145,8 +145,13 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
         layout.next(customerContainer);
     }//GEN-LAST:event_btnManageEnterpriseActionPerformed
 
-    private void buttonSearchClinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchClinicActionPerformed
-    }//GEN-LAST:event_buttonSearchClinicActionPerformed
+    private void buttonAppointmentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAppointmentsActionPerformed
+        customerContainer.removeAll();
+        DentalFrontDeskAppointmentJPanel appointmentJpanel = new DentalFrontDeskAppointmentJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(appointmentJpanel);
+        CardLayout layout = (CardLayout) customerContainer.getLayout();
+        layout.next(customerContainer);
+    }//GEN-LAST:event_buttonAppointmentsActionPerformed
 
     private void buttonSearchInsuranceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInsuranceActionPerformed
     }//GEN-LAST:event_buttonSearchInsuranceActionPerformed
@@ -154,8 +159,8 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnManageEnterprise;
+    private javax.swing.JButton buttonAppointments;
     private javax.swing.JButton buttonPersonalInfo;
-    private javax.swing.JButton buttonSearchClinic;
     private javax.swing.JButton buttonSearchInsurance;
     private javax.swing.JPanel customerContainer;
     private javax.swing.JPanel jPanel3;

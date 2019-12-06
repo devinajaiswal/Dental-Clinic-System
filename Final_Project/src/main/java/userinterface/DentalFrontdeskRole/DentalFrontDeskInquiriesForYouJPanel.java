@@ -42,8 +42,8 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         this.organization = organization;
         this.enterprise = enterprise;
 
-        populateInquiryTable(data.WorkRequestDAO.searchByToUser(account.getUsername()));
-        populateHistoryTable(data.WorkRequestDAO.searchByFromUser(account.getUsername()));
+        populateInquiryTable(data.InquiryWorkRequestDAO.searchByToUser(account.getUsername()));
+        populateHistoryTable(data.InquiryWorkRequestDAO.searchByFromUser(account.getUsername()));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) frameReply.getUI();
         Container north = (Container) ui.getNorthPane();
         north.remove(0);
@@ -301,9 +301,9 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
                     .addComponent(buttonReply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(frameReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -346,14 +346,14 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         message.setToUsername(request.getReceiverUsername());
         message.setMessage(messageText);
         message.setSentTime(LocalDateTime.now());
-        data.InquiryWorkRequestDAO.create(request.getRequestId(), message);
+        data.InquiryWorkRequestDAO.createMessage(request.getRequestId(), message);
 
         JOptionPane.showMessageDialog(this, "Messasge Sent!");
 
         resetFrameReply();
         setButtonsEnabled(true);
-        populateInquiryTable(data.WorkRequestDAO.searchByToUser(account.getUsername()));
-        populateHistoryTable(data.WorkRequestDAO.searchByFromUser(account.getUsername()));
+        populateInquiryTable(data.InquiryWorkRequestDAO.searchByToUser(account.getUsername()));
+        populateHistoryTable(data.InquiryWorkRequestDAO.searchByFromUser(account.getUsername()));
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
@@ -410,7 +410,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
             return;
         }
         String keyword = txtSearch.getText();
-        ArrayList<InquiryWorkRequest> list = data.WorkRequestDAO.searchByToUser(account.getUsername());
+        ArrayList<InquiryWorkRequest> list = data.InquiryWorkRequestDAO.searchByToUser(account.getUsername());
         ArrayList<InquiryWorkRequest> result = new ArrayList<>();
         for (InquiryWorkRequest request : list) {
             if (request.getMessage().contains(keyword) || request.getSenderUsername().contains(keyword)
@@ -420,7 +420,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         }
         populateInquiryTable(result);
 
-        list = data.WorkRequestDAO.searchByFromUser(account.getUsername());
+        list = data.InquiryWorkRequestDAO.searchByFromUser(account.getUsername());
         result = new ArrayList<>();
         for (InquiryWorkRequest request : list) {
             if (request.getMessage().contains(keyword) || request.getSenderUsername().contains(keyword)
