@@ -5,8 +5,6 @@
  */
 package userinterface.DentalManagerRole;
 
-import userinterface.DentalFrontdeskRole.*;
-import userinterface.DentalDentistRole.*;
 import userinterface.CustomerRole.*;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
