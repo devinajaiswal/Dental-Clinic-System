@@ -17,13 +17,13 @@ public class TreatmentWorkRequest extends WorkRequest {
     private String patientUsername;
     private int hygieneScore;
     private String note;
-    private TreatmentType type;
+    private String type;
 
-    public TreatmentType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(TreatmentType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

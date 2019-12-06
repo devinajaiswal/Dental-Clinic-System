@@ -6,8 +6,6 @@
 package data;
 
 import Business.WorkQueue.AppointmentWorkRequest;
-import Business.WorkQueue.InquiryWorkRequest;
-import Business.WorkQueue.Message;
 import static data.Data.getConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

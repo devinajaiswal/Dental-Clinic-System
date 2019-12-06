@@ -221,24 +221,15 @@ insert into Final_Project.TreatmentType values ('Filling'),
 
 CREATE TABLE Final_Project.`TreatmentPrice` (
     `enterprise_id` INT NOT NULL,
-    `treatment_type` VARCHAR(50) NOT NULL,
-    `price` DOUBLE,
-    PRIMARY KEY (`enterprise_id` , `treatment_type`),
-    FOREIGN KEY (enterprise_id)
-        REFERENCES Enterprise (enterprise_id),
-    FOREIGN KEY (treatment_type)
-        REFERENCES TreatmentType (treatment_type)
-);
-
-CREATE TABLE Final_Project.`InsurancePlan` (
-    `plan_id` INT NOT NULL,
-    `plan_name` VARCHAR(50) NOT NULL,
-    `price` DOUBLE NOT NULL,
-    `enterprise_id` INT NOT NULL,
-    PRIMARY KEY (`plan_id`),
+    `filling_price` double NOT NULL,
+    `rootcanal_price` double NOT NULL,
+    `srp_price` double NOT NULL,
+    PRIMARY KEY (`enterprise_id`),
     FOREIGN KEY (enterprise_id)
         REFERENCES Enterprise (enterprise_id)
 );
+
+
 
 CREATE TABLE Final_Project.`PlanCoverage` (
     `plan_id` INT NOT NULL,
@@ -361,21 +352,27 @@ alter table User_MedicalInfo modify column dob timestamp NOT NULL;
 CREATE TABLE Final_Project.`Treatment` (
     `treatment_id` INT NOT NULL,
     `request_id` INT NOT NULL,
-    `patient_username` VARCHAR(50) NOT NULL,
-    `hygieneScore` INT NOT NULL,
-    `type` VARCHAR(50) NOT NULL,
-    `note` VARCHAR(500) NOT NULL,
+    `patient_username` VARCHAR(50) NULL,
+    `hygiene_score` INT NULL,
+    `type` VARCHAR(50) NULL,
+    `note` VARCHAR(500) NULL,
     PRIMARY KEY (`treatment_id`),
     FOREIGN KEY (patient_username)
         REFERENCES User (username),
     FOREIGN KEY (request_id)
         REFERENCES WorkRequest (request_id)
 );
-create table DentalTreatmentPlans(
-  plan_id int not null,
-  plan_name varchar(50) not null,
-   `price` DOUBLE NOT NULL,
+
+
+CREATE TABLE Final_Project.`InsurancePlan` (
+    `plan_id` INT NOT NULL,
+    `plan_name` VARCHAR(50) NOT NULL,
+    `price` DOUBLE NOT NULL,
     `enterprise_id` INT NOT NULL,
-    treatmentType varchar(50) not null,
-    coverage DOUBLE NOT NULL
+    `filling_coverage` double not null,
+    `root_coverage` double NOT NULL,
+    `srp_coverage` double NOT NULL,
+    PRIMARY KEY (`plan_id`),
+    FOREIGN KEY (enterprise_id)
+        REFERENCES Enterprise (enterprise_id)
 );

@@ -51,7 +51,7 @@ public class TreatmentWorkRequestDAO {
             stmt.setInt(2, workRequestId);
             stmt.setString(3, treatment.getPatientUsername());
             stmt.setInt(4, treatment.getHygieneScore());
-            stmt.setString(5, treatment.getType().getValue());
+            stmt.setString(5, treatment.getType());
             stmt.setString(6, treatment.getNote());
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -61,36 +61,32 @@ public class TreatmentWorkRequestDAO {
 
     }
 
-    
-    public static int updateAppointment(int appointmentId, LocalDateTime time) {
-        int id = -1;
+    public static void updateTreatment(TreatmentWorkRequest request) {
         try {
             Connection conn = getConnection();
-            String sql = "Update Appointment set appointment_time = ? where appointment_id = ?";
+            String sql = "Update Treatment set hygiene_score = ?, type = ?, note = ? where treatment_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setTimestamp(1, Timestamp.valueOf(time));
-            stmt.setInt(2, appointmentId);
+            stmt.setInt(1, request.getHygieneScore());
+            stmt.setString(2, request.getType());
+            stmt.setString(3, request.getNote());
+            stmt.setInt(4, request.getTreatmentId());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return id;
-
     }
 
-    
-
-    public static ArrayList<AppointmentWorkRequest> searchByUsername(String username) {
-        ArrayList<AppointmentWorkRequest> result = new ArrayList<>();
+    public static ArrayList<TreatmentWorkRequest> searchByUsername(String username) {
+        ArrayList<TreatmentWorkRequest> result = new ArrayList<>();
         try {
             Connection conn = getConnection();
-            String sql = "SELECT * FROM WorkRequest WHERE receiver_org_id = ? and receiver_username is null And \n"
-                + "exists (SELECT * FROM Appointment where Appointment.request_id = WorkRequest.request_id)";
+            String sql = "SELECT * FROM WorkRequest WHERE receiver_username = ? And \n"
+                + "exists (SELECT * FROM Treatment where Treatment.request_id = WorkRequest.request_id)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, orgId);
+            stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                AppointmentWorkRequest request = new AppointmentWorkRequest();
+                TreatmentWorkRequest request = new TreatmentWorkRequest();
                 request.setMessage(rs.getString("message"));
                 request.setRequestId(rs.getInt("request_id"));
                 request.setSenderUsername(rs.getString("sender_username"));
@@ -110,15 +106,35 @@ public class TreatmentWorkRequestDAO {
                     request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
                 }
 
-                sql = "SELECT * FROM Appointment WHERE request_id = ?";
+                sql = "SELECT * FROM Treatment WHERE request_id = ?";
                 stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, request.getRequestId());
                 ResultSet rs2 = stmt.executeQuery();
                 rs2.next();
-                request.setAppointmentId(rs2.getInt("appointment_id"));
-                request.setAppointmentTime(rs2.getTimestamp("appointment_time").toLocalDateTime());
+                request.setTreatmentId(rs2.getInt("treatment_id"));
+                request.setPatientUsername(rs2.getString("patient_username"));
+                request.setHygieneScore(rs2.getInt("hygiene_score"));
+                request.setType(rs2.getString("type"));
+                request.setNote(rs2.getString("note"));
                 result.add(request);
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
+
+    public static ArrayList<String> getAllTreatmentType() {
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * from TreatmentType";
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                result.add(rs.getString("treatment_type"));
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
