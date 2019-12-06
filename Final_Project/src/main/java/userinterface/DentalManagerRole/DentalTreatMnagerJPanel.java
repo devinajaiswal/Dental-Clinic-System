@@ -5,6 +5,11 @@
  */
 package userinterface.DentalManagerRole;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author z9737
@@ -14,9 +19,18 @@ public class DentalTreatMnagerJPanel extends javax.swing.JPanel {
     /**
      * Creates new form DentalInfo
      */
-    public DentalTreatMnagerJPanel() {
+    JPanel userProcessContainer;
+    UserAccount account;
+    Organization organization;
+    Enterprise enterprise;
+
+    DentalTreatMnagerJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         initComponents();
         jInternalFrame1.setVisible(false);
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
     }
 
     /**

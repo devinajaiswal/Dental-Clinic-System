@@ -33,6 +33,7 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
         this.account = account;
         this.organization = organization;
         this.enterprise = enterprise;
+        
     }
 
     /**

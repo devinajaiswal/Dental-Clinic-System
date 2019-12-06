@@ -5,6 +5,11 @@
  */
 package userinterface.DentalDentistRole;
 
+import Business.Enterprise.Enterprise;
+import Business.Organization.Organization;
+import Business.UserAccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author z9737
@@ -14,8 +19,17 @@ public class DentaiDentistSearchJPanel extends javax.swing.JPanel {
     /**
      * Creates new form DentaiDentistSearchJPanel
      */
-    public DentaiDentistSearchJPanel() {
+    JPanel userProcessContainer;
+    UserAccount account;
+    Organization organization;
+    Enterprise enterprise;
+
+    DentaiDentistSearchJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {        
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;        
     }
 
     /**
