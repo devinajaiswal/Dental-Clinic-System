@@ -119,18 +119,29 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnViewInsuranePlansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInsuranePlansActionPerformed
-        customerContainer.removeAll();
-        CustomerPersonalInfoJPanel customerPersonalInfoJPanel = new CustomerPersonalInfoJPanel(account);
-        customerContainer.add(customerPersonalInfoJPanel);
-        CardLayout layout = (CardLayout) customerContainer.getLayout();
-        layout.next(customerContainer);
+      userProcessContainer.removeAll();
+        InsurancePlanListJPanel insurancePlaninfo = new InsurancePlanListJPanel(account);
+        userProcessContainer.add(insurancePlaninfo);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+
     }//GEN-LAST:event_btnViewInsuranePlansActionPerformed
 
     private void btnViewPolicyApplicationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewPolicyApplicationsActionPerformed
-        customerContainer.removeAll();
+       userProcessContainer.removeAll();
+        InsurancePlanInfoJPanel insurancePlaninfo = new InsurancePlanInfoJPanel(account);
+        userProcessContainer.add(insurancePlaninfo);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnViewPolicyApplicationsActionPerformed
 
     private void btnUploadPlansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadPlansActionPerformed
+   userProcessContainer.removeAll();
+        InsurancePlanInfoJPanel insurancePlaninfo = new InsurancePlanInfoJPanel(account);
+        userProcessContainer.add(insurancePlaninfo);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+
     }//GEN-LAST:event_btnUploadPlansActionPerformed
 
 
