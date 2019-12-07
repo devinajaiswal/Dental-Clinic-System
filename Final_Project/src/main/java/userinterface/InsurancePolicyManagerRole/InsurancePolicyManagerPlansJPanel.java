@@ -4,15 +4,9 @@
  */
 package userinterface.InsurancePolicyManagerRole;
 
-import userinterface.EnterpriseAdminRole.*;
-import userinterface.SystemAdminRole.*;
-import Business.Employee.Employee;
 import Business.Enterprise.Enterprise;
 import Business.Enterprise.InsurancePlan;
-import Business.Network.Network;
 import Business.Organization.Organization;
-import Business.Role.EnterpriseAdminRole;
-import Business.Role.Role;
 import Business.UserAccount.UserAccount;
 import java.awt.Container;
 import java.util.ArrayList;
@@ -224,7 +218,7 @@ public class InsurancePolicyManagerPlansJPanel extends javax.swing.JPanel {
                     .addComponent(txtSRP, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonConfirm)
                     .addComponent(buttonCancel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))

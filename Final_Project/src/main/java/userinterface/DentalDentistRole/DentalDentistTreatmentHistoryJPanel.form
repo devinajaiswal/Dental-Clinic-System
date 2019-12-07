@@ -22,12 +22,14 @@
                   <Component id="frameTreatment" alignment="1" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="buttonTreat" min="-2" max="-2" attributes="0"/>
+                      <Component id="buttonDetail" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="101" max="32767" attributes="0"/>
+                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonMedical" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtSearch" min="-2" pref="469" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="buttonHistory" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="buttonSearch" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="176" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -48,9 +50,12 @@
               <Component id="jScrollPane1" min="-2" pref="338" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="buttonTreat" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                  <Component id="buttonMedical" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                  <Component id="buttonHistory" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="buttonDetail" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Component id="txtSearch" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="buttonSearch" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="frameTreatment" max="32767" attributes="0"/>
@@ -71,8 +76,8 @@
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="3" rowCount="0">
                 <Column editable="false" title="Patient" type="java.lang.Object"/>
-                <Column editable="true" title="Checkin Time" type="java.lang.Object"/>
-                <Column editable="true" title="Message" type="java.lang.Object"/>
+                <Column editable="true" title="Finish Time" type="java.lang.Object"/>
+                <Column editable="true" title="Messsage" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -130,11 +135,6 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="buttonConfirm" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="buttonCancel" min="-2" max="-2" attributes="0"/>
-                      </Group>
                       <Component id="jScrollPane2" alignment="0" min="-2" pref="847" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -151,6 +151,7 @@
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="labUnavailable" min="-2" pref="30" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="buttonCancel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -177,11 +178,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane2" min="-2" pref="121" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="buttonConfirm" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="buttonCancel" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="buttonCancel" min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -190,14 +188,6 @@
         <Component class="javax.swing.JLabel" name="labAvailable">
         </Component>
         <Component class="javax.swing.JLabel" name="labUnavailable">
-        </Component>
-        <Component class="javax.swing.JButton" name="buttonConfirm">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Confirm"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonConfirmActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="buttonCancel">
           <Properties>
@@ -218,6 +208,7 @@
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -227,6 +218,7 @@
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -253,6 +245,7 @@
                 <StringItem index="4" value="5"/>
               </StringArray>
             </Property>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -260,28 +253,27 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="buttonTreat">
+    <Component class="javax.swing.JButton" name="buttonDetail">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Treat The Patient"/>
+        <Property name="text" type="java.lang.String" value="View Detail"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonTreatActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonDetailActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="buttonMedical">
+    <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="text" type="java.lang.String" value="View Patient Medical Info"/>
+        <Property name="text" type="java.lang.String" value="Keyword"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonMedicalActionPerformed"/>
-      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="buttonHistory">
+    <Component class="javax.swing.JTextField" name="txtSearch">
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonSearch">
       <Properties>
-        <Property name="text" type="java.lang.String" value="View Patient Treatment History"/>
+        <Property name="text" type="java.lang.String" value="Search"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonHistoryActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSearchActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

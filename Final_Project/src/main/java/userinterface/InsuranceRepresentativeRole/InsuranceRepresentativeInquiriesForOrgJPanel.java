@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.DentalFrontdeskRole;
+package userinterface.InsuranceRepresentativeRole;
 
+import userinterface.DentalFrontdeskRole.*;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
@@ -22,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author raunak
  */
-public class DentalFrontDeskInquiriesForOrgJPanel extends javax.swing.JPanel {
+public class InsuranceRepresentativeInquiriesForOrgJPanel extends javax.swing.JPanel {
 
     private JPanel userProcessContainer;
     private UserAccount account;
@@ -32,7 +33,7 @@ public class DentalFrontDeskInquiriesForOrgJPanel extends javax.swing.JPanel {
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public DentalFrontDeskInquiriesForOrgJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
+    public InsuranceRepresentativeInquiriesForOrgJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.account = account;

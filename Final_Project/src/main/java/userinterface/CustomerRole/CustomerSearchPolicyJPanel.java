@@ -5,11 +5,13 @@
 package userinterface.CustomerRole;
 
 import Business.Enterprise.Enterprise;
+import Business.Enterprise.InsurancePlan;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.AppointmentWorkRequest;
 import Business.WorkQueue.InquiryWorkRequest;
 import Business.WorkQueue.Message;
+import Business.WorkQueue.PolicyWorkRequest;
 import java.awt.Color;
 import java.awt.Container;
 import java.sql.Date;
@@ -18,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -27,14 +30,14 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author raunak
  */
-public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
+public class CustomerSearchPolicyJPanel extends javax.swing.JPanel {
 
     private UserAccount account;
 
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public CustomerSearchClinicJPanel(UserAccount account) {
+    public CustomerSearchPolicyJPanel(UserAccount account) {
         initComponents();
         this.account = account;
 
@@ -46,25 +49,32 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         north.repaint();
         frameInquiry.setVisible(false);
 
-        ui = (BasicInternalFrameUI) frameAppointment.getUI();
+        ui = (BasicInternalFrameUI) frameApply.getUI();
         north = (Container) ui.getNorthPane();
         north.remove(0);
         north.validate();
         north.repaint();
-        frameAppointment.setVisible(false);
+        frameApply.setVisible(false);
     }
 
-    private void populateTable() {
+    private void populateTable(ArrayList<InsurancePlan> plans) {
         DefaultTableModel model = (DefaultTableModel) tableClinic.getModel();
 
         model.setRowCount(0);
-        for (Enterprise enterprise : data.EnterpriseDAO.getAllbyType(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
-            Object[] row = new Object[3];
-            row[0] = enterprise;
-            row[1] = "";
-            row[2] = "";
+        for (InsurancePlan plan : plans) {
+            Object[] row = new Object[6];
+            row[0] = data.EnterpriseDAO.searchById(plan.getEnterpriseId());
+            row[1] = plan;
+            row[2] = plan.getPrice();
+            row[3] = plan.getFillingCoverage();
+            row[4] = plan.getRootCoverage();
+            row[5] = plan.getSrpCoverage();
             model.addRow(row);
         }
+    }
+
+    private void populateTable() {
+        populateTable(data.PricesDAO.getAllInsurancePlans());
     }
 
     /**
@@ -78,7 +88,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tableClinic = new javax.swing.JTable();
-        buttonAppointment = new javax.swing.JButton();
+        buttonApply = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         frameInquiry = new javax.swing.JInternalFrame();
         labAvailable = new javax.swing.JLabel();
@@ -91,29 +101,24 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         txtSearch = new javax.swing.JTextField();
         buttonSearch = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
-        frameAppointment = new javax.swing.JInternalFrame();
+        frameApply = new javax.swing.JInternalFrame();
         labAvailable1 = new javax.swing.JLabel();
         labUnavailable1 = new javax.swing.JLabel();
-        buttonConfirmAppointment = new javax.swing.JButton();
-        buttonCancelAppointment = new javax.swing.JButton();
+        buttonConfirmApply = new javax.swing.JButton();
+        buttonCancelApply = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        comboTime = new javax.swing.JComboBox();
-        dateAppointment = new com.toedter.calendar.JDateChooser();
-        jLabel1 = new javax.swing.JLabel();
+        dateStart = new com.toedter.calendar.JDateChooser();
 
         tableClinic.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Clinic Name", "Address", "Distance"
+                "Insurance Company Name", "Plan Name", "Yearly Premium", "Filling Coverage(%)", "Root Canal Coverage(%)", "SRP Coverage(%)"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, true
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -122,15 +127,16 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tableClinic);
 
-        buttonAppointment.setText("Make An Appointment");
-        buttonAppointment.addActionListener(new java.awt.event.ActionListener() {
+        buttonApply.setText("Apply");
+        buttonApply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAppointmentActionPerformed(evt);
+                buttonApplyActionPerformed(evt);
             }
         });
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel4.setText("Search Dental Clinic");
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Search Policy Plan");
 
         frameInquiry.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         frameInquiry.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -173,7 +179,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                         .addComponent(buttonConfirmInquiry)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonCancelInquiry)))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         frameInquiryLayout.setVerticalGroup(
             frameInquiryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,86 +206,69 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
         jLabel6.setText("Keyword");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5", "10", "20", "50" }));
+        frameApply.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        frameApply.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        frameApply.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        frameApply.setEnabled(false);
+        frameApply.setVisible(true);
 
-        jLabel8.setText("Distance From Your Address");
-
-        frameAppointment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        frameAppointment.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        frameAppointment.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        frameAppointment.setEnabled(false);
-        frameAppointment.setVisible(true);
-
-        buttonConfirmAppointment.setText("Confirm");
-        buttonConfirmAppointment.addActionListener(new java.awt.event.ActionListener() {
+        buttonConfirmApply.setText("Confirm");
+        buttonConfirmApply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonConfirmAppointmentActionPerformed(evt);
+                buttonConfirmApplyActionPerformed(evt);
             }
         });
 
-        buttonCancelAppointment.setText("Cancel");
-        buttonCancelAppointment.addActionListener(new java.awt.event.ActionListener() {
+        buttonCancelApply.setText("Cancel");
+        buttonCancelApply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCancelAppointmentActionPerformed(evt);
+                buttonCancelApplyActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Date");
+        jLabel2.setText("Start Date");
 
-        jLabel10.setText("Time");
+        dateStart.setDateFormatString("MM/dd/yyyy");
 
-        comboTime.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00" }));
-
-        dateAppointment.setDateFormatString("MM/dd/yyyy");
-
-        javax.swing.GroupLayout frameAppointmentLayout = new javax.swing.GroupLayout(frameAppointment.getContentPane());
-        frameAppointment.getContentPane().setLayout(frameAppointmentLayout);
-        frameAppointmentLayout.setHorizontalGroup(
-            frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frameAppointmentLayout.createSequentialGroup()
+        javax.swing.GroupLayout frameApplyLayout = new javax.swing.GroupLayout(frameApply.getContentPane());
+        frameApply.getContentPane().setLayout(frameApplyLayout);
+        frameApplyLayout.setHorizontalGroup(
+            frameApplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameApplyLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(frameAppointmentLayout.createSequentialGroup()
-                        .addGap(496, 496, 496)
-                        .addComponent(labAvailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(labUnavailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(frameAppointmentLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboTime, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dateStart, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(162, 162, 162)
+                .addComponent(labAvailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(labUnavailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(frameAppointmentLayout.createSequentialGroup()
-                .addComponent(buttonConfirmAppointment)
+            .addGroup(frameApplyLayout.createSequentialGroup()
+                .addComponent(buttonConfirmApply)
                 .addGap(18, 18, 18)
-                .addComponent(buttonCancelAppointment)
+                .addComponent(buttonCancelApply)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        frameAppointmentLayout.setVerticalGroup(
-            frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(frameAppointmentLayout.createSequentialGroup()
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labAvailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labUnavailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dateAppointment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel10)
-                        .addComponent(comboTime, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(frameAppointmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonConfirmAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonCancelAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+        frameApplyLayout.setVerticalGroup(
+            frameApplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(frameApplyLayout.createSequentialGroup()
+                .addGroup(frameApplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(frameApplyLayout.createSequentialGroup()
+                        .addGroup(frameApplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labAvailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labUnavailable1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addComponent(jLabel2))
+                    .addGroup(frameApplyLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(dateStart, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(22, 22, 22)
+                .addGroup(frameApplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonConfirmApply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonCancelApply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
-
-        jLabel1.setText("KM");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -290,31 +279,25 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(frameInquiry, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(frameAppointment)
+                    .addComponent(frameApply)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(buttonInquiry)
-                                .addGap(18, 18, 18)
-                                .addComponent(buttonAppointment))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buttonApply, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,18 +310,15 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonApply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(frameInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(frameAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(frameApply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(21, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -350,27 +330,25 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
     }
 
     private void resetFrameAppointment() {
-        frameAppointment.setVisible(false);
+        frameApply.setVisible(false);
         tableClinic.setEnabled(true);
-        dateAppointment.setDate(null);
-        comboTime.setSelectedIndex(0);
+        dateStart.setDate(null);
     }
 
     private void setButtonsEnabled(boolean enable) {
-        buttonAppointment.setEnabled(enable);
+        buttonApply.setEnabled(enable);
         buttonInquiry.setEnabled(enable);
     }
 
-    private void buttonAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAppointmentActionPerformed
+    private void buttonApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonApplyActionPerformed
         if (tableClinic.getSelectedRow() >= 0) {
-            Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
-            frameAppointment.setVisible(true);
+            frameApply.setVisible(true);
             setButtonsEnabled(false);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a record first");
             return;
         }
-    }//GEN-LAST:event_buttonAppointmentActionPerformed
+    }//GEN-LAST:event_buttonApplyActionPerformed
 
     private void buttonConfirmInquiryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmInquiryActionPerformed
         if (!userinterface.Util.requireNotEmpty(this, txtInquiry)) {
@@ -383,12 +361,12 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         request.setRequestTime(LocalDateTime.now());
         Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
         Organization org = data.OrganizationDAO.searchByTypeAndEnterprise(
-            Organization.Type.DentalFrontDesk.getValue(), enterprise.getEnterpriseId());
+            Organization.Type.InsuranceRepresentative.getValue(), enterprise.getEnterpriseId());
         if (org == null) {
-            JOptionPane.showMessageDialog(this, "The clinic is not setting up properly right now, please try later!");
+            JOptionPane.showMessageDialog(this, "The company is not setting up properly right now, please try later!");
             return;
         }
-        
+
         request.setReceiverOrganizationId(org.getOrganizationID());
         int requestId = data.WorkRequestDAO.create(request);
 
@@ -413,7 +391,6 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
     private void buttonInquiryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInquiryActionPerformed
         if (tableClinic.getSelectedRow() >= 0) {
-            Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
             frameInquiry.setVisible(true);
             setButtonsEnabled(false);
             tableClinic.setEnabled(false);
@@ -423,70 +400,70 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonInquiryActionPerformed
 
-    private void buttonConfirmAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmAppointmentActionPerformed
-        userinterface.Util.setBorderBlack(comboTime, dateAppointment);
-        if (dateAppointment.getDate() == null || dateAppointment.getDate().compareTo(Date.valueOf(LocalDate.now())) <= 0) {
-            dateAppointment.setBorder(new LineBorder(Color.RED));
-            JOptionPane.showMessageDialog(this, "We can only make appointment as early as tomorrow!");
-            return;
-        }
-        if (!userinterface.Util.requireSeletedItemNotNull(this, comboTime)) {
+    private void buttonConfirmApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmApplyActionPerformed
+        userinterface.Util.setBorderBlack(dateStart);
+        if (dateStart.getDate() == null || dateStart.getDate().compareTo(Date.valueOf(LocalDate.now())) <= 0) {
+            dateStart.setBorder(new LineBorder(Color.RED));
+            JOptionPane.showMessageDialog(this, "We can only sell policy as early as tomorrow!");
             return;
         }
 
-        AppointmentWorkRequest request = new AppointmentWorkRequest();
+        InsurancePlan plan = (InsurancePlan) tableClinic.getValueAt(tableClinic.getSelectedRow(), 1);
+        PolicyWorkRequest request = new PolicyWorkRequest();
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy ");
-        String dateString = df.format(dateAppointment.getDate());
-        String timeString = (String) comboTime.getSelectedItem();
+        String dateString = df.format(dateStart.getDate());
+        String timeString = "00:00";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
-        LocalDateTime appointmentTime = LocalDateTime.parse(dateString + timeString, formatter);
-        request.setAppointmentTime(appointmentTime);
+        LocalDateTime startDate = LocalDateTime.parse(dateString + timeString, formatter);
+
+        if (data.PolicyDAO.isUserCoveredAtDate(startDate)) {
+            JOptionPane.showMessageDialog(this, "You will still be covered by another policy at that time!");
+            return;
+        }
         
+        request.setStartDate(startDate);
+        request.setPlanId(plan.getPlanId());
         request.setSenderUsername(account.getUsername());
-        request.setMessage("Appointment Request");
+        request.setUsername(account.getUsername());
+        request.setMessage("Policy applied");
         request.setRequestTime(LocalDateTime.now());
         Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
         Organization org = data.OrganizationDAO.searchByTypeAndEnterprise(
-            Organization.Type.DentalFrontDesk.getValue(), enterprise.getEnterpriseId());
+            Organization.Type.InsurancePolicyManager.getValue(), enterprise.getEnterpriseId());
         if (org == null) {
             JOptionPane.showMessageDialog(this, "The clinic is not setting up properly right now, please try later!");
             return;
         }
         request.setReceiverOrganizationId(org.getOrganizationID());
         int requestId = data.WorkRequestDAO.create(request);
-        data.AppointmentWorkRequestDAO.createAppointment(requestId, appointmentTime);
-        
-        JOptionPane.showMessageDialog(this, "Appointment request sent!");
+        data.PolicyDAO.create(requestId, request);
+
+        JOptionPane.showMessageDialog(this, "Application request sent!");
 
         resetFrameAppointment();
         setButtonsEnabled(true);
-    }//GEN-LAST:event_buttonConfirmAppointmentActionPerformed
+    }//GEN-LAST:event_buttonConfirmApplyActionPerformed
 
-    private void buttonCancelAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelAppointmentActionPerformed
-        frameAppointment.setVisible(false);
+    private void buttonCancelApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelApplyActionPerformed
+        frameApply.setVisible(false);
         resetFrameAppointment();
         setButtonsEnabled(true);
-    }//GEN-LAST:event_buttonCancelAppointmentActionPerformed
+    }//GEN-LAST:event_buttonCancelApplyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonAppointment;
-    private javax.swing.JButton buttonCancelAppointment;
+    private javax.swing.JButton buttonApply;
+    private javax.swing.JButton buttonCancelApply;
     private javax.swing.JButton buttonCancelInquiry;
-    private javax.swing.JButton buttonConfirmAppointment;
+    private javax.swing.JButton buttonConfirmApply;
     private javax.swing.JButton buttonConfirmInquiry;
     private javax.swing.JButton buttonInquiry;
     private javax.swing.JButton buttonSearch;
-    private javax.swing.JComboBox comboTime;
-    private com.toedter.calendar.JDateChooser dateAppointment;
-    private javax.swing.JInternalFrame frameAppointment;
+    private com.toedter.calendar.JDateChooser dateStart;
+    private javax.swing.JInternalFrame frameApply;
     private javax.swing.JInternalFrame frameInquiry;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labAvailable;

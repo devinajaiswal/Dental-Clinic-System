@@ -50,7 +50,6 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
         buttonPersonalInfo = new javax.swing.JButton();
         btnManageEnterprise = new javax.swing.JButton();
         buttonAppointments = new javax.swing.JButton();
-        buttonSearchInsurance = new javax.swing.JButton();
         customerContainer = new javax.swing.JPanel();
 
         jSplitPane1.setDividerLocation(200);
@@ -76,13 +75,6 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        buttonSearchInsurance.setText("Search Insurance Plans");
-        buttonSearchInsurance.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSearchInsuranceActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -92,7 +84,6 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(buttonAppointments, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnManageEnterprise, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonSearchInsurance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonPersonalInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -105,9 +96,7 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
                 .addComponent(buttonPersonalInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonAppointments, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonSearchInsurance, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(413, 413, 413))
+                .addGap(454, 454, 454))
         );
 
         jSplitPane1.setLeftComponent(jPanel3);
@@ -154,15 +143,11 @@ public class DentalFrontdeskWorkAreaJPanel extends javax.swing.JPanel {
         layout.next(customerContainer);
     }//GEN-LAST:event_buttonAppointmentsActionPerformed
 
-    private void buttonSearchInsuranceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInsuranceActionPerformed
-    }//GEN-LAST:event_buttonSearchInsuranceActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnManageEnterprise;
     private javax.swing.JButton buttonAppointments;
     private javax.swing.JButton buttonPersonalInfo;
-    private javax.swing.JButton buttonSearchInsurance;
     private javax.swing.JPanel customerContainer;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
