@@ -4,20 +4,30 @@
  */
 package userinterface.CustomerRole;
 
+import Business.Customer.CustomerPersonalInfo;
 import Business.Enterprise.Enterprise;
+import Business.Organization.DentalCliniclInfo;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.AppointmentWorkRequest;
 import Business.WorkQueue.InquiryWorkRequest;
 import Business.WorkQueue.Message;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
 import java.awt.Color;
 import java.awt.Container;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -55,14 +65,47 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
     }
 
     private void populateTable() {
+        populateTable(data.EnterpriseDAO.getAllbyType(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue()), null);
+    }
+
+    private void populateTable(ArrayList<Enterprise> list, String address) {
         DefaultTableModel model = (DefaultTableModel) tableClinic.getModel();
 
         model.setRowCount(0);
-        for (Enterprise enterprise : data.EnterpriseDAO.getAllbyType(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
+        for (Enterprise enterprise : list) {
             Object[] row = new Object[3];
             row[0] = enterprise;
-            row[1] = "";
-            row[2] = "";
+            DentalCliniclInfo clinicInfo = data.EnterpriseDAO.searchClinicInfo(enterprise.getEnterpriseId());
+            if (address == null) {
+                CustomerPersonalInfo personInfo = data.UserDAO.searchPersonalInfo(account.getUsername());
+                String personalAddress = personInfo.getStreet() + ", " + personInfo.getCity() + ", " + personInfo.getState() + ", " + personInfo.getPostcode();
+                address = personalAddress;
+            }
+
+            if (clinicInfo != null) {
+                String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
+
+                row[1] = clinicAddress;
+
+                GeoApiContext context = new GeoApiContext.Builder()
+                    .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
+                    .build();
+                DistanceMatrix results;
+                String[] orgris = {address};
+                String[] dest = {clinicAddress};
+                try {
+                    results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
+                    row[2] = results.rows[0].elements[0].distance;
+                } catch (ApiException ex) {
+                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+
+            }
             model.addRow(row);
         }
     }
@@ -88,12 +131,10 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtInquiry = new javax.swing.JTextArea();
         buttonInquiry = new javax.swing.JButton();
-        txtSearch = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
         buttonSearch = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txtSearch1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboDistance = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         frameAppointment = new javax.swing.JInternalFrame();
         labAvailable1 = new javax.swing.JLabel();
@@ -104,13 +145,16 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         comboTime = new javax.swing.JComboBox();
         dateAppointment = new com.toedter.calendar.JDateChooser();
+        jLabel1 = new javax.swing.JLabel();
+        txtAddress = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         tableClinic.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Clinic Name", "Address", "Rate"
+                "Clinic Name", "Address", "Distance"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -174,7 +218,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                         .addComponent(buttonConfirmInquiry)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonCancelInquiry)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         frameInquiryLayout.setVerticalGroup(
             frameInquiryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,12 +242,15 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         });
 
         buttonSearch.setText("Search");
+        buttonSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSearchActionPerformed(evt);
+            }
+        });
 
-        jLabel6.setText("Keyword");
+        jLabel6.setText("Name");
 
-        jLabel7.setText("Postcode");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "5 Miles", "10 Miles", "20 Miles", "50Miles" }));
+        comboDistance.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "5", "10", "20", "50" }));
 
         jLabel8.setText("Distance");
 
@@ -282,6 +329,10 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
+        jLabel1.setText("KM");
+
+        jLabel7.setText("Address");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -291,31 +342,32 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(frameInquiry, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(frameAppointment)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel7))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(buttonInquiry)
-                                .addGap(18, 18, 18)
-                                .addComponent(buttonAppointment)))
+                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtAddress)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(frameAppointment)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(comboDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonInquiry)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonAppointment)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -327,13 +379,14 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(txtSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(comboDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel1)
+                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -391,7 +444,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "The clinic is not setting up properly right now, please try later!");
             return;
         }
-        
+
         request.setReceiverOrganizationId(org.getOrganizationID());
         int requestId = data.WorkRequestDAO.create(request);
 
@@ -428,7 +481,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
     private void buttonConfirmAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmAppointmentActionPerformed
         userinterface.Util.setBorderBlack(comboTime, dateAppointment);
-        if (dateAppointment.getDate() == null || dateAppointment.getDate().before(Date.valueOf(LocalDate.now()))) {
+        if (dateAppointment.getDate() == null || dateAppointment.getDate().compareTo(Date.valueOf(LocalDate.now())) <= 0) {
             dateAppointment.setBorder(new LineBorder(Color.RED));
             JOptionPane.showMessageDialog(this, "We can only make appointment as early as tomorrow!");
             return;
@@ -444,7 +497,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
         LocalDateTime appointmentTime = LocalDateTime.parse(dateString + timeString, formatter);
         request.setAppointmentTime(appointmentTime);
-        
+
         request.setSenderUsername(account.getUsername());
         request.setMessage("Appointment Request");
         request.setRequestTime(LocalDateTime.now());
@@ -458,7 +511,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         request.setReceiverOrganizationId(org.getOrganizationID());
         int requestId = data.WorkRequestDAO.create(request);
         data.AppointmentWorkRequestDAO.createAppointment(requestId, appointmentTime);
-        
+
         JOptionPane.showMessageDialog(this, "Appointment request sent!");
 
         resetFrameAppointment();
@@ -471,6 +524,94 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         setButtonsEnabled(true);
     }//GEN-LAST:event_buttonCancelAppointmentActionPerformed
 
+    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
+        userinterface.Util.setBorderBlack(txtAddress, txtName, comboDistance);
+
+        ArrayList<Enterprise> list = data.EnterpriseDAO.getAllbyType(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue());
+        ArrayList<Enterprise> temp = new ArrayList<>();
+        ArrayList<Enterprise> result = new ArrayList<>();
+        if (txtName.getText() != null && !txtName.equals("")) {
+            for (Enterprise enterprise : list) {
+                if (enterprise.getEnterpriseName().contains(txtName.getText())) {
+                    temp.add(enterprise);
+                    result.add(enterprise);
+                }
+            }
+        }
+
+        if (txtAddress.getText() != null && !txtAddress.getText().equals("")) {
+            String distance = (String) comboDistance.getSelectedItem();
+            if (distance == null || distance.equals("")) {
+                comboDistance.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(this, "You must select a distance!");
+                return;
+            }
+            int dis = Integer.parseInt(distance);
+
+            for (Enterprise enterprise : temp) {
+                DentalCliniclInfo clinicInfo = data.EnterpriseDAO.searchClinicInfo(enterprise.getEnterpriseId());
+                if (clinicInfo != null) {
+                    String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
+                    GeoApiContext context = new GeoApiContext.Builder()
+                        .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
+                        .build();
+                    DistanceMatrix results;
+                    String[] orgris = {txtAddress.getText()};
+                    String[] dest = {clinicAddress};
+                    try {
+                        results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
+                        long disResult = results.rows[0].elements[0].distance.inMeters;
+                        if (disResult > dis * 1000) {
+                            result.remove(enterprise);
+                        }
+                    } catch (ApiException ex) {
+                        Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                populateTable(result, txtAddress.getText());
+            }
+
+        } else {
+            String distance = (String) comboDistance.getSelectedItem();
+            if (distance != null && !distance.equals("")) {
+                int dis = Integer.parseInt(distance);
+                CustomerPersonalInfo personInfo = data.UserDAO.searchPersonalInfo(account.getUsername());
+                String personalAddress = personInfo.getStreet() + ", " + personInfo.getCity() + ", " + personInfo.getState() + ", " + personInfo.getPostcode();
+                for (Enterprise enterprise : temp) {
+                    DentalCliniclInfo clinicInfo = data.EnterpriseDAO.searchClinicInfo(enterprise.getEnterpriseId());
+                    if (clinicInfo != null) {
+                        String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
+                        GeoApiContext context = new GeoApiContext.Builder()
+                            .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
+                            .build();
+                        DistanceMatrix results;
+                        String[] orgris = {personalAddress};
+                        String[] dest = {clinicAddress};
+                        try {
+                            results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
+                            long disResult = results.rows[0].elements[0].distance.inMeters;
+                            if (disResult > dis * 1000) {
+                                result.remove(enterprise);
+                            }
+                        } catch (ApiException ex) {
+                            Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }
+            populateTable(result, null);
+        }
+
+    }//GEN-LAST:event_buttonSearchActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAppointment;
     private javax.swing.JButton buttonCancelAppointment;
@@ -479,11 +620,12 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
     private javax.swing.JButton buttonConfirmInquiry;
     private javax.swing.JButton buttonInquiry;
     private javax.swing.JButton buttonSearch;
+    private javax.swing.JComboBox<String> comboDistance;
     private javax.swing.JComboBox comboTime;
     private com.toedter.calendar.JDateChooser dateAppointment;
     private javax.swing.JInternalFrame frameAppointment;
     private javax.swing.JInternalFrame frameInquiry;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -497,8 +639,8 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel labUnavailable;
     private javax.swing.JLabel labUnavailable1;
     private javax.swing.JTable tableClinic;
+    private javax.swing.JTextField txtAddress;
     private javax.swing.JTextArea txtInquiry;
-    private javax.swing.JTextField txtSearch;
-    private javax.swing.JTextField txtSearch1;
+    private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }

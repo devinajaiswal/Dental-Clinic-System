@@ -5,20 +5,11 @@
  */
 package userinterface;
 
-import com.nexmo.client.NexmoClient;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.auth.AuthMethod;
-import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.sms.SmsSubmissionResult;
-import com.nexmo.client.sms.messages.TextMessage;
 import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
 import java.awt.Color;
 import java.awt.Component;
-import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.mail.Authenticator;
@@ -72,6 +63,32 @@ public class Util {
             if (txtField.getText() == null || txtField.getText().equals("")) {
                 txtField.setBorder(new LineBorder(Color.RED));
                 JOptionPane.showMessageDialog(parentComponent, "This text field can't be empty!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean requireInt(Component parentComponent, JTextField... txtFields) {
+        for (JTextField txtField : txtFields) {
+            try {
+                Integer.parseInt(txtField.getText());
+            } catch (java.lang.NumberFormatException e) {
+                txtField.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(parentComponent, "The text of this text field must be a integer number!");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean requireDouble(Component parentComponent, JTextField... txtFields) {
+        for (JTextField txtField : txtFields) {
+            try {
+                Double.parseDouble(txtField.getText());
+            } catch (java.lang.NumberFormatException e) {
+                txtField.setBorder(new LineBorder(Color.RED));
+                JOptionPane.showMessageDialog(parentComponent, "The text of this text field must be a double number!");
                 return false;
             }
         }
@@ -137,6 +154,12 @@ public class Util {
     private static boolean emailPatternCorrect(String email) {
         Pattern p = Pattern.compile("^(.+)@(.+)$");
         Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
+    public static boolean passwordPatternCorrect(String password) {
+        Pattern p = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[*$#&])[A-Za-z\\d*$#&]{6,}$");
+        Matcher m = p.matcher(password);
         return m.matches();
     }
 

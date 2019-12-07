@@ -11,7 +11,6 @@ import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
-import userinterface.DentalFrontdeskRole.DentalFrontDeskInquiriesForYouJPanel;
 
 /**
  *
@@ -46,27 +45,23 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
-        buttonTreatment = new javax.swing.JButton();
-        btnSearchClinic = new javax.swing.JButton();
-        dentistContainer = new javax.swing.JPanel();
+        buttonTreat = new javax.swing.JButton();
+        btnTreatmentHistory = new javax.swing.JButton();
+        customerContainer = new javax.swing.JPanel();
 
         jSplitPane1.setDividerLocation(200);
 
-        buttonTreatment.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        buttonTreatment.setText("Patient Treatment");
-        buttonTreatment.setMaximumSize(new java.awt.Dimension(137, 23));
-        buttonTreatment.setMinimumSize(new java.awt.Dimension(137, 23));
-        buttonTreatment.addActionListener(new java.awt.event.ActionListener() {
+        buttonTreat.setText("Patient Treatment");
+        buttonTreat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonTreatmentActionPerformed(evt);
+                buttonTreatActionPerformed(evt);
             }
         });
 
-        btnSearchClinic.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btnSearchClinic.setText("Search for other clinic");
-        btnSearchClinic.addActionListener(new java.awt.event.ActionListener() {
+        btnTreatmentHistory.setText("Treatment History");
+        btnTreatmentHistory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchClinicActionPerformed(evt);
+                btnTreatmentHistoryActionPerformed(evt);
             }
         });
 
@@ -76,25 +71,25 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buttonTreatment, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearchClinic, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnTreatmentHistory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                    .addComponent(buttonTreat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(buttonTreatment, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
-                .addComponent(btnSearchClinic, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(buttonTreat, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnTreatmentHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(483, 483, 483))
         );
 
         jSplitPane1.setLeftComponent(jPanel3);
 
-        dentistContainer.setLayout(new java.awt.CardLayout());
-        jSplitPane1.setRightComponent(dentistContainer);
+        customerContainer.setLayout(new java.awt.CardLayout());
+        jSplitPane1.setRightComponent(customerContainer);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -102,7 +97,7 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
@@ -111,32 +106,26 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSearchClinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchClinicActionPerformed
-        dentistContainer.removeAll();
-        DentaiDentistSearchJPanel searchJpanel = new DentaiDentistSearchJPanel(userProcessContainer, account, organization, enterprise);
-        dentistContainer.add(searchJpanel);
-        CardLayout layout = (CardLayout) dentistContainer.getLayout();
-        layout.next(dentistContainer);
-    }//GEN-LAST:event_btnSearchClinicActionPerformed
+    private void buttonTreatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTreatActionPerformed
+        customerContainer.removeAll();
+        DentalDentistTreatmentJPanel jpanel = new DentalDentistTreatmentJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(jpanel);
+        CardLayout layout = (CardLayout) customerContainer.getLayout();
+        layout.next(customerContainer);
+    }//GEN-LAST:event_buttonTreatActionPerformed
 
-    private void buttonTreatmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTreatmentActionPerformed
-        //        customerContainer.removeAll();
-        //        CustomerPersonalInfoJPanel customerPersonalInfoJPanel = new CustomerPersonalInfoJPanel(account);
-        //        customerContainer.add(customerPersonalInfoJPanel);
-        //        CardLayout layout = (CardLayout) customerContainer.getLayout();
-        //        layout.next(customerContainer);
-        dentistContainer.removeAll();
-        DendentistTreatJPanel treatJpanel = new DendentistTreatJPanel(userProcessContainer, account, organization, enterprise);
-        dentistContainer.add(treatJpanel);
-        CardLayout layout = (CardLayout) dentistContainer.getLayout();
-        layout.next(dentistContainer);
-    }//GEN-LAST:event_buttonTreatmentActionPerformed
+    private void btnTreatmentHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTreatmentHistoryActionPerformed
+        customerContainer.removeAll();
+        DentalDentistTreatmentHistoryJPanel jpanel = new DentalDentistTreatmentHistoryJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(jpanel);
+        CardLayout layout = (CardLayout) customerContainer.getLayout();
+        layout.next(customerContainer);    }//GEN-LAST:event_btnTreatmentHistoryActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSearchClinic;
-    private javax.swing.JButton buttonTreatment;
-    private javax.swing.JPanel dentistContainer;
+    private javax.swing.JButton btnTreatmentHistory;
+    private javax.swing.JButton buttonTreat;
+    private javax.swing.JPanel customerContainer;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables

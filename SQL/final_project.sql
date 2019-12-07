@@ -221,21 +221,10 @@ insert into Final_Project.TreatmentType values ('Filling'),
 
 CREATE TABLE Final_Project.`TreatmentPrice` (
     `enterprise_id` INT NOT NULL,
-    `treatment_type` VARCHAR(50) NOT NULL,
-    `price` DOUBLE,
-    PRIMARY KEY (`enterprise_id` , `treatment_type`),
-    FOREIGN KEY (enterprise_id)
-        REFERENCES Enterprise (enterprise_id),
-    FOREIGN KEY (treatment_type)
-        REFERENCES TreatmentType (treatment_type)
-);
-
-CREATE TABLE Final_Project.`InsurancePlan` (
-    `plan_id` INT NOT NULL,
-    `plan_name` VARCHAR(50) NOT NULL,
-    `price` DOUBLE NOT NULL,
-    `enterprise_id` INT NOT NULL,
-    PRIMARY KEY (`plan_id`),
+    `filling_price` double NOT NULL,
+    `rootcanal_price` double NOT NULL,
+    `srp_price` double NOT NULL,
+    PRIMARY KEY (`enterprise_id`),
     FOREIGN KEY (enterprise_id)
         REFERENCES Enterprise (enterprise_id)
 );
@@ -251,33 +240,21 @@ CREATE TABLE Final_Project.`PlanCoverage` (
         REFERENCES TreatmentType (treatment_type)
 );
 
-CREATE TABLE Final_Project.`RequestStatusType` (
-    `status_type` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`status_type`)
-);
-INSERT INTO Final_Project.`RequestStatusType` VALUES ('SENT'),
-('ASSIGNED'), ('FINISHED'), ('CONFIRMED');
-
 CREATE TABLE Final_Project.`WorkRequest` (
     `request_id` INT NOT NULL,
     `message` VARCHAR(500) NULL,
     `sender_username` VARCHAR(50) NOT NULL,
     `receiver_username` VARCHAR(50) NULL,
     `receiver_org_id` INT NULL,
-    `request_status` VARCHAR(50) NOT NULL,
     `request_time` DATETIME NOT NULL,
-    `assign_time` DATETIME NULL,
     `finish_time` DATETIME NULL,
-    `confirm_time` DATETIME NULL,
     PRIMARY KEY (request_id),
     FOREIGN KEY (sender_username)
         REFERENCES User (username),
     FOREIGN KEY (receiver_username)
         REFERENCES User (username),
     FOREIGN KEY (receiver_org_id)
-        REFERENCES Organization (organization_id),
-    FOREIGN KEY (request_status)
-        REFERENCES RequestStatusType (status_type)
+        REFERENCES Organization (organization_id)
 );
 
 CREATE TABLE Final_Project.`Enterprise_Rate` (
@@ -298,7 +275,6 @@ CREATE TABLE Final_Project.`Enterprise_Address` (
     `city` VARCHAR(50) NOT NULL,
     `state` VARCHAR(50) NOT NULL,
     `postcode` VARCHAR(50) NOT NULL,
-    `phone` VARCHAR(50) NOT NULL,
     PRIMARY KEY (`enterprise_id`),
     FOREIGN KEY (enterprise_id)
         REFERENCES Enterprise (enterprise_id),
@@ -361,21 +337,60 @@ alter table User_MedicalInfo modify column dob timestamp NOT NULL;
 CREATE TABLE Final_Project.`Treatment` (
     `treatment_id` INT NOT NULL,
     `request_id` INT NOT NULL,
-    `patient_username` VARCHAR(50) NOT NULL,
-    `hygieneScore` INT NOT NULL,
-    `type` VARCHAR(50) NOT NULL,
-    `note` VARCHAR(500) NOT NULL,
+    `patient_username` VARCHAR(50) NULL,
+    `hygiene_score` INT NULL,
+    `type` VARCHAR(50) NULL,
+    `note` VARCHAR(500) NULL,
     PRIMARY KEY (`treatment_id`),
     FOREIGN KEY (patient_username)
         REFERENCES User (username),
     FOREIGN KEY (request_id)
         REFERENCES WorkRequest (request_id)
 );
-create table DentalTreatmentPlans(
-  plan_id int not null,
-  plan_name varchar(50) not null,
-   `price` DOUBLE NOT NULL,
+
+
+CREATE TABLE Final_Project.`InsurancePlan` (
+    `plan_id` INT NOT NULL,
+    `plan_name` VARCHAR(50) NOT NULL,
+    `price` DOUBLE NOT NULL,
     `enterprise_id` INT NOT NULL,
-    treatmentType varchar(50) not null,
-    coverage DOUBLE NOT NULL
+    `filling_coverage` double not null,
+    `root_coverage` double NOT NULL,
+    `srp_coverage` double NOT NULL,
+    PRIMARY KEY (`plan_id`),
+    FOREIGN KEY (enterprise_id)
+        REFERENCES Enterprise (enterprise_id)
+);
+
+CREATE TABLE Final_Project.`Policy` (
+	`policy_id` INT NOT NULL,
+    `request_id` INT NOT NULL,
+	`plan_id` INT NOT NULL,
+    `username` varchar(50) NOT NULL,
+    `start_date` TIMESTAMP NOT NULL,
+    `premium` double NULL,
+    `status` varchar(50) NOT NULL,
+    PRIMARY KEY (`policy_id`),
+    FOREIGN KEY (request_id)
+        REFERENCES WorkRequest (request_id),
+    FOREIGN KEY (plan_id)
+        REFERENCES InsurancePlan (plan_id),
+    FOREIGN KEY (username)
+        REFERENCES User (username)
+);
+
+alter table Appointment add column status varchar(50);
+
+CREATE TABLE Final_Project.`Payment` (
+	`payment_id` INT NOT NULL,
+    `request_id` INT NOT NULL,
+	`treatment_id` INT NULL,
+    `policy_id` INT NULL,
+    `amount` double NULL,
+    `status` varchar(50) NOT NULL,
+    PRIMARY KEY (`payment_id`),
+    FOREIGN KEY (treatment_id)
+        REFERENCES Treatment (treatment_id),
+    FOREIGN KEY (policy_id)
+        REFERENCES Policy (policy_id)
 );

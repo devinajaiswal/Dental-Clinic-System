@@ -5,10 +5,12 @@
  */
 package data;
 
+import Business.Customer.CustomerPersonalInfo;
 import Business.Enterprise.Enterprise;
 import Business.Enterprise.DentalClinicEnterprise;
 import Business.Enterprise.InsuranceEnterprise;
 import Business.Network.Network;
+import Business.Organization.DentalCliniclInfo;
 import Business.Organization.Organization;
 import static data.Data.getConnection;
 import java.sql.Connection;
@@ -85,7 +87,7 @@ public class EnterpriseDAO {
         return result;
     }
 
-        public static ArrayList<Enterprise> getAllbyType(String type) {
+    public static ArrayList<Enterprise> getAllbyType(String type) {
         ArrayList<Enterprise> result = new ArrayList<>();
         String sql = "SELECT * FROM Enterprise WHERE enterprise_type = ?";
 
@@ -111,7 +113,7 @@ public class EnterpriseDAO {
     }
 
     public static Enterprise searchByUsername(String Username) {
-        Enterprise enterprise = null; 
+        Enterprise enterprise = null;
         String sql = "SELECT * FROM ((Enterprise NATURAL JOIN Enterprise_User) NATURAL JOIN "
             + "Network_Enterprise) NATURAL JOIN Network WHERE username = ?";
 
@@ -186,6 +188,7 @@ public class EnterpriseDAO {
             stmt.setInt(4, id);
             stmt.executeUpdate();
             conn.commit();
+             Logger.getLogger(Data.class.getName()).info("Enterprise created , id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
             try {
@@ -205,9 +208,93 @@ public class EnterpriseDAO {
             stmt.setString(1, enterpriseName);
             stmt.setInt(2, enterpriseId);
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("Enterprise name update , id = " + enterpriseId); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    public static Enterprise searchById(int enterpriseId) {
+        String sql = "SELECT * FROM Enterprise where enterprise_id = ?";
+        try {
+            Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, enterpriseId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Enterprise enterprise;
+                String type = rs.getString("enterprise_type");
+                if (type.equals(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
+                    enterprise = new DentalClinicEnterprise(rs.getString("enterprise_name"));
+                } else {
+                    enterprise = new InsuranceEnterprise(rs.getString("enterprise_name"));
+                }
+                enterprise.setEnterpriseId(rs.getInt("enterprise_id"));
+                return enterprise;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static DentalCliniclInfo searchClinicInfo(int enterpriseId) {
+        try {
+            String sql = "SELECT * from Enterprise_Address where enterprise_id = ?";
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, enterpriseId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                DentalCliniclInfo info = new DentalCliniclInfo();
+                info.setCity(rs.getString("city"));
+                info.setStreet(rs.getString("street"));
+                info.setState(rs.getString("State"));
+                info.setPostcode(rs.getString("postcode"));
+                return info;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static boolean isClinicInfoReady(int enterpriseId) {
+        return searchClinicInfo(enterpriseId) != null;
+    }
+
+    public static void createClinicInfo(int enterpriseId, DentalCliniclInfo clinicInfo) {
+        try {
+            Connection conn = data.Data.getConnection();
+            String sql = "INSERT INTO Enterprise_Address VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, enterpriseId);
+            stmt.setString(2, clinicInfo.getStreet());
+            stmt.setString(3, clinicInfo.getCity());
+            stmt.setString(4, clinicInfo.getState());
+            stmt.setString(5, clinicInfo.getPostcode());
+            stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("Clinic info created , id = " + enterpriseId); 
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void updateClinicInfo(int enterpriseId, DentalCliniclInfo clinicInfo) {
+        try {
+            Connection conn = data.Data.getConnection();
+            String sql = "Update Enterprise_Address set street = ?, city = ?, state = ?, postcode = ? "
+                + " where enterprise_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, clinicInfo.getStreet());
+            stmt.setString(2, clinicInfo.getCity());
+            stmt.setString(3, clinicInfo.getState());
+            stmt.setString(4, clinicInfo.getPostcode());
+            stmt.setInt(5, enterpriseId);
+            stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("Clinic info updated, id = " + enterpriseId); 
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

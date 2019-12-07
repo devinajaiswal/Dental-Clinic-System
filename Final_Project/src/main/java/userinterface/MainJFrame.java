@@ -7,7 +7,19 @@ package userinterface;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.GeocodingResult;
 import java.awt.CardLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import userinterface.CustomerRole.CreateCustomerPanel;
@@ -17,8 +29,6 @@ import userinterface.CustomerRole.CreateCustomerPanel;
  * @author Lingfeng
  */
 public class MainJFrame extends javax.swing.JFrame {
-
-
 
     /**
      * Creates new form MainJFrame
@@ -221,6 +231,7 @@ public class MainJFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

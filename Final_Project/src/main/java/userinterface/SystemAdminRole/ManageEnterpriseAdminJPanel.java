@@ -350,6 +350,11 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
                 return;
             }
 
+            if (!userinterface.Util.passwordPatternCorrect(password)) {
+                JOptionPane.showMessageDialog(this, "Password pattern doesn't mathch!");
+                return;
+            }
+
             if (data.UserDAO.isUsernameExist(txtUsername.getText())) {
                 JOptionPane.showMessageDialog(this, "Username already exists, please choose another one!");
                 return;

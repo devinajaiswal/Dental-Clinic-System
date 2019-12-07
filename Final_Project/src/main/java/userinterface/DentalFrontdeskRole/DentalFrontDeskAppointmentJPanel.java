@@ -4,14 +4,17 @@
  */
 package userinterface.DentalFrontdeskRole;
 
+import Business.Customer.CustomerPersonalInfo;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
 import Business.WorkQueue.AppointmentWorkRequest;
+import Business.WorkQueue.InquiryWorkRequest;
 import Business.WorkQueue.TreatmentWorkRequest;
-import Business.WorkQueue.WorkRequest;
+import data.AppointmentWorkRequestDAO;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,10 +26,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import userinterface.CustomerRole.CustomerMedicalInfoJPanel;
 
@@ -79,10 +85,42 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
         for (String username : dentists) {
             comboDentist.addItem(username);
         }
+
+        comboStatus.removeAll();
+        comboStatus.addItem("");
+        comboStatus.addItem(AppointmentWorkRequest.Status.NEED_CONFIRMATION.getValue());
+        comboStatus.addItem(AppointmentWorkRequest.Status.CONFIRMED.getValue());
+        comboStatus.addItem(AppointmentWorkRequest.Status.CANCELLED.getValue());
+        comboStatus.addItem(AppointmentWorkRequest.Status.CHECKED_IN.getValue());
+
     }
 
     public void populate() {
         populateAppointmentTable(data.AppointmentWorkRequestDAO.searchByOrgId(organization.getOrganizationID()));
+
+        tableAppointment.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+                AppointmentWorkRequest request = (AppointmentWorkRequest) table.getModel().getValueAt(row, 3);
+                if (request.getStatus().equals(AppointmentWorkRequest.Status.NEED_CONFIRMATION.getValue())) {
+                    setBackground(Color.PINK);
+                } else if (request.getStatus().equals(AppointmentWorkRequest.Status.CONFIRMED.getValue())) {
+                    setBackground(new Color(152, 251, 152));
+                } else if (request.getStatus().equals(AppointmentWorkRequest.Status.CANCELLED.getValue())) {
+                    setBackground(new Color(205, 133, 63));
+                } else if (request.getStatus().equals(AppointmentWorkRequest.Status.CHECKED_IN.getValue())) {
+                    setBackground(new Color(192, 192, 192));
+                } else {
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
+                }
+                return this;
+            }
+        });
     }
 
     private void populateAppointmentTable(ArrayList<AppointmentWorkRequest> list) {
@@ -93,15 +131,7 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
             Object[] row = new Object[4];
             row[0] = request.getSenderUsername();
             row[1] = formatter.format(request.getAppointmentTime());
-            if (request.getStatus().equals(WorkRequest.Status.SENT.getValue())) {
-                row[2] = "Need Confirmation";
-            } else if (request.getStatus().equals(WorkRequest.Status.ASSIGNED.getValue())) {
-                row[2] = "Confirmed";
-            } else if (request.getStatus().equals(WorkRequest.Status.FINISHED.getValue())) {
-                row[2] = "Canceled";
-            } else {
-                row[2] = "Checked In";
-            }
+            row[2] = request.getStatus();
             row[3] = request;
             model.addRow(row);
         }
@@ -265,7 +295,12 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
             }
         });
 
-        buttonUpComing.setText("Up Coming Today");
+        buttonUpComing.setText("Coming Today");
+        buttonUpComing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUpComingActionPerformed(evt);
+            }
+        });
 
         frameReschedule.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         frameReschedule.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -339,7 +374,7 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
                 .addGroup(frameRescheduleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonRescheduleConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonRescheduleCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         buttonConfirmAppointment.setText("Confirm The Appointment");
@@ -349,7 +384,6 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
             }
         });
 
-        comboStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "Need Confirmation", "Confirmed", "Cancelled", "Checked In" }));
         comboStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboStatusActionPerformed(evt);
@@ -518,10 +552,20 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
         AppointmentWorkRequest request = (AppointmentWorkRequest) tableAppointment.getValueAt(tableAppointment.getSelectedRow(), 3);
         request.setMessage(messageText);
         request.setFinishTime(LocalDateTime.now());
-        request.setStatus(WorkRequest.Status.FINISHED.getValue());
         data.WorkRequestDAO.update(request);
+        data.AppointmentWorkRequestDAO.updateAppointmentStatus(request.getAppointmentId(), AppointmentWorkRequest.Status.CANCELLED.getValue());
 
         JOptionPane.showMessageDialog(this, "Appointment cancelled!");
+
+        CustomerPersonalInfo info = data.UserDAO.searchPersonalInfo(request.getSenderUsername());
+        String message = "Your appointment with "
+            + enterprise.getEnterpriseName() + " at " + request.getAppointmentTime() + " is cancelled!";
+        userinterface.Util.sendSMS(info.getPhone(), message);
+        try {
+            userinterface.Util.sendEmail(info.getEmail(), "Appointment cancelled", message);
+        } catch (MessagingException ex) {
+            Logger.getLogger(DentalFrontDeskAppointmentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         resetFrameReply();
         setButtonsEnabled(true);
@@ -536,6 +580,12 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
 
     private void buttonCancelAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelAppointmentActionPerformed
         if (tableAppointment.getSelectedRow() >= 0) {
+            AppointmentWorkRequest request = (AppointmentWorkRequest) tableAppointment.getValueAt(tableAppointment.getSelectedRow(), 3);
+            if (request.getStatus().equals(AppointmentWorkRequest.Status.CANCELLED.getValue())
+                || request.getStatus().equals(AppointmentWorkRequest.Status.CHECKED_IN.getValue())) {
+                JOptionPane.showMessageDialog(this, "The appointment is already cancelled or checked in!");
+                return;
+            }
             frameCancel.setVisible(true);
             setButtonsEnabled(false);
             tableAppointment.setEnabled(false);
@@ -548,8 +598,13 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
     private void buttonRescheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRescheduleActionPerformed
         userinterface.Util.setBorderBlack(dateAppointment, comboTime);
         if (tableAppointment.getSelectedRow() >= 0) {
-            frameReschedule.setVisible(true);
             AppointmentWorkRequest request = (AppointmentWorkRequest) tableAppointment.getValueAt(tableAppointment.getSelectedRow(), 3);
+            if (request.getStatus().equals(AppointmentWorkRequest.Status.CANCELLED.getValue())
+                || request.getStatus().equals(AppointmentWorkRequest.Status.CHECKED_IN.getValue())) {
+                JOptionPane.showMessageDialog(this, "The appointment is already cancelled or checked in!");
+                return;
+            }
+            frameReschedule.setVisible(true);
             DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
             DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
@@ -571,21 +626,7 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
 
     private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
         String keyword = txtSearch.getText();
-        String status = "";
-        System.out.println((String) comboStatus.getSelectedItem());
-        switch ((String) comboStatus.getSelectedItem()) {
-            case "Need Confirmation":
-                status = WorkRequest.Status.SENT.getValue();
-                break;
-            case "Confirmed":
-                status = WorkRequest.Status.ASSIGNED.getValue();
-                break;
-            case "Cancelled":
-                status = WorkRequest.Status.FINISHED.getValue();
-                break;
-            case "Checked In":
-                status = WorkRequest.Status.CONFIRMED.getValue();
-        }
+        String status = (String) comboStatus.getSelectedItem();
         ArrayList<AppointmentWorkRequest> list = data.AppointmentWorkRequestDAO.
             searchByOrgId(organization.getOrganizationID());
         ArrayList<AppointmentWorkRequest> result = new ArrayList<>();
@@ -613,7 +654,7 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
 
     private void buttonRescheduleConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRescheduleConfirmActionPerformed
         userinterface.Util.setBorderBlack(comboTime, dateAppointment);
-        if (dateAppointment.getDate() == null || dateAppointment.getDate().before(java.sql.Date.valueOf(LocalDate.now()))) {
+        if (dateAppointment.getDate() == null || dateAppointment.getDate().compareTo(java.sql.Date.valueOf(LocalDate.now())) <= 0) {
             dateAppointment.setBorder(new LineBorder(Color.RED));
             JOptionPane.showMessageDialog(this, "We can only make appointment as early as tomorrow!");
             return;
@@ -630,12 +671,19 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
         LocalDateTime appointmentTime = LocalDateTime.parse(dateString + timeString, formatter);
         request.setAppointmentTime(appointmentTime);
         request.setMessage("Appointment Rescheduled");
-        request.setAssignTime(LocalDateTime.now());
-        request.setStatus(WorkRequest.Status.ASSIGNED.getValue());
         data.WorkRequestDAO.update(request);
-        data.AppointmentWorkRequestDAO.updateAppointment(request.getAppointmentId(), appointmentTime);
+        data.AppointmentWorkRequestDAO.rescheduleAppointment(request.getAppointmentId(), appointmentTime);
 
         JOptionPane.showMessageDialog(this, "Appointment Rescheduled!");
+        CustomerPersonalInfo info = data.UserDAO.searchPersonalInfo(request.getSenderUsername());
+        String message = "Your appointment with "
+            + enterprise.getEnterpriseName() + " at " + request.getAppointmentTime() + " is confirmed!";
+        userinterface.Util.sendSMS(info.getPhone(), message);
+        try {
+            userinterface.Util.sendEmail(info.getEmail(), "Appointment confirmed", message);
+        } catch (MessagingException ex) {
+            Logger.getLogger(DentalFrontDeskAppointmentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         resetFrameAppointment();
         setButtonsEnabled(true);
         populate();
@@ -650,11 +698,24 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
     private void buttonConfirmAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmAppointmentActionPerformed
         if (tableAppointment.getSelectedRow() >= 0) {
             AppointmentWorkRequest request = (AppointmentWorkRequest) tableAppointment.getValueAt(tableAppointment.getSelectedRow(), 3);
+            if (!request.getStatus().equals(AppointmentWorkRequest.Status.NEED_CONFIRMATION.getValue())) {
+                JOptionPane.showMessageDialog(this, "The appointment is already confirmed or cancelled or checked in!");
+                return;
+            }
             request.setMessage("Appointment Confirmed");
-            request.setAssignTime(LocalDateTime.now());
-            request.setStatus(WorkRequest.Status.ASSIGNED.getValue());
+            AppointmentWorkRequestDAO.updateAppointmentStatus(request.getAppointmentId(),
+                AppointmentWorkRequest.Status.CONFIRMED.getValue());
             data.WorkRequestDAO.update(request);
             JOptionPane.showMessageDialog(this, "Appointment Confirmed!");
+            CustomerPersonalInfo info = data.UserDAO.searchPersonalInfo(request.getSenderUsername());
+            String message = "Your appointment with "
+                + enterprise.getEnterpriseName() + " at " + request.getAppointmentTime() + " is confirmed!";
+            userinterface.Util.sendSMS(info.getPhone(), message);
+            try {
+                userinterface.Util.sendEmail(info.getEmail(), "Appointment confirmed", message);
+            } catch (MessagingException ex) {
+                Logger.getLogger(DentalFrontDeskAppointmentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
             resetFrameAppointment();
             populate();
         } else {
@@ -678,25 +739,27 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
         }
         AppointmentWorkRequest request = (AppointmentWorkRequest) tableAppointment.getValueAt(tableAppointment.getSelectedRow(), 3);
         request.setMessage("Checked In");
-        request.setAssignTime(LocalDateTime.now());
-        request.setStatus(WorkRequest.Status.CONFIRMED.getValue());
+        request.setFinishTime(LocalDateTime.now());
+        AppointmentWorkRequestDAO.updateAppointmentStatus(request.getAppointmentId(),
+            AppointmentWorkRequest.Status.CHECKED_IN.getValue());
         data.WorkRequestDAO.update(request);
 
         TreatmentWorkRequest treatRequest = new TreatmentWorkRequest();
         treatRequest.setPatientUsername(request.getSenderUsername());
-        treatRequest.setStatus(WorkRequest.Status.SENT.getValue());
         treatRequest.setSenderUsername(account.getUsername());
         treatRequest.setReceiverUsername(dentist);
         treatRequest.setMessage("Treatment request");
         treatRequest.setRequestTime(LocalDateTime.now());
+        int requestId = data.WorkRequestDAO.create(treatRequest);
+        data.TreatmentWorkRequestDAO.createTreatment(requestId, treatRequest);
 
         JOptionPane.showMessageDialog(this, "Checked In");
-        resetFrameAppointment();
+        resetFrameCheckin();
+        setButtonsEnabled(true);
         populate();
     }//GEN-LAST:event_buttonCheckinConfirmActionPerformed
 
     private void buttonCheckinCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCheckinCancelActionPerformed
-        frameCheckin.setVisible(false);
         resetFrameCheckin();
         setButtonsEnabled(true);
         tableAppointment.setEnabled(true);
@@ -704,6 +767,15 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
 
     private void buttonCheckinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCheckinActionPerformed
         if (tableAppointment.getSelectedRow() >= 0) {
+            AppointmentWorkRequest request = (AppointmentWorkRequest) tableAppointment.getValueAt(tableAppointment.getSelectedRow(), 3);
+            if (!request.getStatus().equals(AppointmentWorkRequest.Status.CONFIRMED.getValue())) {
+                JOptionPane.showMessageDialog(this, "Only confirmed appointment can be checked in!");
+                return;
+            }
+            if (request.getAppointmentTime().toLocalDate().compareTo(LocalDate.now()) != 0) {
+                JOptionPane.showMessageDialog(this, "Only today's appointment can be checked in!");
+                return;
+            }
             frameCheckin.setVisible(true);
             setButtonsEnabled(false);
             tableAppointment.setEnabled(false);
@@ -712,6 +784,19 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
             return;
         }
     }//GEN-LAST:event_buttonCheckinActionPerformed
+
+    private void buttonUpComingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpComingActionPerformed
+        ArrayList<AppointmentWorkRequest> list = data.AppointmentWorkRequestDAO.
+            searchByOrgId(organization.getOrganizationID());
+        ArrayList<AppointmentWorkRequest> result = new ArrayList<>();
+
+        for (AppointmentWorkRequest request : list) {
+            if (request.getAppointmentTime().toLocalDate().compareTo(LocalDate.now()) == 0) {
+                result.add(request);
+            }
+        }
+        populateAppointmentTable(result);
+    }//GEN-LAST:event_buttonUpComingActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCancelAppointment;

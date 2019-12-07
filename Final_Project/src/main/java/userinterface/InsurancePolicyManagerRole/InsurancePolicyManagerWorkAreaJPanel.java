@@ -12,6 +12,7 @@ import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
+import userinterface.DentalManagerRole.DentalManagerPriceJPanel;
 
 /**
  *
@@ -46,17 +47,17 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
-        btnViewInsuranePlans = new javax.swing.JButton();
+        buttonInsuranePlans = new javax.swing.JButton();
         btnViewPolicyApplications = new javax.swing.JButton();
-        btnUploadPlans = new javax.swing.JButton();
+        buttonPolicies = new javax.swing.JButton();
         customerContainer = new javax.swing.JPanel();
 
         jSplitPane1.setDividerLocation(200);
 
-        btnViewInsuranePlans.setText("View Insurance Plans");
-        btnViewInsuranePlans.addActionListener(new java.awt.event.ActionListener() {
+        buttonInsuranePlans.setText("Insurance Plans");
+        buttonInsuranePlans.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewInsuranePlansActionPerformed(evt);
+                buttonInsuranePlansActionPerformed(evt);
             }
         });
 
@@ -67,10 +68,10 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnUploadPlans.setText("Upload Insurance Plans");
-        btnUploadPlans.addActionListener(new java.awt.event.ActionListener() {
+        buttonPolicies.setText("View Policies");
+        buttonPolicies.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUploadPlansActionPerformed(evt);
+                buttonPoliciesActionPerformed(evt);
             }
         });
 
@@ -81,21 +82,21 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnUploadPlans, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnViewPolicyApplications, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnViewInsuranePlans, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buttonInsuranePlans, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonPolicies, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewPolicyApplications, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(btnViewInsuranePlans)
+                .addComponent(buttonInsuranePlans, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnViewPolicyApplications)
+                .addComponent(btnViewPolicyApplications, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnUploadPlans)
-                .addGap(460, 460, 460))
+                .addComponent(buttonPolicies, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jSplitPane1.setLeftComponent(jPanel3);
@@ -118,37 +119,36 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnViewInsuranePlansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewInsuranePlansActionPerformed
-      userProcessContainer.removeAll();
-        InsurancePlanListJPanel insurancePlaninfo = new InsurancePlanListJPanel(account);
-        userProcessContainer.add(insurancePlaninfo);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
+    private void buttonInsuranePlansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonInsuranePlansActionPerformed
+        customerContainer.removeAll();
+        InsurancePolicyManagerPlansJPanel jpanel = new InsurancePolicyManagerPlansJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(jpanel);
+        CardLayout layout = (CardLayout) customerContainer.getLayout();
+        layout.next(customerContainer);
 
-    }//GEN-LAST:event_btnViewInsuranePlansActionPerformed
+    }//GEN-LAST:event_buttonInsuranePlansActionPerformed
 
     private void btnViewPolicyApplicationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewPolicyApplicationsActionPerformed
-       userProcessContainer.removeAll();
-        InsurancePlanInfoJPanel insurancePlaninfo = new InsurancePlanInfoJPanel(account);
-        userProcessContainer.add(insurancePlaninfo);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
+        customerContainer.removeAll();
+        InsurancePolicyManagerApplicationJPanel jpanel = new InsurancePolicyManagerApplicationJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(jpanel);
+        CardLayout layout = (CardLayout) customerContainer.getLayout();
+        layout.next(customerContainer);
     }//GEN-LAST:event_btnViewPolicyApplicationsActionPerformed
 
-    private void btnUploadPlansActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadPlansActionPerformed
-   userProcessContainer.removeAll();
-        InsurancePlanInfoJPanel insurancePlaninfo = new InsurancePlanInfoJPanel(account);
-        userProcessContainer.add(insurancePlaninfo);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
-
-    }//GEN-LAST:event_btnUploadPlansActionPerformed
+    private void buttonPoliciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPoliciesActionPerformed
+        customerContainer.removeAll();
+        InsurancePolicyManagerPoliciesJPanel jpanel = new InsurancePolicyManagerPoliciesJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(jpanel);
+        CardLayout layout = (CardLayout) customerContainer.getLayout();
+        layout.next(customerContainer);
+    }//GEN-LAST:event_buttonPoliciesActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnUploadPlans;
-    private javax.swing.JButton btnViewInsuranePlans;
     private javax.swing.JButton btnViewPolicyApplications;
+    private javax.swing.JButton buttonInsuranePlans;
+    private javax.swing.JButton buttonPolicies;
     private javax.swing.JPanel customerContainer;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;

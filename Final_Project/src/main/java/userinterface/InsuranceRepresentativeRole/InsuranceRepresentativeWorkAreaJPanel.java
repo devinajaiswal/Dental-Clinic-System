@@ -47,39 +47,23 @@ public class InsuranceRepresentativeWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
-        buttonPersonalInfo = new javax.swing.JButton();
-        btnManageEnterprise = new javax.swing.JButton();
-        buttonSearchClinic = new javax.swing.JButton();
-        buttonSearchInsurance = new javax.swing.JButton();
+        buttonOrg = new javax.swing.JButton();
+        btnMe = new javax.swing.JButton();
         customerContainer = new javax.swing.JPanel();
 
         jSplitPane1.setDividerLocation(200);
 
-        buttonPersonalInfo.setText("Personal Information");
-        buttonPersonalInfo.addActionListener(new java.awt.event.ActionListener() {
+        buttonOrg.setText("Inquiries To Organization");
+        buttonOrg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPersonalInfoActionPerformed(evt);
+                buttonOrgActionPerformed(evt);
             }
         });
 
-        btnManageEnterprise.setText("Medical Information");
-        btnManageEnterprise.addActionListener(new java.awt.event.ActionListener() {
+        btnMe.setText("Inquiries To Me");
+        btnMe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManageEnterpriseActionPerformed(evt);
-            }
-        });
-
-        buttonSearchClinic.setText("Search Clinic");
-        buttonSearchClinic.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSearchClinicActionPerformed(evt);
-            }
-        });
-
-        buttonSearchInsurance.setText("Search Insurance Plans");
-        buttonSearchInsurance.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSearchInsuranceActionPerformed(evt);
+                btnMeActionPerformed(evt);
             }
         });
 
@@ -90,24 +74,18 @@ public class InsuranceRepresentativeWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(buttonSearchClinic, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnManageEnterprise, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonPersonalInfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonSearchInsurance, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(btnMe, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonOrg, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(buttonPersonalInfo)
+                .addComponent(buttonOrg)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnManageEnterprise)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonSearchClinic)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonSearchInsurance)
-                .addContainerGap())
+                .addComponent(btnMe)
+                .addGap(489, 489, 489))
         );
 
         jSplitPane1.setLeftComponent(jPanel3);
@@ -126,34 +104,30 @@ public class InsuranceRepresentativeWorkAreaJPanel extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonPersonalInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPersonalInfoActionPerformed
+    private void buttonOrgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOrgActionPerformed
         customerContainer.removeAll();
-        CustomerPersonalInfoJPanel customerPersonalInfoJPanel = new CustomerPersonalInfoJPanel(account);
-        customerContainer.add(customerPersonalInfoJPanel);
+        InsuranceRepresentativeInquiriesForOrgJPanel jpanel = new InsuranceRepresentativeInquiriesForOrgJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(jpanel);
         CardLayout layout = (CardLayout) customerContainer.getLayout();
         layout.next(customerContainer);
-    }//GEN-LAST:event_buttonPersonalInfoActionPerformed
+    }//GEN-LAST:event_buttonOrgActionPerformed
 
-    private void btnManageEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageEnterpriseActionPerformed
+    private void btnMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMeActionPerformed
         customerContainer.removeAll();
-    }//GEN-LAST:event_btnManageEnterpriseActionPerformed
-
-    private void buttonSearchClinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchClinicActionPerformed
-    }//GEN-LAST:event_buttonSearchClinicActionPerformed
-
-    private void buttonSearchInsuranceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInsuranceActionPerformed
-    }//GEN-LAST:event_buttonSearchInsuranceActionPerformed
+        InsuranceRepresentativeInquiriesForYouJPanel jpanel = new InsuranceRepresentativeInquiriesForYouJPanel(userProcessContainer, account, organization, enterprise);
+        customerContainer.add(jpanel);
+        CardLayout layout = (CardLayout) customerContainer.getLayout();
+        layout.next(customerContainer);
+    }//GEN-LAST:event_btnMeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnManageEnterprise;
-    private javax.swing.JButton buttonPersonalInfo;
-    private javax.swing.JButton buttonSearchClinic;
-    private javax.swing.JButton buttonSearchInsurance;
+    private javax.swing.JButton btnMe;
+    private javax.swing.JButton buttonOrg;
     private javax.swing.JPanel customerContainer;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JSplitPane jSplitPane1;

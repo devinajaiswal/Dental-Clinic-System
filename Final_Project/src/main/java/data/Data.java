@@ -8,11 +8,6 @@ package data;
 import Business.Employee.Employee;
 import Business.Role.Role;
 import Business.UserAccount.UserAccount;
-import com.twilio.Twilio;
-import com.twilio.type.PhoneNumber;
-import com.twilio.type.PhoneNumberCapabilities;
-import java.awt.Color;
-import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,27 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
-import userinterface.MainJFrame;
 
 /**
  *
@@ -96,13 +72,14 @@ public class Data {
                         employee.setEmail(rs.getString("email"));
                         account.setEmployee(employee);
                     }
-                    
+                   Logger.getLogger(Data.class.getName()).info("Logged in , username = " + account.getUsername()); 
                     return account;
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Logger.getLogger(Data.class.getName()).info("Log in , but no user found");
         return null;
     }
 

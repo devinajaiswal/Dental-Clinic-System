@@ -17,7 +17,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import org.joda.time.format.DateTimeFormat;
 
 /**
  *
@@ -240,6 +239,7 @@ public class DentalFrontDeskInquiriesForOrgJPanel extends javax.swing.JPanel {
 
         JOptionPane.showMessageDialog(this, "Messasge Sent!");
 
+        populateTable();
         resetFrameReply();
         setButtonsEnabled(true);
     }//GEN-LAST:event_buttonConfirmActionPerformed

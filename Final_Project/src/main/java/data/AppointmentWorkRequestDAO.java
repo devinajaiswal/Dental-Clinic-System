@@ -6,8 +6,6 @@
 package data;
 
 import Business.WorkQueue.AppointmentWorkRequest;
-import Business.WorkQueue.InquiryWorkRequest;
-import Business.WorkQueue.Message;
 import static data.Data.getConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,33 +43,54 @@ public class AppointmentWorkRequestDAO {
         int id = -1;
         try {
             Connection conn = getConnection();
-            String sql = "INSERT INTO Appointment VALUES (?, ?, ?)";
+            String sql = "INSERT INTO Appointment VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             id = generateId();
             stmt.setInt(1, id);
             stmt.setInt(2, workRequestId);
             stmt.setTimestamp(3, Timestamp.valueOf(time));
+            stmt.setString(4, AppointmentWorkRequest.Status.NEED_CONFIRMATION.getValue());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Logger.getLogger(Data.class.getName()).info("appointment created , id = " + id);
         return id;
 
     }
 
     
-    public static int updateAppointment(int appointmentId, LocalDateTime time) {
+    public static int rescheduleAppointment(int appointmentId, LocalDateTime time) {
         int id = -1;
         try {
             Connection conn = getConnection();
-            String sql = "Update Appointment set appointment_time = ? where appointment_id = ?";
+            String sql = "Update Appointment set appointment_time = ? , status = ? where appointment_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setTimestamp(1, Timestamp.valueOf(time));
+            stmt.setString(2, AppointmentWorkRequest.Status.CONFIRMED.getValue());
+            stmt.setInt(3, appointmentId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Logger.getLogger(Data.class.getName()).info("appointment reschudeled, id = " + id);
+        return id;
+
+    }
+
+        public static int updateAppointmentStatus(int appointmentId, String status) {
+        int id = -1;
+        try {
+            Connection conn = getConnection();
+            String sql = "Update Appointment set status = ? where appointment_id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
             stmt.setInt(2, appointmentId);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Logger.getLogger(Data.class.getName()).info("appointment status updated, id = " + id);
         return id;
 
     }
@@ -94,18 +113,11 @@ public class AppointmentWorkRequestDAO {
                 request.setSenderUsername(rs.getString("sender_username"));
                 request.setReceiverUsername(rs.getString("receiver_username"));
                 request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
-                request.setStatus(rs.getString("request_status"));
                 if (rs.getTimestamp("request_time") != null) {
                     request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
                 }
-                if (rs.getTimestamp("assign_time") != null) {
-                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                }
                 if (rs.getTimestamp("finish_time") != null) {
                     request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("confirm_time") != null) {
-                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
                 }
 
                 sql = "SELECT * FROM Appointment WHERE request_id = ?";
@@ -115,6 +127,7 @@ public class AppointmentWorkRequestDAO {
                 rs2.next();
                 request.setAppointmentId(rs2.getInt("appointment_id"));
                 request.setAppointmentTime(rs2.getTimestamp("appointment_time").toLocalDateTime());
+                request.setStatus(rs2.getString("status"));
                 result.add(request);
             }
         } catch (SQLException ex) {

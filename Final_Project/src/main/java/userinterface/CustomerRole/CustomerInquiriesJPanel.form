@@ -38,6 +38,8 @@
                       <Component id="buttonReply" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="buttonHistory" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="buttonFinish" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane4" alignment="0" max="32767" attributes="0"/>
@@ -71,6 +73,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="buttonReply" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   <Component id="buttonHistory" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="buttonFinish" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="frameReply" min="-2" max="-2" attributes="0"/>
@@ -224,7 +227,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="tableToYou">
+        <Component class="javax.swing.JTable" name="tableActive">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="3" rowCount="0">
@@ -322,7 +325,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Lucida Grande" size="14" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Inquries NOT Replied"/>
+        <Property name="text" type="java.lang.String" value="Active Inquries"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -332,6 +335,14 @@
         </Property>
         <Property name="text" type="java.lang.String" value="History Inquries"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonFinish">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mark As Finished"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonFinishActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

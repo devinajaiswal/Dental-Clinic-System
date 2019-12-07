@@ -148,8 +148,7 @@ public class UserDAO {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.executeUpdate();
-            System.out.println(user.getUsername());
-            System.out.println(user.getPassword());
+             Logger.getLogger(Data.class.getName()).info("user created, id = " + user.getUsername()); 
 
             sql = "INSERT INTO Employee values (?, ?, ?)";
             stmt = conn.prepareStatement(sql);
@@ -158,28 +157,25 @@ public class UserDAO {
             stmt.setString(2, user.getEmployee().getName());
             stmt.setString(3, user.getEmployee().getEmail());
             stmt.executeLargeUpdate();
-            System.out.println("2");
+             Logger.getLogger(Data.class.getName()).info("employee created, id = " + employeeId); 
 
             sql = "INSERT INTO Employee_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, employeeId);
             stmt.setString(2, user.getUsername());
             stmt.executeLargeUpdate();
-            System.out.println("3");
 
             sql = "INSERT INTO Role_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getRole().getRoleType().getValue());
             stmt.executeLargeUpdate();
-            System.out.println("4");
 
             sql = "INSERT INTO Organization_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, organizationId);
             stmt.setString(2, user.getUsername());
             stmt.executeLargeUpdate();
-            System.out.println("5");
 
             sql = "INSERT INTO Enterprise_User values (?, ?)";
             stmt = conn.prepareStatement(sql);
@@ -219,6 +215,7 @@ public class UserDAO {
             stmt.executeLargeUpdate();
 
             conn.commit();
+             Logger.getLogger(Data.class.getName()).info("customer created, id = " + user.getUsername()); 
 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
@@ -609,8 +606,6 @@ public class UserDAO {
                 result = new CustomerMedicalInfo();
                 result.setGender(rs.getString("gender"));
                 result.setDob(rs.getTimestamp("dob").toLocalDateTime());
-                System.out.println(rs.getDate("dob"));
-                System.out.println(rs.getDate("dob").toLocalDate());
                 result.setSmoking(rs.getBoolean("smoking"));
                 result.setSweet(rs.getBoolean("sweet"));
                 result.setDiabetes(rs.getBoolean("diabetes"));

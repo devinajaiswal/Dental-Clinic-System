@@ -4,6 +4,7 @@ import Business.Organization.DentalAdminOrganization;
 import Business.Organization.DentalDentistOrganization;
 import Business.Organization.DentalFrontDeskOrganization;
 import Business.Organization.DentalManagerOrganization;
+import Business.Organization.InsuranceAdminOrganization;
 import Business.Organization.InsuranceFinanceManagerOrganization;
 import Business.Organization.InsurancePolicyManagerOrganization;
 import Business.Organization.InsuranceRepresentativeOrganization;
@@ -26,7 +27,7 @@ public class InsuranceEnterprise extends Enterprise {
         list.add(new InsuranceRepresentativeOrganization());
         list.add(new InsuranceFinanceManagerOrganization());
         list.add(new InsurancePolicyManagerOrganization());
-        list.add(new InsuranceFinanceManagerOrganization());
+        list.add(new InsuranceAdminOrganization());
         return list;
     }
 

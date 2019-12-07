@@ -19,33 +19,8 @@ public abstract class WorkRequest {
     private String senderUsername;
     private String receiverUsername;
     private int receiverOrganizationId;
-    private String status;
     private LocalDateTime requestTime;
-    private LocalDateTime assignTime;
     private LocalDateTime finishTime;
-    private LocalDateTime confirmTime;
-
-    public enum Status {
-        SENT("SENT"),
-        ASSIGNED("ASSIGNED"),
-        FINISHED("FINISHED"),
-        CONFIRMED("CONFIRMED");
-
-        private Status(String value) {
-            this.value = value;
-        }
-
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-    }
 
     public String getSenderUsername() {
         return senderUsername;
@@ -79,14 +54,6 @@ public abstract class WorkRequest {
         this.requestId = requestId;
     }
 
-    public LocalDateTime getAssignTime() {
-        return assignTime;
-    }
-
-    public void setAssignTime(LocalDateTime assignTime) {
-        this.assignTime = assignTime;
-    }
-
     public LocalDateTime getFinishTime() {
         return finishTime;
     }
@@ -94,20 +61,6 @@ public abstract class WorkRequest {
     public void setFinishTime(LocalDateTime finishTime) {
         this.finishTime = finishTime;
     }
-
-    public LocalDateTime getConfirmTime() {
-        return confirmTime;
-    }
-
-    public void setConfirmTime(LocalDateTime confirmTime) {
-        this.confirmTime = confirmTime;
-    }
-
-    public WorkRequest() {
-        requestTime = LocalDateTime.now();
-    }
-
-
 
     public LocalDateTime getRequestTime() {
         return requestTime;
@@ -123,16 +76,6 @@ public abstract class WorkRequest {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     @Override

@@ -11,13 +11,17 @@ import Business.UserAccount.UserAccount;
 import Business.WorkQueue.InquiryWorkRequest;
 import Business.WorkQueue.Message;
 import Business.WorkQueue.WorkRequest;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import userinterface.DetailJFrame;
 
@@ -42,8 +46,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         this.organization = organization;
         this.enterprise = enterprise;
 
-        populateInquiryTable(data.InquiryWorkRequestDAO.searchByToUser(account.getUsername()));
-        populateHistoryTable(data.InquiryWorkRequestDAO.searchByFromUser(account.getUsername()));
+        populate();
         BasicInternalFrameUI ui = (BasicInternalFrameUI) frameReply.getUI();
         Container north = (Container) ui.getNorthPane();
         north.remove(0);
@@ -52,13 +55,38 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         frameReply.setVisible(false);
     }
 
+    private void populate() {
+        populateInquiryTable(data.InquiryWorkRequestDAO.searchByUserAndStatus(account.getUsername(), false));
+        populateHistoryTable(data.InquiryWorkRequestDAO.searchByUserAndStatus(account.getUsername(), true));
+
+        tableActive.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+                InquiryWorkRequest request = (InquiryWorkRequest) table.getModel().getValueAt(row, 2);
+                if (request.getReceiverUsername() != null && request.getReceiverUsername().equals(account.getUsername())) {
+                    setBackground(Color.PINK);
+                } else {
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
+                }
+                return this;
+            }
+        });
+    }
+
     private void populateInquiryTable(ArrayList<InquiryWorkRequest> list) {
-        DefaultTableModel model = (DefaultTableModel) tableToYou.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableActive.getModel();
         model.setRowCount(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
         for (WorkRequest request : list) {
             Object[] row = new Object[3];
-            row[0] = request.getSenderUsername();
+            String from = request.getSenderUsername().equals(account.getUsername())
+                ? request.getReceiverUsername() : request.getSenderUsername();
+            row[0] = from;
             row[1] = formatter.format(request.getRequestTime());
             row[2] = request;
             model.addRow(row);
@@ -71,7 +99,9 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
         for (WorkRequest request : list) {
             Object[] row = new Object[3];
-            row[0] = request.getReceiverUsername();
+            String from = request.getSenderUsername().equals(account.getUsername())
+                ? request.getReceiverUsername() : request.getSenderUsername();
+            row[0] = from;
             row[1] = formatter.format(request.getRequestTime());
             row[2] = request;
             model.addRow(row);
@@ -100,13 +130,14 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         buttonSearch = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableToYou = new javax.swing.JTable();
+        tableActive = new javax.swing.JTable();
         buttonHistory = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableHistory = new javax.swing.JTable();
         buttonHistoryHistory = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        buttonFinish = new javax.swing.JButton();
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel4.setText("Patients Inquries");
@@ -160,7 +191,9 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
                 .addGroup(frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(frameReplyLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(frameReplyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,7 +217,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
 
         jLabel6.setText("Keyword");
 
-        tableToYou.setModel(new javax.swing.table.DefaultTableModel(
+        tableActive.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -200,11 +233,11 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(tableToYou);
-        if (tableToYou.getColumnModel().getColumnCount() > 0) {
-            tableToYou.getColumnModel().getColumn(0).setPreferredWidth(20);
-            tableToYou.getColumnModel().getColumn(1).setPreferredWidth(20);
-            tableToYou.getColumnModel().getColumn(2).setPreferredWidth(150);
+        jScrollPane3.setViewportView(tableActive);
+        if (tableActive.getColumnModel().getColumnCount() > 0) {
+            tableActive.getColumnModel().getColumn(0).setPreferredWidth(20);
+            tableActive.getColumnModel().getColumn(1).setPreferredWidth(20);
+            tableActive.getColumnModel().getColumn(2).setPreferredWidth(150);
         }
 
         buttonHistory.setText("View Conversation History");
@@ -245,10 +278,17 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         });
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        jLabel1.setText("Inquries NOT Replied");
+        jLabel1.setText("Active Inquries");
 
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         jLabel2.setText("History Inquries");
+
+        buttonFinish.setText("Mark As Finished");
+        buttonFinish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonFinishActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -274,6 +314,8 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
                         .addComponent(buttonReply)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonHistory)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonFinish)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane4)
                     .addGroup(layout.createSequentialGroup()
@@ -299,7 +341,8 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonReply, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(frameReply, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -319,7 +362,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
 
     private void resetFrameReply() {
         frameReply.setVisible(false);
-        tableToYou.setEnabled(true);
+        tableActive.setEnabled(true);
         txtReply.setText("");
     }
 
@@ -333,11 +376,13 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
             return;
         }
         String messageText = txtReply.getText();
-        InquiryWorkRequest request = (InquiryWorkRequest) tableToYou.getValueAt(tableToYou.getSelectedRow(), 2);
+        InquiryWorkRequest request = (InquiryWorkRequest) tableActive.getValueAt(tableActive.getSelectedRow(), 2);
         request.setMessage(messageText);
         request.setRequestTime(LocalDateTime.now());
-        request.setReceiverUsername(request.getSenderUsername());
-        request.setSenderUsername(account.getUsername());
+        if (!request.getSenderUsername().equals(account.getUsername())) {
+            request.setReceiverUsername(request.getSenderUsername());
+            request.setSenderUsername(account.getUsername());
+        }
         data.WorkRequestDAO.update(request);
 
         Message message;
@@ -352,8 +397,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
 
         resetFrameReply();
         setButtonsEnabled(true);
-        populateInquiryTable(data.InquiryWorkRequestDAO.searchByToUser(account.getUsername()));
-        populateHistoryTable(data.InquiryWorkRequestDAO.searchByFromUser(account.getUsername()));
+        populate();
     }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
@@ -363,10 +407,10 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void buttonReplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonReplyActionPerformed
-        if (tableToYou.getSelectedRow() >= 0) {
+        if (tableActive.getSelectedRow() >= 0) {
             frameReply.setVisible(true);
             setButtonsEnabled(false);
-            tableToYou.setEnabled(false);
+            tableActive.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a record first");
             return;
@@ -374,8 +418,8 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonReplyActionPerformed
 
     private void buttonHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHistoryActionPerformed
-        if (tableToYou.getSelectedRow() >= 0) {
-            InquiryWorkRequest request = (InquiryWorkRequest) tableToYou.getValueAt(tableToYou.getSelectedRow(), 2);
+        if (tableActive.getSelectedRow() >= 0) {
+            InquiryWorkRequest request = (InquiryWorkRequest) tableActive.getValueAt(tableActive.getSelectedRow(), 2);
             DetailJFrame customerJFrame = new DetailJFrame();
             customerJFrame.setSize(600, 400);
             customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -410,7 +454,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
             return;
         }
         String keyword = txtSearch.getText();
-        ArrayList<InquiryWorkRequest> list = data.InquiryWorkRequestDAO.searchByToUser(account.getUsername());
+        ArrayList<InquiryWorkRequest> list = data.InquiryWorkRequestDAO.searchByUserAndStatus(account.getUsername(), false);
         ArrayList<InquiryWorkRequest> result = new ArrayList<>();
         for (InquiryWorkRequest request : list) {
             if (request.getMessage().contains(keyword) || request.getSenderUsername().contains(keyword)
@@ -420,7 +464,7 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         }
         populateInquiryTable(result);
 
-        list = data.InquiryWorkRequestDAO.searchByFromUser(account.getUsername());
+        list = data.InquiryWorkRequestDAO.searchByUserAndStatus(account.getUsername(), true);
         result = new ArrayList<>();
         for (InquiryWorkRequest request : list) {
             if (request.getMessage().contains(keyword) || request.getSenderUsername().contains(keyword)
@@ -431,9 +475,22 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
         populateHistoryTable(result);
     }//GEN-LAST:event_buttonSearchActionPerformed
 
+    private void buttonFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFinishActionPerformed
+        if (tableActive.getSelectedRow() >= 0) {
+            InquiryWorkRequest request = (InquiryWorkRequest) tableActive.getValueAt(tableActive.getSelectedRow(), 2);
+            request.setFinishTime(LocalDateTime.now());
+            data.WorkRequestDAO.update(request);
+            populate();
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a record first");
+            return;
+        }
+    }//GEN-LAST:event_buttonFinishActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonConfirm;
+    private javax.swing.JButton buttonFinish;
     private javax.swing.JButton buttonHistory;
     private javax.swing.JButton buttonHistoryHistory;
     private javax.swing.JButton buttonReply;
@@ -448,8 +505,8 @@ public class DentalFrontDeskInquiriesForYouJPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel labAvailable;
     private javax.swing.JLabel labUnavailable;
+    private javax.swing.JTable tableActive;
     private javax.swing.JTable tableHistory;
-    private javax.swing.JTable tableToYou;
     private javax.swing.JTextArea txtReply;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
