@@ -4,6 +4,7 @@
  */
 package userinterface.InsurancePolicyManagerRole;
 
+import Business.Customer.CustomerPersonalInfo;
 import Business.Enterprise.Enterprise;
 import Business.Enterprise.InsurancePlan;
 import Business.Organization.Organization;
@@ -15,12 +16,17 @@ import java.awt.Container;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import userinterface.DentalFrontdeskRole.DentalFrontDeskAppointmentJPanel;
 import userinterface.DetailJFrame;
 import userinterface.MedicalInfoJPanel;
+import userinterface.TreatmentHistoryJPanel;
 
 /**
  *
@@ -302,7 +308,17 @@ public class InsurancePolicyManagerApplicationJPanel extends javax.swing.JPanel 
         request.setPremium(basePrice * (1 - discount / 100));
         data.PolicyDAO.updateStatusAndPremium(request);
 
-        JOptionPane.showMessageDialog(this, "Policy applicatio complete!");
+        JOptionPane.showMessageDialog(this, "Policy application complete!");
+
+        CustomerPersonalInfo info = data.UserDAO.searchPersonalInfo(request.getSenderUsername());
+            String message = "Your policy application with "
+            + enterprise.getEnterpriseName() + " is " + request.getStatus() +"!";
+        userinterface.Util.sendSMS(info.getPhone(), message);
+        try {
+            userinterface.Util.sendEmail(info.getEmail(), "Application result", message);
+        } catch (MessagingException ex) {
+            Logger.getLogger(DentalFrontDeskAppointmentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         resetFrame();
         setButtonsEnabled(true);
@@ -328,12 +344,12 @@ public class InsurancePolicyManagerApplicationJPanel extends javax.swing.JPanel 
 
     private void buttonMedicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMedicalActionPerformed
         if (tableTreatment.getSelectedRow() >= 0) {
-            TreatmentWorkRequest request = (TreatmentWorkRequest) tableTreatment.getValueAt(tableTreatment.getSelectedRow(), 2);
+            PolicyWorkRequest request = (PolicyWorkRequest) tableTreatment.getValueAt(tableTreatment.getSelectedRow(), 2);
             DetailJFrame customerJFrame = new DetailJFrame();
-            customerJFrame.setSize(600, 400);
+            customerJFrame.setSize(500, 500);
             customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
             customerJFrame.setLocationRelativeTo(this);
-            customerJFrame.setContentPane(new MedicalInfoJPanel(request.getPatientUsername()));
+            customerJFrame.setContentPane(new MedicalInfoJPanel(request.getUsername()));
             customerJFrame.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a record first");
@@ -343,7 +359,18 @@ public class InsurancePolicyManagerApplicationJPanel extends javax.swing.JPanel 
     }//GEN-LAST:event_buttonMedicalActionPerformed
 
     private void buttonHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHistoryActionPerformed
-        // TODO add your handling code here:
+          if (tableTreatment.getSelectedRow() >= 0) {
+            PolicyWorkRequest request = (PolicyWorkRequest) tableTreatment.getValueAt(tableTreatment.getSelectedRow(), 2);
+            DetailJFrame customerJFrame = new DetailJFrame();
+            customerJFrame.setSize(800, 800);
+            customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+            customerJFrame.setLocationRelativeTo(this);
+            customerJFrame.setContentPane(new TreatmentHistoryJPanel(request.getUsername()));
+            customerJFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a record first");
+            return;
+        }
     }//GEN-LAST:event_buttonHistoryActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

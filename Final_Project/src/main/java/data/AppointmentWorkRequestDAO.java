@@ -54,6 +54,7 @@ public class AppointmentWorkRequestDAO {
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Logger.getLogger(Data.class.getName()).info("appointment created , id = " + id);
         return id;
 
     }
@@ -72,6 +73,7 @@ public class AppointmentWorkRequestDAO {
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Logger.getLogger(Data.class.getName()).info("appointment reschudeled, id = " + id);
         return id;
 
     }
@@ -88,6 +90,7 @@ public class AppointmentWorkRequestDAO {
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Logger.getLogger(Data.class.getName()).info("appointment status updated, id = " + id);
         return id;
 
     }

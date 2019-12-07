@@ -35,6 +35,7 @@ public class PricesDAO {
             stmt.setDouble(3, rootPrice);
             stmt.setDouble(4, srpPrice);
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("treatment price created, id = " + enterprise_id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,6 +52,7 @@ public class PricesDAO {
             stmt.setDouble(2, rootPrice);
             stmt.setDouble(3, srpPrice);
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("treatment price updated, id = " + enterprise_id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,7 +114,8 @@ public class PricesDAO {
             Connection conn = getConnection();
             String sql = "INSERT INTO InsurancePlan VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, generatePlanId());
+            int id = generatePlanId();
+            stmt.setInt(1, id);
             stmt.setString(2, plan.getPlanName());
             stmt.setDouble(3, plan.getPrice());
             stmt.setInt(4, enterprise_id);
@@ -120,6 +123,7 @@ public class PricesDAO {
             stmt.setDouble(6, plan.getRootCoverage());
             stmt.setDouble(7, plan.getSrpCoverage());
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("insurance plan created, id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -138,6 +142,7 @@ public class PricesDAO {
             stmt.setDouble(5, plan.getSrpCoverage());
             stmt.setInt(6, plan.getPlanId());
             stmt.executeUpdate();
+             Logger.getLogger(Data.class.getName()).info("insurance plan updated, id = " + plan.getPlanId()); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }

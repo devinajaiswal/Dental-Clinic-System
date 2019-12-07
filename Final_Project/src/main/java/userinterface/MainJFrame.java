@@ -232,23 +232,6 @@ public class MainJFrame extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
 
-        GeoApiContext context = new GeoApiContext.Builder()
-            .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
-            .build();
-        DistanceMatrix results;
-        String[] orgris = {"14 Buswell street, Boston, MA 02215"};
-        String[] dest = {"39 Florence Street, Malden, MA 02148"};
-        try {
-            results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
-            System.out.println(results.rows[0].elements[0].distance);
-        } catch (ApiException ex) {
-            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

@@ -56,6 +56,7 @@ public class WorkRequestDAO {
             stmt.setTimestamp(6, Timestamp.valueOf(workRequest.getRequestTime()));
             stmt.setString(7, null);
             stmt.executeUpdate();
+             Logger.getLogger(Data.class.getName()).info("work request created, id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,6 +91,7 @@ public class WorkRequestDAO {
             }
             stmt.setInt(7, workRequest.getRequestId());
             stmt.executeUpdate();
+             Logger.getLogger(Data.class.getName()).info("work request updated, id = " + workRequest.getRequestId()); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }

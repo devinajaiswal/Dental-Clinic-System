@@ -49,6 +49,7 @@ public class NetworkDAO {
             stmt.setString(1, network.getName());
             stmt.setInt(2, network.getId());
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("network updated, id = " + network.getId()); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -74,9 +75,11 @@ public class NetworkDAO {
             Connection conn = getConnection();
             String sql = "INSERT INTO Network VALUES (?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, generateId());
+            int id = generateId();
+            stmt.setInt(1, id);
             stmt.setString(2, network.getName());
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("network created , id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
