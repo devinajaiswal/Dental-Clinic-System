@@ -58,7 +58,7 @@ public class DendentistTreatJPanel extends javax.swing.JPanel {
 
         jLabel6.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Pationt Treatment");
+        jLabel6.setText("Patient Treatment");
 
         labelLastName.setText("Last Name *");
 
