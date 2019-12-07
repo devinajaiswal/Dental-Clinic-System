@@ -2,45 +2,31 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package userinterface.DentalDentistRole;
+package userinterface;
 
-import Business.Enterprise.Enterprise;
-import Business.Organization.Organization;
-import Business.UserAccount.UserAccount;
 import Business.WorkQueue.TreatmentWorkRequest;
 import java.awt.Container;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import userinterface.ConversationJPanel;
-import userinterface.DetailJFrame;
-import userinterface.MedicalInfoJPanel;
-import userinterface.TreatmentHistoryJPanel;
 
 /**
  *
  * @author raunak
  */
-public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
-
-    private JPanel userProcessContainer;
-    private UserAccount account;
-    private Organization organization;
-    private Enterprise enterprise;
+public class TreatmentHistoryJPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public DentalDentistTreatmentJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise) {
+    private String patientUsername;
+
+    public TreatmentHistoryJPanel(String patientUsername) {
         initComponents();
-        this.userProcessContainer = userProcessContainer;
-        this.account = account;
-        this.organization = organization;
-        this.enterprise = enterprise;
+        this.patientUsername = patientUsername;
 
         populateTable();
         BasicInternalFrameUI ui = (BasicInternalFrameUI) frameTreatment.getUI();
@@ -65,7 +51,7 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
         for (TreatmentWorkRequest request : list) {
             Object[] row = new Object[3];
             row[0] = request.getPatientUsername();
-            row[1] = formatter.format(request.getRequestTime());
+            row[1] = formatter.format(request.getFinishTime());
             row[2] = request;
             model.addRow(row);
         }
@@ -73,7 +59,7 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
     }
 
     private void populateTable() {
-        populateTable(data.TreatmentWorkRequestDAO.searchByUsernameAndStatus(account.getUsername(), false));
+        populateTable(data.TreatmentWorkRequestDAO.searchByPatient(patientUsername));
     }
 
     /**
@@ -91,7 +77,6 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
         frameTreatment = new javax.swing.JInternalFrame();
         labAvailable = new javax.swing.JLabel();
         labUnavailable = new javax.swing.JLabel();
-        buttonConfirm = new javax.swing.JButton();
         buttonCancel = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtNote = new javax.swing.JTextArea();
@@ -99,16 +84,14 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         comboScore = new javax.swing.JComboBox<>();
-        buttonTreat = new javax.swing.JButton();
-        buttonMedical = new javax.swing.JButton();
-        buttonHistory = new javax.swing.JButton();
+        buttonDetail = new javax.swing.JButton();
 
         tableTreatment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Patient", "Checkin Time", "Message"
+                "Patient", "Finish Time", "Messsage"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -134,13 +117,6 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
         frameTreatment.setEnabled(false);
         frameTreatment.setVisible(true);
 
-        buttonConfirm.setText("Confirm");
-        buttonConfirm.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonConfirmActionPerformed(evt);
-            }
-        });
-
         buttonCancel.setText("Cancel");
         buttonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -150,13 +126,17 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
 
         txtNote.setColumns(20);
         txtNote.setRows(5);
+        txtNote.setEnabled(false);
         jScrollPane2.setViewportView(txtNote);
+
+        comboType.setEnabled(false);
 
         jLabel1.setText("Treatment Type");
 
         jLabel2.setText("Hygiene Score");
 
         comboScore.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+        comboScore.setEnabled(false);
 
         javax.swing.GroupLayout frameTreatmentLayout = new javax.swing.GroupLayout(frameTreatment.getContentPane());
         frameTreatment.getContentPane().setLayout(frameTreatmentLayout);
@@ -165,10 +145,6 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
             .addGroup(frameTreatmentLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(frameTreatmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(frameTreatmentLayout.createSequentialGroup()
-                        .addComponent(buttonConfirm)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonCancel))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 847, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(frameTreatmentLayout.createSequentialGroup()
                         .addGroup(frameTreatmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,7 +157,8 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
                         .addGap(590, 590, 590)
                         .addComponent(labAvailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(labUnavailable, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonCancel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         frameTreatmentLayout.setVerticalGroup(
@@ -201,30 +178,14 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(frameTreatmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        buttonTreat.setText("Treat The Patient");
-        buttonTreat.addActionListener(new java.awt.event.ActionListener() {
+        buttonDetail.setText("View Detail");
+        buttonDetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonTreatActionPerformed(evt);
-            }
-        });
-
-        buttonMedical.setText("View Patient Medical Info");
-        buttonMedical.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonMedicalActionPerformed(evt);
-            }
-        });
-
-        buttonHistory.setText("View Patient Treatment History");
-        buttonHistory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonHistoryActionPerformed(evt);
+                buttonDetailActionPerformed(evt);
             }
         });
 
@@ -238,11 +199,7 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
                     .addComponent(frameTreatment, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(buttonTreat)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonMedical)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonHistory)
+                        .addComponent(buttonDetail)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -258,10 +215,7 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonTreat, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonMedical, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonHistory, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(buttonDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(frameTreatment))
         );
@@ -276,41 +230,8 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
     }
 
     private void setButtonsEnabled(boolean enable) {
-        buttonTreat.setEnabled(enable);
+        buttonDetail.setEnabled(enable);
     }
-
-    private void buttonConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmActionPerformed
-        if (!userinterface.Util.requireNotEmpty(this, txtNote)) {
-            return;
-        }
-        if (!userinterface.Util.requireSeletedItemNotNull(this, comboScore, comboType)) {
-            return;
-        }
-        int hygieneScore = 0;
-
-        try {
-            hygieneScore = Integer.parseInt((String) comboScore.getSelectedItem());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Hygiene Score must be a number.");
-        }
-
-        String note = txtNote.getText();
-        TreatmentWorkRequest request = (TreatmentWorkRequest) tableTreatment.getValueAt(tableTreatment.getSelectedRow(), 2);
-        request.setMessage("Patient treated");
-        request.setFinishTime(LocalDateTime.now());
-        data.WorkRequestDAO.update(request);
-
-        request.setHygieneScore(hygieneScore);
-        request.setNote(note);
-        request.setType((String) comboType.getSelectedItem());
-        data.TreatmentWorkRequestDAO.updateTreatment(request);
-
-        JOptionPane.showMessageDialog(this, "Patient treated!");
-
-        resetFrame();
-        setButtonsEnabled(true);
-        populateTable();
-    }//GEN-LAST:event_buttonConfirmActionPerformed
 
     private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
         frameTreatment.setVisible(false);
@@ -318,54 +239,24 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
         setButtonsEnabled(true);
     }//GEN-LAST:event_buttonCancelActionPerformed
 
-    private void buttonTreatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTreatActionPerformed
+    private void buttonDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDetailActionPerformed
         if (tableTreatment.getSelectedRow() >= 0) {
             frameTreatment.setVisible(true);
             setButtonsEnabled(false);
             tableTreatment.setEnabled(false);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a record first");
-            return;
-        }
-    }//GEN-LAST:event_buttonTreatActionPerformed
-
-    private void buttonMedicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMedicalActionPerformed
-        if (tableTreatment.getSelectedRow() >= 0) {
             TreatmentWorkRequest request = (TreatmentWorkRequest) tableTreatment.getValueAt(tableTreatment.getSelectedRow(), 2);
-            DetailJFrame customerJFrame = new DetailJFrame();
-            customerJFrame.setSize(500, 500);
-            customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-            customerJFrame.setLocationRelativeTo(this);
-            customerJFrame.setContentPane(new MedicalInfoJPanel(request.getPatientUsername()));
-            customerJFrame.setVisible(true);
+            comboType.setSelectedItem(request.getType());
+            comboScore.setSelectedItem(request.getHygieneScore());
+            txtNote.setText(request.getNote());
         } else {
             JOptionPane.showMessageDialog(this, "Please select a record first");
             return;
         }
-
-    }//GEN-LAST:event_buttonMedicalActionPerformed
-
-    private void buttonHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHistoryActionPerformed
-        if (tableTreatment.getSelectedRow() >= 0) {
-            TreatmentWorkRequest request = (TreatmentWorkRequest) tableTreatment.getValueAt(tableTreatment.getSelectedRow(), 2);
-            DetailJFrame customerJFrame = new DetailJFrame();
-            customerJFrame.setSize(800, 600);
-            customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-            customerJFrame.setLocationRelativeTo(this);
-            customerJFrame.setContentPane(new TreatmentHistoryJPanel(request.getPatientUsername()));
-            customerJFrame.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a record first");
-            return;
-        }
-    }//GEN-LAST:event_buttonHistoryActionPerformed
+    }//GEN-LAST:event_buttonDetailActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonCancel;
-    private javax.swing.JButton buttonConfirm;
-    private javax.swing.JButton buttonHistory;
-    private javax.swing.JButton buttonMedical;
-    private javax.swing.JButton buttonTreat;
+    private javax.swing.JButton buttonDetail;
     private javax.swing.JComboBox<String> comboScore;
     private javax.swing.JComboBox<String> comboType;
     private javax.swing.JInternalFrame frameTreatment;

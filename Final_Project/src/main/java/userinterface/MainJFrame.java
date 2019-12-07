@@ -7,7 +7,19 @@ package userinterface;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.maps.DistanceMatrixApi;
+import com.google.maps.DistanceMatrixApiRequest;
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrix;
+import com.google.maps.model.GeocodingResult;
 import java.awt.CardLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import userinterface.CustomerRole.CreateCustomerPanel;
@@ -17,8 +29,6 @@ import userinterface.CustomerRole.CreateCustomerPanel;
  * @author Lingfeng
  */
 public class MainJFrame extends javax.swing.JFrame {
-
-
 
     /**
      * Creates new form MainJFrame
@@ -221,6 +231,24 @@ public class MainJFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
+        GeoApiContext context = new GeoApiContext.Builder()
+            .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
+            .build();
+        DistanceMatrix results;
+        String[] orgris = {"14 Buswell street, Boston, MA 02215"};
+        String[] dest = {"39 Florence Street, Malden, MA 02148"};
+        try {
+            results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
+            System.out.println(results.rows[0].elements[0].distance);
+        } catch (ApiException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

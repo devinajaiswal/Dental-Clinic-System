@@ -85,7 +85,7 @@ public class EnterpriseDAO {
         return result;
     }
 
-        public static ArrayList<Enterprise> getAllbyType(String type) {
+    public static ArrayList<Enterprise> getAllbyType(String type) {
         ArrayList<Enterprise> result = new ArrayList<>();
         String sql = "SELECT * FROM Enterprise WHERE enterprise_type = ?";
 
@@ -111,7 +111,7 @@ public class EnterpriseDAO {
     }
 
     public static Enterprise searchByUsername(String Username) {
-        Enterprise enterprise = null; 
+        Enterprise enterprise = null;
         String sql = "SELECT * FROM ((Enterprise NATURAL JOIN Enterprise_User) NATURAL JOIN "
             + "Network_Enterprise) NATURAL JOIN Network WHERE username = ?";
 
@@ -208,6 +208,30 @@ public class EnterpriseDAO {
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static Enterprise searchById(int enterpriseId) {
+        String sql = "SELECT * FROM Enterprise where enterprise_id = ?";
+        try {
+            Connection conn = getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, enterpriseId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Enterprise enterprise;
+                String type = rs.getString("enterprise_type");
+                if (type.equals(Enterprise.EnterpriseType.DENTAL_CLINIC.getValue())) {
+                    enterprise = new DentalClinicEnterprise(rs.getString("enterprise_name"));
+                } else {
+                    enterprise = new InsuranceEnterprise(rs.getString("enterprise_name"));
+                }
+                enterprise.setEnterpriseId(rs.getInt("enterprise_id"));
+                return enterprise;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }

@@ -167,4 +167,52 @@ public class PricesDAO {
         }
         return result;
     }
+
+    public static InsurancePlan searchInsurancePlan(int planId) {
+        try {
+            String sql = "SELECT * from InsurancePlan where plan_id = ?";
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, planId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                InsurancePlan plan = new InsurancePlan();
+                plan.setPlanId(rs.getInt("plan_id"));
+                plan.setEnterpriseId(rs.getInt("enterprise_id"));
+                plan.setPlanName(rs.getString("plan_name"));
+                plan.setPrice(rs.getDouble("price"));
+                plan.setFillingCoverage(rs.getDouble("filling_coverage"));
+                plan.setRootCoverage(rs.getDouble("root_coverage"));
+                plan.setSrpCoverage(rs.getDouble("srp_coverage"));
+                return plan;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static ArrayList<InsurancePlan> getAllInsurancePlans() {
+        ArrayList<InsurancePlan> result = new ArrayList<>();
+        try {
+            String sql = "SELECT * from InsurancePlan";
+            Connection conn = data.Data.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                InsurancePlan plan = new InsurancePlan();
+                plan.setPlanId(rs.getInt("plan_id"));
+                plan.setEnterpriseId(rs.getInt("enterprise_id"));
+                plan.setPlanName(rs.getString("plan_name"));
+                plan.setPrice(rs.getDouble("price"));
+                plan.setFillingCoverage(rs.getDouble("filling_coverage"));
+                plan.setRootCoverage(rs.getDouble("root_coverage"));
+                plan.setSrpCoverage(rs.getDouble("srp_coverage"));
+                result.add(plan);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return result;
+    }
 }

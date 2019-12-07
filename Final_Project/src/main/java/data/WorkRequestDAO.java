@@ -5,9 +5,6 @@
  */
 package data;
 
-import Business.Customer.CustomerPersonalInfo;
-import Business.Network.Network;
-import Business.WorkQueue.InquiryWorkRequest;
 import Business.WorkQueue.WorkRequest;
 import static data.Data.getConnection;
 import java.sql.Connection;
@@ -16,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +41,7 @@ public class WorkRequestDAO {
         int id = -1;
         try {
             Connection conn = getConnection();
-            String sql = "INSERT INTO WorkRequest VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO WorkRequest VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             id = generateId();
             stmt.setInt(1, id);
@@ -57,11 +53,8 @@ public class WorkRequestDAO {
             } else {
                 stmt.setNull(5, java.sql.Types.INTEGER);
             }
-            stmt.setString(6, WorkRequest.Status.SENT.getValue());
-            stmt.setTimestamp(7, Timestamp.valueOf(workRequest.getRequestTime()));
-            stmt.setString(8, null);
-            stmt.setString(9, null);
-            stmt.setString(10, null);
+            stmt.setTimestamp(6, Timestamp.valueOf(workRequest.getRequestTime()));
+            stmt.setString(7, null);
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,8 +66,8 @@ public class WorkRequestDAO {
         try {
             Connection conn = getConnection();
             String sql = "Update WorkRequest set message = ?, sender_username = ?,"
-                + " receiver_username = ?, receiver_org_id = ?, request_status = ?, "
-                + " request_time = ?, assign_time = ?, finish_time = ?, confirm_time = ?"
+                + " receiver_username = ?, receiver_org_id = ?, "
+                + " request_time = ?, finish_time = ? "
                 + " where request_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, workRequest.getMessage());
@@ -85,28 +78,17 @@ public class WorkRequestDAO {
             } else {
                 stmt.setNull(4, java.sql.Types.INTEGER);
             }
-            stmt.setString(5, workRequest.getStatus());
             if (workRequest.getRequestTime() != null) {
-                stmt.setTimestamp(6, Timestamp.valueOf(workRequest.getRequestTime()));
+                stmt.setTimestamp(5, Timestamp.valueOf(workRequest.getRequestTime()));
+            } else {
+                stmt.setTimestamp(5, null);
+            }
+            if (workRequest.getFinishTime() != null) {
+                stmt.setTimestamp(6, Timestamp.valueOf(workRequest.getFinishTime()));
             } else {
                 stmt.setTimestamp(6, null);
             }
-            if (workRequest.getAssignTime() != null) {
-                stmt.setTimestamp(7, Timestamp.valueOf(workRequest.getAssignTime()));
-            } else {
-                stmt.setTimestamp(7, null);
-            }
-            if (workRequest.getFinishTime() != null) {
-                stmt.setTimestamp(8, Timestamp.valueOf(workRequest.getFinishTime()));
-            } else {
-                stmt.setTimestamp(8, null);
-            }
-            if (workRequest.getConfirmTime() != null) {
-                stmt.setTimestamp(9, Timestamp.valueOf(workRequest.getConfirmTime()));
-            } else {
-                stmt.setTimestamp(9, null);
-            }
-            stmt.setInt(10, workRequest.getRequestId());
+            stmt.setInt(7, workRequest.getRequestId());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);

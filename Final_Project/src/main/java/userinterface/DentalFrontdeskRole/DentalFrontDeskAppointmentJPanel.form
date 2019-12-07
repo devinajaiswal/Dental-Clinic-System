@@ -279,8 +279,11 @@
     </Component>
     <Component class="javax.swing.JButton" name="buttonUpComing">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Up Coming Today"/>
+        <Property name="text" type="java.lang.String" value="Coming Today"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonUpComingActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JInternalFrame" name="frameReschedule">
       <Properties>
@@ -350,7 +353,7 @@
                       <Component id="buttonRescheduleConfirm" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="buttonRescheduleCancel" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="51" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -419,13 +422,7 @@
     <Component class="javax.swing.JComboBox" name="comboStatus">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="5">
-            <StringItem index="0" value=""/>
-            <StringItem index="1" value="Need Confirmation"/>
-            <StringItem index="2" value="Confirmed"/>
-            <StringItem index="3" value="Cancelled"/>
-            <StringItem index="4" value="Checked In"/>
-          </StringArray>
+          <StringArray count="0"/>
         </Property>
       </Properties>
       <Events>

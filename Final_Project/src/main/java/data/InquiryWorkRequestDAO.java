@@ -81,51 +81,26 @@ public class InquiryWorkRequestDAO {
         return result;
     }
 
-    public static ArrayList<InquiryWorkRequest> searchByToUser(String toUsername) {
+    public static ArrayList<InquiryWorkRequest> searchByUserAndStatus(String username, boolean finished) {
         ArrayList<InquiryWorkRequest> result = new ArrayList<>();
         try {
             Connection conn = getConnection();
-            String sql = "SELECT * FROM WorkRequest WHERE receiver_username = ? And \n"
-                + "exists (SELECT * FROM Message where Message.request_id = WorkRequest.request_id)";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, toUsername);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                InquiryWorkRequest request = new InquiryWorkRequest();
-                request.setMessage(rs.getString("message"));
-                request.setRequestId(rs.getInt("request_id"));
-                request.setSenderUsername(rs.getString("sender_username"));
-                request.setReceiverUsername(rs.getString("receiver_username"));
-                request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
-                request.setStatus(rs.getString("request_status"));
-                if (rs.getTimestamp("request_time") != null) {
-                    request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("assign_time") != null) {
-                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("finish_time") != null) {
-                    request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("confirm_time") != null) {
-                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
-                }
-                result.add(request);
+            String sql;
+            if (finished) {
+                sql = "SELECT * FROM WorkRequest \n"
+                    + "WHERE (receiver_username = ? or sender_username = ?) \n"
+                    + "And exists (SELECT * FROM Message where Message.request_id = WorkRequest.request_id)\n"
+                    + "And finish_time is not null";
+            } else {
+                sql = "SELECT * FROM WorkRequest \n"
+                    + "WHERE (receiver_username = ? or sender_username = ?) \n"
+                    + "And exists (SELECT * FROM Message where Message.request_id = WorkRequest.request_id)\n"
+                    + "And finish_time is null";
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
 
-    public static ArrayList<InquiryWorkRequest> searchByFromUser(String fromUsername) {
-        ArrayList<InquiryWorkRequest> result = new ArrayList<>();
-        try {
-            Connection conn = getConnection();
-            String sql = "SELECT * FROM WorkRequest WHERE sender_username = ? And \n"
-                + "exists (SELECT * FROM Message where Message.request_id = WorkRequest.request_id)";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, fromUsername);
+            stmt.setString(1, username);
+            stmt.setString(2, username);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 InquiryWorkRequest request = new InquiryWorkRequest();
@@ -134,18 +109,11 @@ public class InquiryWorkRequestDAO {
                 request.setSenderUsername(rs.getString("sender_username"));
                 request.setReceiverUsername(rs.getString("receiver_username"));
                 request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
-                request.setStatus(rs.getString("request_status"));
                 if (rs.getTimestamp("request_time") != null) {
                     request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
                 }
-                if (rs.getTimestamp("assign_time") != null) {
-                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                }
                 if (rs.getTimestamp("finish_time") != null) {
                     request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("confirm_time") != null) {
-                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
                 }
                 result.add(request);
             }
@@ -171,18 +139,11 @@ public class InquiryWorkRequestDAO {
                 request.setSenderUsername(rs.getString("sender_username"));
                 request.setReceiverUsername(rs.getString("receiver_username"));
                 request.setReceiverOrganizationId(rs.getInt("receiver_org_id"));
-                request.setStatus(rs.getString("request_status"));
                 if (rs.getTimestamp("request_time") != null) {
                     request.setRequestTime(rs.getTimestamp("request_time").toLocalDateTime());
                 }
-                if (rs.getTimestamp("assign_time") != null) {
-                    request.setAssignTime(rs.getTimestamp("assign_time").toLocalDateTime());
-                }
                 if (rs.getTimestamp("finish_time") != null) {
                     request.setFinishTime(rs.getTimestamp("finish_time").toLocalDateTime());
-                }
-                if (rs.getTimestamp("confirm_time") != null) {
-                    request.setConfirmTime(rs.getTimestamp("confirm_time").toLocalDateTime());
                 }
                 result.add(request);
             }
