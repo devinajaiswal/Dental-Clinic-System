@@ -606,8 +606,6 @@ public class UserDAO {
                 result = new CustomerMedicalInfo();
                 result.setGender(rs.getString("gender"));
                 result.setDob(rs.getTimestamp("dob").toLocalDateTime());
-                System.out.println(rs.getDate("dob"));
-                System.out.println(rs.getDate("dob").toLocalDate());
                 result.setSmoking(rs.getBoolean("smoking"));
                 result.setSweet(rs.getBoolean("sweet"));
                 result.setDiabetes(rs.getBoolean("diabetes"));
