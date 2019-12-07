@@ -53,6 +53,7 @@ public class InquiryWorkRequestDAO {
             stmt.setString(5, message.getMessage());
             stmt.setTimestamp(6, Timestamp.valueOf(message.getSentTime()));
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("message created , id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }

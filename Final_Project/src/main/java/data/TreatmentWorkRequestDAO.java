@@ -51,6 +51,7 @@ public class TreatmentWorkRequestDAO {
             stmt.setString(5, treatment.getType());
             stmt.setString(6, treatment.getNote());
             stmt.executeUpdate();
+             Logger.getLogger(Data.class.getName()).info("treatment created, id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,6 +69,7 @@ public class TreatmentWorkRequestDAO {
             stmt.setString(3, request.getNote());
             stmt.setInt(4, request.getTreatmentId());
             stmt.executeUpdate();
+             Logger.getLogger(Data.class.getName()).info("treatment updated, id = " + request.getTreatmentId()); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }

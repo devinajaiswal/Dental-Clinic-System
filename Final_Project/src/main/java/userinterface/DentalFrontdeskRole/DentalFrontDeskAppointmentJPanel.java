@@ -4,6 +4,7 @@
  */
 package userinterface.DentalFrontdeskRole;
 
+import Business.Customer.CustomerPersonalInfo;
 import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.Role.Role;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -555,6 +557,16 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
 
         JOptionPane.showMessageDialog(this, "Appointment cancelled!");
 
+        CustomerPersonalInfo info = data.UserDAO.searchPersonalInfo(request.getSenderUsername());
+        String message = "Your appointment with "
+            + enterprise.getEnterpriseName() + " at " + request.getAppointmentTime() + " is cancelled!";
+        userinterface.Util.sendSMS(info.getPhone(), message);
+        try {
+            userinterface.Util.sendEmail(info.getEmail(), "Appointment cancelled", message);
+        } catch (MessagingException ex) {
+            Logger.getLogger(DentalFrontDeskAppointmentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         resetFrameReply();
         setButtonsEnabled(true);
         populate();
@@ -663,6 +675,15 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
         data.AppointmentWorkRequestDAO.rescheduleAppointment(request.getAppointmentId(), appointmentTime);
 
         JOptionPane.showMessageDialog(this, "Appointment Rescheduled!");
+        CustomerPersonalInfo info = data.UserDAO.searchPersonalInfo(request.getSenderUsername());
+        String message = "Your appointment with "
+            + enterprise.getEnterpriseName() + " at " + request.getAppointmentTime() + " is confirmed!";
+        userinterface.Util.sendSMS(info.getPhone(), message);
+        try {
+            userinterface.Util.sendEmail(info.getEmail(), "Appointment confirmed", message);
+        } catch (MessagingException ex) {
+            Logger.getLogger(DentalFrontDeskAppointmentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         resetFrameAppointment();
         setButtonsEnabled(true);
         populate();
@@ -686,6 +707,15 @@ public class DentalFrontDeskAppointmentJPanel extends javax.swing.JPanel {
                 AppointmentWorkRequest.Status.CONFIRMED.getValue());
             data.WorkRequestDAO.update(request);
             JOptionPane.showMessageDialog(this, "Appointment Confirmed!");
+            CustomerPersonalInfo info = data.UserDAO.searchPersonalInfo(request.getSenderUsername());
+            String message = "Your appointment with "
+                + enterprise.getEnterpriseName() + " at " + request.getAppointmentTime() + " is confirmed!";
+            userinterface.Util.sendSMS(info.getPhone(), message);
+            try {
+                userinterface.Util.sendEmail(info.getEmail(), "Appointment confirmed", message);
+            } catch (MessagingException ex) {
+                Logger.getLogger(DentalFrontDeskAppointmentJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
             resetFrameAppointment();
             populate();
         } else {

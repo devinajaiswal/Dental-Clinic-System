@@ -349,7 +349,7 @@ public class DentalDentistTreatmentJPanel extends javax.swing.JPanel {
         if (tableTreatment.getSelectedRow() >= 0) {
             TreatmentWorkRequest request = (TreatmentWorkRequest) tableTreatment.getValueAt(tableTreatment.getSelectedRow(), 2);
             DetailJFrame customerJFrame = new DetailJFrame();
-            customerJFrame.setSize(800, 600);
+            customerJFrame.setSize(800, 800);
             customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
             customerJFrame.setLocationRelativeTo(this);
             customerJFrame.setContentPane(new TreatmentHistoryJPanel(request.getPatientUsername()));

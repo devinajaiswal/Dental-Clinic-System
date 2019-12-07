@@ -56,6 +56,7 @@ public class PolicyDAO {
             stmt.setDouble(6, policy.getPremium());
             stmt.setString(7, PolicyWorkRequest.Status.APPLIED.getValue());
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("policy request created, id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -72,6 +73,7 @@ public class PolicyDAO {
             stmt.setDouble(2, policy.getPremium());
             stmt.setInt(3, policy.getPolicyId());
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("policy request updated, id = " + policy.getPolicyId()); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
         }

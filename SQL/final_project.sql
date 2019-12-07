@@ -275,7 +275,6 @@ CREATE TABLE Final_Project.`Enterprise_Address` (
     `city` VARCHAR(50) NOT NULL,
     `state` VARCHAR(50) NOT NULL,
     `postcode` VARCHAR(50) NOT NULL,
-    `phone` VARCHAR(50) NOT NULL,
     PRIMARY KEY (`enterprise_id`),
     FOREIGN KEY (enterprise_id)
         REFERENCES Enterprise (enterprise_id),

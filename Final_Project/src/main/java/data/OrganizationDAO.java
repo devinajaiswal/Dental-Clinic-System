@@ -35,6 +35,7 @@ public class OrganizationDAO {
             stmt.setInt(4, organization.getEnterprise().getEnterpriseId());
             stmt.executeUpdate();
             conn.commit();
+            Logger.getLogger(Data.class.getName()).info("organization created, id = " + id); 
         } catch (SQLException ex) {
             Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
             try {
@@ -54,6 +55,7 @@ public class OrganizationDAO {
             stmt.setString(1, orgnization.getName());
             stmt.setInt(2, orgnization.getOrganizationID());
             stmt.executeUpdate();
+            Logger.getLogger(Data.class.getName()).info("organization updated, id = " + orgnization.getOrganizationID()); 
         } catch (SQLException ex) {
             Logger.getLogger(OrganizationDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
