@@ -98,7 +98,7 @@ public class CustomerSearchPolicyJPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtInquiry = new javax.swing.JTextArea();
         buttonInquiry = new javax.swing.JButton();
-        txtSearch = new javax.swing.JTextField();
+        txtKeyword = new javax.swing.JTextField();
         buttonSearch = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         frameApply = new javax.swing.JInternalFrame();
@@ -203,6 +203,11 @@ public class CustomerSearchPolicyJPanel extends javax.swing.JPanel {
         });
 
         buttonSearch.setText("Search");
+        buttonSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSearchActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Keyword");
 
@@ -289,15 +294,15 @@ public class CustomerSearchPolicyJPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtKeyword, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -308,7 +313,7 @@ public class CustomerSearchPolicyJPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtKeyword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -450,6 +455,21 @@ public class CustomerSearchPolicyJPanel extends javax.swing.JPanel {
         setButtonsEnabled(true);
     }//GEN-LAST:event_buttonCancelApplyActionPerformed
 
+    private void buttonSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchActionPerformed
+        if (!userinterface.Util.requireNotEmpty(this, txtKeyword)) {
+            return;
+        }
+        ArrayList<InsurancePlan> list = data.PricesDAO.getAllInsurancePlans();
+        ArrayList<InsurancePlan> result = new ArrayList<>();
+        for (InsurancePlan plan : list) {
+            if (plan.getPlanName().contains(txtKeyword.getText())) {
+                result.add(plan);
+            }
+        }
+        populateTable(result);
+    }//GEN-LAST:event_buttonSearchActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonApply;
     private javax.swing.JButton buttonCancelApply;
@@ -472,6 +492,6 @@ public class CustomerSearchPolicyJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel labUnavailable1;
     private javax.swing.JTable tableClinic;
     private javax.swing.JTextArea txtInquiry;
-    private javax.swing.JTextField txtSearch;
+    private javax.swing.JTextField txtKeyword;
     // End of variables declaration//GEN-END:variables
 }

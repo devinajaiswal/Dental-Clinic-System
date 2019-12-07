@@ -82,25 +82,29 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 address = personalAddress;
             }
 
-            String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
+            if (clinicInfo != null) {
+                String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
 
-            row[1] = clinicAddress;
+                row[1] = clinicAddress;
 
-            GeoApiContext context = new GeoApiContext.Builder()
-                .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
-                .build();
-            DistanceMatrix results;
-            String[] orgris = {address};
-            String[] dest = {clinicAddress};
-            try {
-                results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
-                row[2] = results.rows[0].elements[0].distance;
-            } catch (ApiException ex) {
-                Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                GeoApiContext context = new GeoApiContext.Builder()
+                    .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
+                    .build();
+                DistanceMatrix results;
+                String[] orgris = {address};
+                String[] dest = {clinicAddress};
+                try {
+                    results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
+                    row[2] = results.rows[0].elements[0].distance;
+                } catch (ApiException ex) {
+                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+
             }
             model.addRow(row);
         }
@@ -546,43 +550,13 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
             for (Enterprise enterprise : temp) {
                 DentalCliniclInfo clinicInfo = data.EnterpriseDAO.searchClinicInfo(enterprise.getEnterpriseId());
-                String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
-                GeoApiContext context = new GeoApiContext.Builder()
-                    .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
-                    .build();
-                DistanceMatrix results;
-                String[] orgris = {txtAddress.getText()};
-                String[] dest = {clinicAddress};
-                try {
-                    results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
-                    long disResult = results.rows[0].elements[0].distance.inMeters;
-                    if (disResult > dis * 1000) {
-                        result.remove(enterprise);
-                    }
-                } catch (ApiException ex) {
-                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                populateTable(result, txtAddress.getText());
-            }
-
-        } else {
-            String distance = (String) comboDistance.getSelectedItem();
-            if (distance != null && !distance.equals("")) {
-                int dis = Integer.parseInt(distance);
-                CustomerPersonalInfo personInfo = data.UserDAO.searchPersonalInfo(account.getUsername());
-                    String personalAddress = personInfo.getStreet() + ", " + personInfo.getCity() + ", " + personInfo.getState() + ", " + personInfo.getPostcode();
-                for (Enterprise enterprise : temp) {
-                    DentalCliniclInfo clinicInfo = data.EnterpriseDAO.searchClinicInfo(enterprise.getEnterpriseId());
+                if (clinicInfo != null) {
                     String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
                     GeoApiContext context = new GeoApiContext.Builder()
                         .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
                         .build();
                     DistanceMatrix results;
-                    String[] orgris = {personalAddress};
+                    String[] orgris = {txtAddress.getText()};
                     String[] dest = {clinicAddress};
                     try {
                         results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
@@ -596,6 +570,40 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                         Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                populateTable(result, txtAddress.getText());
+            }
+
+        } else {
+            String distance = (String) comboDistance.getSelectedItem();
+            if (distance != null && !distance.equals("")) {
+                int dis = Integer.parseInt(distance);
+                CustomerPersonalInfo personInfo = data.UserDAO.searchPersonalInfo(account.getUsername());
+                String personalAddress = personInfo.getStreet() + ", " + personInfo.getCity() + ", " + personInfo.getState() + ", " + personInfo.getPostcode();
+                for (Enterprise enterprise : temp) {
+                    DentalCliniclInfo clinicInfo = data.EnterpriseDAO.searchClinicInfo(enterprise.getEnterpriseId());
+                    if (clinicInfo != null) {
+                        String clinicAddress = clinicInfo.getStreet() + ", " + clinicInfo.getCity() + ", " + clinicInfo.getState() + ", " + clinicInfo.getPostcode();
+                        GeoApiContext context = new GeoApiContext.Builder()
+                            .apiKey("AIzaSyDG85iDSWZ2OgPVpOC1l2QFhSSNc3PCMVg")
+                            .build();
+                        DistanceMatrix results;
+                        String[] orgris = {personalAddress};
+                        String[] dest = {clinicAddress};
+                        try {
+                            results = DistanceMatrixApi.getDistanceMatrix(context, orgris, dest).await();
+                            long disResult = results.rows[0].elements[0].distance.inMeters;
+                            if (disResult > dis * 1000) {
+                                result.remove(enterprise);
+                            }
+                        } catch (ApiException ex) {
+                            Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(CustomerSearchClinicJPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }

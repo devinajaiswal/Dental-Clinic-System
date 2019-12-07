@@ -157,6 +157,12 @@ public class Util {
         return m.matches();
     }
 
+    public static boolean passwordPatternCorrect(String password) {
+        Pattern p = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[*$#&])[A-Za-z\\d*$#&]{6,}$");
+        Matcher m = p.matcher(password);
+        return m.matches();
+    }
+
     public static void sendEmail(String to, String title, String content) throws AddressException, MessagingException {
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", true);

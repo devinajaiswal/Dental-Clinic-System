@@ -259,6 +259,10 @@ public class EnterpriseDAO {
         return null;
     }
 
+    public static boolean isClinicInfoReady(int enterpriseId) {
+        return searchClinicInfo(enterpriseId) != null;
+    }
+
     public static void createClinicInfo(int enterpriseId, DentalCliniclInfo clinicInfo) {
         try {
             Connection conn = data.Data.getConnection();

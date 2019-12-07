@@ -51,13 +51,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="buttonPolicies" pref="180" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="buttonInquries" pref="180" max="32767" attributes="0"/>
-                              <Component id="buttonSearchClinic" alignment="0" max="32767" attributes="0"/>
-                              <Component id="btnManageEnterprise" alignment="0" max="32767" attributes="0"/>
-                              <Component id="buttonPersonalInfo" alignment="0" max="32767" attributes="0"/>
-                              <Component id="buttonSearchInsurance" pref="180" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="buttonInquries" pref="180" max="32767" attributes="0"/>
+                          <Component id="buttonSearchClinic" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnManageEnterprise" alignment="0" max="32767" attributes="0"/>
+                          <Component id="buttonPersonalInfo" alignment="0" max="32767" attributes="0"/>
+                          <Component id="buttonSearchInsurance" pref="180" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace pref="12" max="32767" attributes="0"/>
                   </Group>

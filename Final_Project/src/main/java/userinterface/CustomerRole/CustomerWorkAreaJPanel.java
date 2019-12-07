@@ -9,6 +9,7 @@ import Business.Enterprise.Enterprise;
 import Business.Organization.Organization;
 import Business.UserAccount.UserAccount;
 import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -167,6 +168,11 @@ public class CustomerWorkAreaJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnManageEnterpriseActionPerformed
 
     private void buttonSearchClinicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchClinicActionPerformed
+        if (!data.UserDAO.isPersonalInfoComplete(account.getUsername())
+            || !data.UserDAO.isMedicalInfoComplete(account.getUsername())) {
+            JOptionPane.showMessageDialog(this, "Please compete personal and medical information first!");
+            return;
+        }
         customerContainer.removeAll();
         CustomerSearchClinicJPanel searchClinicJPanel = new CustomerSearchClinicJPanel(account);
         customerContainer.add(searchClinicJPanel);
@@ -175,6 +181,11 @@ public class CustomerWorkAreaJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonSearchClinicActionPerformed
 
     private void buttonSearchInsuranceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchInsuranceActionPerformed
+        if (!data.UserDAO.isPersonalInfoComplete(account.getUsername())
+            || !data.UserDAO.isMedicalInfoComplete(account.getUsername())) {
+            JOptionPane.showMessageDialog(this, "Please compete personal and medical information first!");
+            return;
+        }
         customerContainer.removeAll();
         CustomerSearchPolicyJPanel jpanel = new CustomerSearchPolicyJPanel(account);
         customerContainer.add(jpanel);

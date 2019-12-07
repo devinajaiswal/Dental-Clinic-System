@@ -144,6 +144,11 @@ public class CreateCustomerPanel extends javax.swing.JPanel {
             return;
         }
 
+        if (!userinterface.Util.passwordPatternCorrect(password)) {
+            JOptionPane.showMessageDialog(this, "Passwords pattern wrong!");
+            return;
+        }
+
         UserAccount user = new UserAccount();
         user.setUsername(txtUsername.getText());
         user.setPassword(password);
