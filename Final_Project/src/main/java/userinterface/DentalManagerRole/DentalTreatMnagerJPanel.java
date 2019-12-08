@@ -86,7 +86,7 @@ public class DentalTreatMnagerJPanel extends javax.swing.JPanel {
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("Dental Finace Management");
+        jLabel4.setText("Dental Finance Management");
 
         buttonEdit.setText("Send Bill");
         buttonEdit.addActionListener(new java.awt.event.ActionListener() {
