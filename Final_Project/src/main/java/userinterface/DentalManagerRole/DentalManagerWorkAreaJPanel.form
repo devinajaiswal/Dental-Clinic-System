@@ -72,6 +72,9 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="buttonPersonalInfo">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/address.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Clinic Information"/>
               </Properties>
               <Events>
@@ -80,6 +83,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnPrices">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/money.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Treatment Prices"/>
               </Properties>
               <Events>

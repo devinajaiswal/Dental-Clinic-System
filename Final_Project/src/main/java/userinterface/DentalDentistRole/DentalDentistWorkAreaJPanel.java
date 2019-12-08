@@ -51,6 +51,7 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(200);
 
+        buttonTreat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/treat.png"))); // NOI18N
         buttonTreat.setText("Patient Treatment");
         buttonTreat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,6 +59,7 @@ public class DentalDentistWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnTreatmentHistory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/history.png"))); // NOI18N
         btnTreatmentHistory.setText("Treatment History");
         btnTreatmentHistory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

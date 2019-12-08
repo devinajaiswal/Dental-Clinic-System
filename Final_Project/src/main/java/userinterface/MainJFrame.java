@@ -38,6 +38,8 @@ public class MainJFrame extends javax.swing.JFrame {
         this.setSize(1200, 800);
         buttonLogout.setVisible(false);
 
+        labelName.setVisible(false);
+        labelRole.setVisible(false);
         container.removeAll();
         CardLayout layout = (CardLayout) container.getLayout();
         container.add(new WelcomeJPanel());
@@ -65,6 +67,7 @@ public class MainJFrame extends javax.swing.JFrame {
         buttonSignup = new javax.swing.JButton();
         labelName = new javax.swing.JLabel();
         labelRole = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         container = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -73,6 +76,7 @@ public class MainJFrame extends javax.swing.JFrame {
         jSplitPane1.setDividerSize(5);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
+        buttonLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/login.png"))); // NOI18N
         buttonLogin.setText("Login");
         buttonLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -90,6 +94,7 @@ public class MainJFrame extends javax.swing.JFrame {
 
         labelPassword.setText("Password");
 
+        buttonLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logout.png"))); // NOI18N
         buttonLogout.setText("Logout");
         buttonLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,12 +102,17 @@ public class MainJFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonSignup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/signup.png"))); // NOI18N
         buttonSignup.setText("Sign Up as A Patient");
         buttonSignup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonSignupActionPerformed(evt);
             }
         });
+
+        labelName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/user.png"))); // NOI18N
+
+        labelRole.setIcon(new javax.swing.ImageIcon(getClass().getResource("/role.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -116,9 +126,11 @@ public class MainJFrame extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(labelName)
-                        .addGap(18, 18, 18)
-                        .addComponent(labelRole)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelRole)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelUsername)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -147,7 +159,8 @@ public class MainJFrame extends javax.swing.JFrame {
                     .addComponent(buttonLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonSignup, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelName)
-                    .addComponent(labelRole))
+                    .addComponent(labelRole)
+                    .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(loginJLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -166,15 +179,17 @@ public class MainJFrame extends javax.swing.JFrame {
     private void setComponentsVisible(UserAccount user, boolean login) {
         if (login) {
             if (user.getEmployee() == null) {
-                labelName.setText("Welcome " + user.getUsername() + "!");
+                labelName.setText(user.getUsername());
             } else {
-                labelName.setText("Welcome " + user.getEmployee().getName() + "!");
+                labelName.setText(user.getEmployee().getName());
             }
-            labelRole.setText("Your role: " + user.getRole().getRoleType().getValue());
+            labelRole.setText(user.getRole().getRoleType().getValue());
         } else {
             labelName.setText("");
             labelRole.setText("");
         }
+        labelName.setVisible(login);
+        labelRole.setVisible(login);
         labelUsername.setVisible(!login);
         txtUsername.setVisible(!login);
         labelPassword.setVisible(!login);
@@ -267,6 +282,7 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonLogout;
     private javax.swing.JButton buttonSignup;
     private javax.swing.JPanel container;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel labelName;
