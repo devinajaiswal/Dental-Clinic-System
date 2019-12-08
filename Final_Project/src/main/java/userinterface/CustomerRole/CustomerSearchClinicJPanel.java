@@ -29,9 +29,13 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import userinterface.DetailJFrame;
+import userinterface.MedicalInfoJPanel;
+import userinterface.TreatmentPriceJPanel;
 
 /**
  *
@@ -148,6 +152,7 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         txtAddress = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        buttonFees = new javax.swing.JButton();
 
         tableClinic.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -333,6 +338,13 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
         jLabel7.setText("Address");
 
+        buttonFees.setText("View Fees");
+        buttonFees.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonFeesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -367,6 +379,8 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                         .addComponent(buttonInquiry)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonAppointment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonFees)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -390,7 +404,8 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAppointment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(buttonInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonFees, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(frameInquiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -612,12 +627,33 @@ public class CustomerSearchClinicJPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_buttonSearchActionPerformed
 
+    private void buttonFeesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFeesActionPerformed
+        if (tableClinic.getSelectedRow() >= 0) {
+            Enterprise enterprise = (Enterprise) tableClinic.getValueAt(tableClinic.getSelectedRow(), 0);
+            if (!data.PricesDAO.isTeatmentPricesExist(enterprise.getEnterpriseId())) {
+                JOptionPane.showMessageDialog(this, "The clinic is not setting up properly, please try later");
+                return;
+            }
+            DetailJFrame customerJFrame = new DetailJFrame();
+            customerJFrame.setSize(500, 500);
+            customerJFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+            customerJFrame.setLocationRelativeTo(this);
+            customerJFrame.setContentPane(new TreatmentPriceJPanel(enterprise));
+            customerJFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a record first");
+            return;
+        }
+    }//GEN-LAST:event_buttonFeesActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAppointment;
     private javax.swing.JButton buttonCancelAppointment;
     private javax.swing.JButton buttonCancelInquiry;
     private javax.swing.JButton buttonConfirmAppointment;
     private javax.swing.JButton buttonConfirmInquiry;
+    private javax.swing.JButton buttonFees;
     private javax.swing.JButton buttonInquiry;
     private javax.swing.JButton buttonSearch;
     private javax.swing.JComboBox<String> comboDistance;
