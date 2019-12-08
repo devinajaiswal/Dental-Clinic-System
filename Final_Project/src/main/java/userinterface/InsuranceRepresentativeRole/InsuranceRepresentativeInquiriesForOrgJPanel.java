@@ -109,7 +109,7 @@ public class InsuranceRepresentativeInquiriesForOrgJPanel extends javax.swing.JP
         }
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel4.setText("Patients Inquries");
+        jLabel4.setText("Patients Inquiries");
 
         frameReply.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         frameReply.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
