@@ -105,11 +105,16 @@ CREATE TABLE Final_Project.EnterpriseUser (
     CONSTRAINT FOREIGN KEY (username)
         REFERENCES User (username)
 );
+use Final_project;
+ALTER TABLE `Final_project`.`Roles` 
+RENAME TO  `Final_project`.`Role_User` ;
+ALTER TABLE `Final_project`.`EnterpriseOrganization` 
+RENAME TO  `Final_project`.`Organization` ;
+ALTER TABLE `Final_project`.`EnterpriseUser` 
+RENAME TO  `Final_project`.`Enterprise_User`;
+ALTER TABLE `Final_project`.`NetworkEnterprise` 
+RENAME TO  `Final_project`.`Network_Enterprise`;
 
-rename table Roles to Role_User;
-rename table EnterpriseOrganization to Organization;
-rename table EnterpriseUser to Enterprise_User;
-rename table NetworkEnterprise to Network_Enterprise;
 ALTER TABLE Employee MODIFY email VARCHAR(50);
 
 CREATE TABLE Final_Project.`Organization_User` (
@@ -228,6 +233,20 @@ CREATE TABLE Final_Project.`TreatmentPrice` (
     FOREIGN KEY (enterprise_id)
         REFERENCES Enterprise (enterprise_id)
 );
+
+CREATE TABLE Final_Project.`InsurancePlan` (
+    `plan_id` INT NOT NULL,
+    `plan_name` VARCHAR(50) NOT NULL,
+    `price` DOUBLE NOT NULL,
+    `enterprise_id` INT NOT NULL,
+    `filling_coverage` double not null,
+    `root_coverage` double NOT NULL,
+    `srp_coverage` double NOT NULL,
+    PRIMARY KEY (`plan_id`),
+    FOREIGN KEY (enterprise_id)
+        REFERENCES Enterprise (enterprise_id)
+);
+
 
 CREATE TABLE Final_Project.`PlanCoverage` (
     `plan_id` INT NOT NULL,
@@ -349,18 +368,6 @@ CREATE TABLE Final_Project.`Treatment` (
 );
 
 
-CREATE TABLE Final_Project.`InsurancePlan` (
-    `plan_id` INT NOT NULL,
-    `plan_name` VARCHAR(50) NOT NULL,
-    `price` DOUBLE NOT NULL,
-    `enterprise_id` INT NOT NULL,
-    `filling_coverage` double not null,
-    `root_coverage` double NOT NULL,
-    `srp_coverage` double NOT NULL,
-    PRIMARY KEY (`plan_id`),
-    FOREIGN KEY (enterprise_id)
-        REFERENCES Enterprise (enterprise_id)
-);
 
 CREATE TABLE Final_Project.`Policy` (
 	`policy_id` INT NOT NULL,
