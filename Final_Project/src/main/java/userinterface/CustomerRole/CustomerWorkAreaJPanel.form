@@ -50,14 +50,14 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="buttonPolicies" pref="180" max="32767" attributes="0"/>
-                          <Component id="buttonInquries" pref="180" max="32767" attributes="0"/>
+                          <Component id="buttonPolicies" max="32767" attributes="0"/>
+                          <Component id="buttonInquries" max="32767" attributes="0"/>
                           <Component id="buttonSearchClinic" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnManageEnterprise" alignment="0" max="32767" attributes="0"/>
                           <Component id="buttonPersonalInfo" alignment="0" max="32767" attributes="0"/>
-                          <Component id="buttonSearchInsurance" pref="180" max="32767" attributes="0"/>
+                          <Component id="buttonSearchInsurance" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="12" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -84,6 +84,9 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="buttonPersonalInfo">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/personal.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Personal Information"/>
               </Properties>
               <Events>
@@ -92,6 +95,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnManageEnterprise">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/medical.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Medical Information"/>
               </Properties>
               <Events>
@@ -100,6 +106,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="buttonSearchClinic">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/dental.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Search Clinic"/>
               </Properties>
               <Events>
@@ -108,6 +117,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="buttonSearchInsurance">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/insurance.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Search Insurance Plans"/>
               </Properties>
               <Events>
@@ -116,6 +128,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="buttonInquries">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/conversation.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Inquries"/>
               </Properties>
               <Events>
@@ -124,6 +139,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="buttonPolicies">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/policy.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Policies"/>
               </Properties>
               <Events>

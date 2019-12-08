@@ -49,12 +49,12 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="buttonInsuranePlans" alignment="0" max="32767" attributes="0"/>
-                          <Component id="buttonPolicies" max="32767" attributes="0"/>
-                          <Component id="btnViewPolicyApplications" alignment="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="buttonInsuranePlans" max="32767" attributes="0"/>
+                          <Component id="btnViewPolicyApplications" pref="186" max="32767" attributes="0"/>
+                          <Component id="buttonPolicies" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="9" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -75,6 +75,9 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="buttonInsuranePlans">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/insurance.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Insurance Plans"/>
               </Properties>
               <Events>
@@ -83,7 +86,10 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnViewPolicyApplications">
               <Properties>
-                <Property name="text" type="java.lang.String" value="View Policy Applications"/>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/history.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="View Applications"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewPolicyApplicationsActionPerformed"/>
@@ -91,6 +97,9 @@
             </Component>
             <Component class="javax.swing.JButton" name="buttonPolicies">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/policy.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="View Policies"/>
               </Properties>
               <Events>

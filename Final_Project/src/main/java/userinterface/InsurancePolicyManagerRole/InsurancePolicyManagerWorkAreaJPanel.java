@@ -54,6 +54,7 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(200);
 
+        buttonInsuranePlans.setIcon(new javax.swing.ImageIcon(getClass().getResource("/insurance.png"))); // NOI18N
         buttonInsuranePlans.setText("Insurance Plans");
         buttonInsuranePlans.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -61,13 +62,15 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnViewPolicyApplications.setText("View Policy Applications");
+        btnViewPolicyApplications.setIcon(new javax.swing.ImageIcon(getClass().getResource("/history.png"))); // NOI18N
+        btnViewPolicyApplications.setText("View Applications");
         btnViewPolicyApplications.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewPolicyApplicationsActionPerformed(evt);
             }
         });
 
+        buttonPolicies.setIcon(new javax.swing.ImageIcon(getClass().getResource("/policy.png"))); // NOI18N
         buttonPolicies.setText("View Policies");
         buttonPolicies.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,11 +84,11 @@ public class InsurancePolicyManagerWorkAreaJPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(buttonInsuranePlans, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonPolicies, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnViewPolicyApplications, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buttonInsuranePlans, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewPolicyApplications, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                    .addComponent(buttonPolicies, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

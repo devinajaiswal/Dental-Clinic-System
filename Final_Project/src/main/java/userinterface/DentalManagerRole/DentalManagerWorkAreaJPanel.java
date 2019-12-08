@@ -51,6 +51,7 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setDividerLocation(200);
 
+        buttonPersonalInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/address.png"))); // NOI18N
         buttonPersonalInfo.setText("Clinic Information");
         buttonPersonalInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,6 +59,7 @@ public class DentalManagerWorkAreaJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnPrices.setIcon(new javax.swing.ImageIcon(getClass().getResource("/money.png"))); // NOI18N
         btnPrices.setText("Treatment Prices");
         btnPrices.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
